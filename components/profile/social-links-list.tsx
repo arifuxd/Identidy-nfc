@@ -71,6 +71,32 @@ const platformIcons: Record<string, IconComponent> = {
   custom: ExternalLink,
 };
 
+const platformLabels: Record<string, string> = {
+  facebook: "Facebook",
+  twitter: "Twitter / X",
+  pinterest: "Pinterest",
+  tiktok: "TikTok",
+  github: "GitHub",
+  youtube: "YouTube",
+  linkedin: "LinkedIn",
+  instagram: "Instagram",
+  portfolio: "Portfolio",
+  custom: "Custom Link",
+};
+
+const platformAccentClasses: Record<string, string> = {
+  facebook: "from-blue-500/16 to-blue-700/8 border-blue-300/20 text-blue-300",
+  twitter: "from-cyan-500/16 to-sky-700/8 border-cyan-300/20 text-cyan-300",
+  pinterest: "from-rose-500/16 to-red-700/8 border-rose-300/20 text-rose-300",
+  tiktok: "from-fuchsia-500/16 to-violet-700/8 border-fuchsia-300/20 text-fuchsia-300",
+  github: "from-slate-400/16 to-slate-700/8 border-slate-300/20 text-slate-200",
+  youtube: "from-red-500/16 to-red-700/8 border-red-300/20 text-red-300",
+  linkedin: "from-blue-500/16 to-indigo-700/8 border-blue-300/20 text-blue-300",
+  instagram: "from-pink-500/16 to-purple-700/8 border-pink-300/20 text-pink-300",
+  portfolio: "from-emerald-500/16 to-green-700/8 border-emerald-300/20 text-emerald-300",
+  custom: "from-amber-500/16 to-orange-700/8 border-amber-300/20 text-amber-300",
+};
+
 function toPhoneDigits(value: string) {
   return value.replace(/[^\d+]/g, "").replace(/^(\+)?0+/, "$1");
 }
@@ -144,9 +170,12 @@ export function SocialLinksList({
     <div className="space-y-4">
       {socialLinks.length ? (
         <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <div className="inline-flex min-w-max gap-3 py-1">
+          <div className="inline-flex min-w-max gap-2 py-1">
             {socialLinks.map((link) => {
               const Icon = platformIcons[link.platform] ?? ExternalLink;
+              const accent =
+                platformAccentClasses[link.platform] ?? platformAccentClasses.custom;
+              const title = link.label?.trim() || platformLabels[link.platform] || "Social Link";
 
               return (
                 <a
@@ -154,11 +183,14 @@ export function SocialLinksList({
                   href={link.url}
                   target="_blank"
                   rel="noreferrer"
-                  title={link.label || link.platform}
-                  aria-label={link.label || link.platform}
-                  className="flex size-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-primary transition hover:border-primary/50 hover:bg-white/10 hover:text-white"
+                  title={title}
+                  aria-label={title}
+                  className={`flex w-[96px] shrink-0 flex-col rounded-xl border bg-gradient-to-br p-2.5 transition hover:-translate-y-0.5 hover:border-white/25 ${accent}`}
                 >
-                  <Icon className="size-5" />
+                  <span className="flex size-8 items-center justify-center rounded-full bg-current/20">
+                    <Icon className="size-4 text-current" />
+                  </span>
+                  <p className="mt-2 truncate text-xs font-semibold text-white">{title}</p>
                 </a>
               );
             })}
