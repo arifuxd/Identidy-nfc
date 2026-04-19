@@ -1,6 +1,6 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
+import Image from "next/image";
 import { useRef, useState, type ChangeEvent } from "react";
 import { LoaderCircle, Upload } from "lucide-react";
 
@@ -94,11 +94,14 @@ export function MediaUploader({
       </div>
 
       {value ? (
-        <div className="mt-4 overflow-hidden rounded-3xl border border-white/8">
-          <img
-            alt={label}
-            className="h-36 w-full object-cover"
+        <div className="relative mt-4 h-36 overflow-hidden rounded-3xl border border-white/8">
+          <Image
             src={value}
+            alt={label}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 420px"
+            quality={100}
           />
         </div>
       ) : null}

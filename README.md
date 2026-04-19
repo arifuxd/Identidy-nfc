@@ -14,7 +14,7 @@ Production-ready SaaS-style NFC business card platform built with Next.js App Ro
 ## Features
 
 - Marketing landing page
-- Mobile-first public profile pages at `/p/[slug]`
+- Mobile-first public profile pages at `/profile/[slug]`
 - Save Contact `.vcf` download
 - User dashboard for profile editing
 - Debounced slug availability checking
@@ -50,7 +50,7 @@ npm run dev
 
 - `/` marketing page
 - `/login`, `/signup`
-- `/p/[slug]` public profile
+- `/profile/[slug]` public profile
 - `/dashboard`
 - `/dashboard/profile`
 - `/dashboard/analytics`

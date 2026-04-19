@@ -26,7 +26,7 @@ export default async function DashboardSettingsPage() {
           <div className="rounded-3xl border border-white/8 bg-white/4 p-4">
             <p className="text-sm text-muted">Public URL</p>
             <p className="mt-2 text-base text-white">
-              /p/{profile?.slug ?? "your-slug"}
+              /profile/{profile?.slug ?? "your-slug"}
             </p>
           </div>
           <div className="rounded-3xl border border-white/8 bg-white/4 p-4">

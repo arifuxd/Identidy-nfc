@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BarChart3, Link2, Smartphone } from "lucide-react";
 
@@ -52,9 +53,27 @@ export function MarketingHero() {
           <div className="relative p-5">
             <div className="mx-auto max-w-sm rounded-[2rem] border border-white/10 bg-[#08111d] p-3 shadow-2xl">
               <div className="rounded-[1.6rem] border border-white/8 bg-gradient-to-b from-[#173254] to-[#0a1729] p-4">
-                <div className="h-28 rounded-[1.4rem] bg-[url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
+                <div className="relative h-28 overflow-hidden rounded-[1.4rem]">
+                  <Image
+                    src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80"
+                    alt="Profile cover preview"
+                    fill
+                    className="object-cover object-center"
+                    sizes="(max-width: 1024px) 90vw, 360px"
+                    quality={100}
+                  />
+                </div>
                 <div className="-mt-9 flex items-end gap-4 px-2">
-                  <div className="size-20 rounded-3xl border-4 border-[#0a1729] bg-[url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80')] bg-cover bg-center" />
+                  <div className="relative size-20 overflow-hidden rounded-3xl border-4 border-[#0a1729]">
+                    <Image
+                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80"
+                      alt="Profile avatar preview"
+                      fill
+                      className="object-cover object-center"
+                      sizes="80px"
+                      quality={100}
+                    />
+                  </div>
                   <div className="pb-2">
                     <p className="text-lg font-semibold text-white">
                       Sarah Khan

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Download } from "lucide-react";
 
@@ -45,26 +46,39 @@ export default async function PublicProfilePage({
   }
 
   const { profile, socialLinks, experiences } = data;
+  const coverUrl = profile.cover_path || DEFAULT_COVER;
+  const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
+
   return (
     <main className="mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-6 sm:py-8">
       <PublicProfileViewTracker slug={profile.slug} />
 
       <section className="glass-panel overflow-hidden rounded-[2rem]">
-        <div
-          className="h-40 bg-cover bg-center sm:h-52"
-          style={{
-            backgroundImage: `url(${profile.cover_path || DEFAULT_COVER})`,
-          }}
-        />
+        <div className="relative z-0 h-40 sm:h-52">
+          <Image
+            src={coverUrl}
+            alt={`${profile.display_name} cover image`}
+            fill
+            className="object-cover object-center"
+            sizes="(max-width: 640px) 100vw, 640px"
+            quality={100}
+            priority
+          />
+        </div>
         <div className="px-5 pb-5">
-          <div className="-mt-16 flex justify-center">
+          <div className="relative z-20 -mt-16 flex justify-center">
             <div className="rounded-full p-[3px] ring-3 ring-primary shadow-xl shadow-primary/20">
-              <div
-                className="size-28 rounded-full bg-cover bg-center"
-                style={{
-                  backgroundImage: `url(${profile.avatar_path || DEFAULT_AVATAR})`,
-                }}
-              />
+              <div className="relative size-28 overflow-hidden rounded-full">
+                <Image
+                  src={avatarUrl}
+                  alt={`${profile.display_name} profile photo`}
+                  fill
+                  className="object-cover object-center"
+                  sizes="112px"
+                  quality={100}
+                  priority
+                />
+              </div>
             </div>
           </div>
 

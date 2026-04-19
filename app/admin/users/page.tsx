@@ -78,7 +78,7 @@ export default async function AdminUsersPage({
                         {user.display_name}
                       </p>
                       <p className="mt-1 text-sm text-muted">
-                        /p/{user.slug} · {role}
+                        /profile/{user.slug} | {role}
                       </p>
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row">

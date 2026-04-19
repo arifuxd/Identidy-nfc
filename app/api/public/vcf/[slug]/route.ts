@@ -25,7 +25,7 @@ export async function GET(
     title: profile.job_title,
     company: profile.company_name,
     address: profile.address,
-    url: absoluteUrl(`/p/${profile.slug}`),
+    url: absoluteUrl(`/profile/${profile.slug}`),
   });
 
   return new NextResponse(vcard, {

@@ -129,9 +129,9 @@ export async function saveProfileAction(values: ProfileFormValues) {
   revalidatePath("/dashboard/profile");
   revalidatePath("/dashboard/analytics");
   if (existingProfile?.slug) {
-    revalidatePath(`/p/${existingProfile.slug}`);
+    revalidatePath(`/profile/${existingProfile.slug}`);
   }
-  revalidatePath(`/p/${parsed.slug}`);
+  revalidatePath(`/profile/${parsed.slug}`);
 
   return { success: "Profile updated successfully." };
 }

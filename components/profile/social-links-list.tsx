@@ -103,9 +103,8 @@ export function SocialLinksList({
           key: "email",
           label: "Email",
           value: email,
-          href: `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`,
+          href: `mailto:${email}`,
           icon: Mail,
-          external: true,
         }
       : null,
     whatsappDigits
