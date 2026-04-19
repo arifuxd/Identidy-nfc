@@ -16,6 +16,8 @@ export const RESERVED_SLUGS = new Set([
 export const SOCIAL_PLATFORM_OPTIONS = [
   "facebook",
   "twitter",
+  "pinterest",
+  "tiktok",
   "github",
   "youtube",
   "portfolio",
@@ -30,6 +32,8 @@ export const SOCIAL_PLATFORM_LABELS: Record<
 > = {
   facebook: "Facebook",
   twitter: "Twitter / X",
+  pinterest: "Pinterest",
+  tiktok: "TikTok",
   github: "GitHub",
   youtube: "YouTube",
   portfolio: "Portfolio",

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { MapPin, Download } from "lucide-react";
+import { Download } from "lucide-react";
 
 import { ExperienceList } from "@/components/profile/experience-list";
 import { PublicProfileViewTracker } from "@/components/profile/public-profile-view-tracker";
@@ -8,7 +8,6 @@ import { SocialLinksList } from "@/components/profile/social-links-list";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_AVATAR, DEFAULT_COVER } from "@/lib/constants";
 import { getProfileBundleBySlug } from "@/lib/db/profiles";
-import { absoluteUrl } from "@/lib/utils";
 
 type Params = Promise<{ slug: string }>;
 
@@ -46,8 +45,6 @@ export default async function PublicProfilePage({
   }
 
   const { profile, socialLinks, experiences } = data;
-  const publicUrl = absoluteUrl(`/p/${profile.slug}`);
-
   return (
     <main className="mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-6 sm:py-8">
       <PublicProfileViewTracker slug={profile.slug} />
@@ -60,16 +57,18 @@ export default async function PublicProfilePage({
           }}
         />
         <div className="px-5 pb-5">
-          <div className="-mt-16 flex items-end gap-4">
-            <div
-              className="size-28 rounded-[2rem] border-4 border-background bg-cover bg-center shadow-xl"
-              style={{
-                backgroundImage: `url(${profile.avatar_path || DEFAULT_AVATAR})`,
-              }}
-            />
+          <div className="-mt-16 flex justify-center">
+            <div className="rounded-full p-[3px] ring-3 ring-primary shadow-xl shadow-primary/20">
+              <div
+                className="size-28 rounded-full bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${profile.avatar_path || DEFAULT_AVATAR})`,
+                }}
+              />
+            </div>
           </div>
 
-          <div className="mt-4">
+          <div className="mt-4 text-center">
             <h1 className="text-3xl font-semibold text-white">
               {profile.display_name}
             </h1>
@@ -81,20 +80,15 @@ export default async function PublicProfilePage({
               </p>
             ) : null}
             {profile.bio ? (
-              <p className="mt-4 text-sm leading-7 text-muted">{profile.bio}</p>
+              <p className="mt-2 text-sm leading-7 text-muted">{profile.bio}</p>
             ) : null}
           </div>
 
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-5">
             <a href={`/api/public/vcf/${profile.slug}`} className="flex-1">
               <Button className="w-full">
                 <Download className="size-4" />
                 Save Contact
-              </Button>
-            </a>
-            <a href={publicUrl} className="flex-1">
-              <Button variant="secondary" className="w-full">
-                Share Profile
               </Button>
             </a>
           </div>
@@ -102,19 +96,8 @@ export default async function PublicProfilePage({
       </section>
 
       <div className="mt-4 space-y-4">
-        <SocialLinksList links={socialLinks} />
+        <SocialLinksList links={socialLinks} profile={profile} />
         <ExperienceList items={experiences} />
-        {profile.address ? (
-          <section className="glass-panel rounded-3xl p-4">
-            <h2 className="text-sm font-medium uppercase tracking-[0.24em] text-blue-100/68">
-              Address
-            </h2>
-            <p className="mt-4 flex items-start gap-3 text-sm leading-7 text-muted">
-              <MapPin className="mt-1 size-4 text-primary" />
-              <span>{profile.address}</span>
-            </p>
-          </section>
-        ) : null}
       </div>
     </main>
   );
