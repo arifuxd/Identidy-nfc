@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Download } from "lucide-react";
@@ -11,6 +12,14 @@ import { DEFAULT_AVATAR, DEFAULT_COVER } from "@/lib/constants";
 import { getProfileBundleBySlug } from "@/lib/db/profiles";
 
 type Params = Promise<{ slug: string }>;
+
+function withAlpha(hexColor: string, alphaHex: string) {
+  if (!/^#[0-9a-f]{6}$/i.test(hexColor)) {
+    return hexColor;
+  }
+
+  return `${hexColor}${alphaHex}`;
+}
 
 export async function generateMetadata({
   params,
@@ -48,9 +57,22 @@ export default async function PublicProfilePage({
   const { profile, socialLinks, experiences } = data;
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
+  const accentColor = profile.accent_color || "#3b82f6";
+  const avatarShape = profile.avatar_shape === "rounded" ? "rounded-3xl" : "rounded-full";
+  const alignment = profile.profile_alignment === "left" ? "left" : "center";
+  const textAlignmentClass = alignment === "left" ? "text-left" : "text-center";
+  const avatarRowClass = alignment === "left" ? "justify-start" : "justify-center";
+  const profileStyle = {
+    "--primary": accentColor,
+    "--primary-strong": accentColor,
+    "--ring": withAlpha(accentColor, "55"),
+  } as CSSProperties;
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-6 sm:py-8">
+    <main
+      className="mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-6 sm:py-8"
+      style={profileStyle}
+    >
       <PublicProfileViewTracker slug={profile.slug} />
 
       <section className="glass-panel overflow-hidden rounded-[2rem]">
@@ -66,9 +88,9 @@ export default async function PublicProfilePage({
           />
         </div>
         <div className="px-5 pb-5">
-          <div className="relative z-20 -mt-16 flex justify-center">
-            <div className="rounded-full p-[3px] ring-3 ring-primary shadow-xl shadow-primary/20">
-              <div className="relative size-28 overflow-hidden rounded-full">
+          <div className={`relative z-20 -mt-16 flex ${avatarRowClass}`}>
+            <div className={`p-[3px] ring-3 ring-primary shadow-xl shadow-primary/20 ${avatarShape}`}>
+              <div className={`relative size-28 overflow-hidden ${avatarShape}`}>
                 <Image
                   src={avatarUrl}
                   alt={`${profile.display_name} profile photo`}
@@ -82,7 +104,7 @@ export default async function PublicProfilePage({
             </div>
           </div>
 
-          <div className="mt-4 text-center">
+          <div className={`mt-4 ${textAlignmentClass}`}>
             <h1 className="text-3xl font-semibold text-white">
               {profile.display_name}
             </h1>
@@ -100,7 +122,13 @@ export default async function PublicProfilePage({
 
           <div className="mt-5">
             <a href={`/api/public/vcf/${profile.slug}`} className="flex-1">
-              <Button className="w-full">
+              <Button
+                className="w-full"
+                style={{
+                  backgroundColor: accentColor,
+                  boxShadow: `0 16px 40px ${withAlpha(accentColor, "59")}`,
+                }}
+              >
                 <Download className="size-4" />
                 Save Contact
               </Button>

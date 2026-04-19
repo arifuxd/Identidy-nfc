@@ -17,15 +17,58 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const { profile } = data;
+  const { profile, socialLinks } = data;
+  const emails = [
+    profile.email_home
+      ? { value: profile.email_home, type: "home" as const }
+      : null,
+    profile.email_office
+      ? { value: profile.email_office, type: "office" as const }
+      : null,
+  ].filter(Boolean) as Array<{ value: string; type: "home" | "office" }>;
+
+  const phones = [
+    profile.phone_home
+      ? { value: profile.phone_home, type: "home" as const }
+      : null,
+    profile.phone_office
+      ? { value: profile.phone_office, type: "office" as const }
+      : null,
+  ].filter(Boolean) as Array<{ value: string; type: "home" | "office" }>;
+
+  const links = socialLinks
+    .map((item) => item.url?.trim())
+    .filter((item): item is string => Boolean(item));
+
+  const avatarUrl = profile.avatar_path?.trim();
+  let photoBase64: string | null = null;
+  let photoType: string | null = null;
+
+  if (avatarUrl) {
+    try {
+      const avatarResponse = await fetch(avatarUrl, { cache: "no-store" });
+
+      if (avatarResponse.ok) {
+        const bytes = await avatarResponse.arrayBuffer();
+        photoBase64 = Buffer.from(bytes).toString("base64");
+        photoType = avatarResponse.headers.get("content-type");
+      }
+    } catch {
+      // Skip avatar embedding when remote fetch fails.
+    }
+  }
+
   const vcard = buildVCard({
     name: profile.display_name,
-    email: profile.email_public,
-    phone: profile.phone_public,
+    emails,
+    phones,
     title: profile.job_title,
     company: profile.company_name,
     address: profile.address,
-    url: absoluteUrl(`/profile/${profile.slug}`),
+    profileUrl: absoluteUrl(`/profile/${profile.slug}`),
+    links,
+    photoBase64,
+    photoType,
   });
 
   return new NextResponse(vcard, {

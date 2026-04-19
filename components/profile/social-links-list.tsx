@@ -101,6 +101,12 @@ function toPhoneDigits(value: string) {
   return value.replace(/[^\d+]/g, "").replace(/^(\+)?0+/, "$1");
 }
 
+const badgeToneClasses: Record<"pink" | "green" | "blue", string> = {
+  pink: "bg-gradient-to-br from-red-500/16 to-red-700/8 border-red-300/20 text-white",
+  green: "border-emerald-400/80 bg-emerald-500/20 text-emerald-100",
+  blue: "bg-gradient-to-br from-emerald-500/16 to-green-700/8 border-emerald-300/20 text-white",
+};
+
 export function SocialLinksList({
   links,
   profile,
@@ -109,35 +115,64 @@ export function SocialLinksList({
   profile: Profile;
 }) {
   const socialLinks = links.filter((link) => link.url);
-  const phone = profile.phone_public?.trim();
-  const email = profile.email_public?.trim();
+  const phoneHome = profile.phone_home?.trim() || profile.phone_public?.trim() || "";
+  const phoneOffice = profile.phone_office?.trim() || "";
+  const emailHome = profile.email_home?.trim() || profile.email_public?.trim() || "";
+  const emailOffice = profile.email_office?.trim() || "";
   const location = profile.address?.trim();
-  const whatsappDigits = phone ? toPhoneDigits(phone).replace(/^\+/, "") : "";
+  const whatsappSource = phoneHome || phoneOffice;
+  const whatsappDigits = whatsappSource ? toPhoneDigits(whatsappSource).replace(/^\+/, "") : "";
 
   const contactItems = [
-    phone
+    phoneHome
       ? {
-          key: "phone",
+          key: "phone-home",
           label: "Phone",
-          value: phone,
-          href: `tel:${toPhoneDigits(phone)}`,
+          value: phoneHome,
+          href: `tel:${toPhoneDigits(phoneHome)}`,
           icon: Phone,
+          badgeLabel: "Home",
+          badgeTone: "pink",
         }
       : null,
-    email
+    phoneOffice
       ? {
-          key: "email",
+          key: "phone-office",
+          label: "Phone",
+          value: phoneOffice,
+          href: `tel:${toPhoneDigits(phoneOffice)}`,
+          icon: Phone,
+          badgeLabel: "Office",
+          badgeTone: "blue",
+        }
+      : null,
+    emailHome
+      ? {
+          key: "email-home",
           label: "Email",
-          value: email,
-          href: `mailto:${email}`,
+          value: emailHome,
+          href: `mailto:${emailHome}`,
           icon: Mail,
+          badgeLabel: "Home",
+          badgeTone: "pink",
+        }
+      : null,
+    emailOffice
+      ? {
+          key: "email-office",
+          label: "Email",
+          value: emailOffice,
+          href: `mailto:${emailOffice}`,
+          icon: Mail,
+          badgeLabel: "Office",
+          badgeTone: "blue",
         }
       : null,
     whatsappDigits
       ? {
           key: "whatsapp",
           label: "WhatsApp",
-          value: phone ?? "",
+          value: whatsappSource,
           href: `https://wa.me/${whatsappDigits}`,
           icon: WhatsappIcon,
           external: true,
@@ -160,6 +195,8 @@ export function SocialLinksList({
     href: string;
     icon: IconComponent;
     external?: boolean;
+    badgeLabel?: string;
+    badgeTone?: "pink" | "green" | "blue";
   }>;
 
   if (!socialLinks.length && !contactItems.length) {
@@ -206,13 +243,17 @@ export function SocialLinksList({
           <div className="mt-4 grid gap-3">
             {contactItems.map((item) => {
               const Icon = item.icon;
+              const badgeToneClass = item.badgeTone
+                ? badgeToneClasses[item.badgeTone]
+                : null;
+
               return (
                 <a
                   key={item.key}
                   href={item.href}
                   target={item.external ? "_blank" : undefined}
                   rel={item.external ? "noreferrer" : undefined}
-                  className="flex w-full items-start justify-between gap-3 overflow-hidden rounded-2xl border border-white/8 bg-white/4 px-4 py-3 transition hover:border-primary/40 hover:bg-white/7"
+                  className="relative flex w-full items-start justify-between gap-3 overflow-hidden rounded-2xl border border-white/8 bg-white/4 px-4 py-3 pr-20 transition hover:border-primary/40 hover:bg-white/7"
                 >
                   <span className="flex min-w-0 flex-1 items-center gap-3">
                     <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-primary/14 text-primary">
@@ -225,7 +266,16 @@ export function SocialLinksList({
                       </span>
                     </span>
                   </span>
-                  <ExternalLink className="mt-1 size-4 shrink-0 text-muted" />
+                  <span className="absolute right-3 top-2 flex items-end gap-1.5">
+                    {item.badgeLabel && badgeToneClass ? (
+                      <span
+                        className={`rounded-md border px-2.5 py-0.5 text-[10px] font-semibold tracking-[0.03em] ${badgeToneClass}`}
+                      >
+                        {item.badgeLabel}
+                      </span>
+                    ) : null}
+                    <ExternalLink className="mt-[1px] size-4 shrink-0 text-muted" />
+                  </span>
                 </a>
               );
             })}

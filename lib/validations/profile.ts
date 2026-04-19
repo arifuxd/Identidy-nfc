@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { SOCIAL_PLATFORM_OPTIONS } from "@/lib/constants";
+import { PROFILE_ACCENT_OPTIONS, SOCIAL_PLATFORM_OPTIONS } from "@/lib/constants";
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const nullableString = (max: number) =>
@@ -54,8 +54,9 @@ export const profileSchema = z.object({
   job_title: nullableString(100),
   company_name: nullableString(100),
   address: nullableString(220),
-  phone_public: nullableString(40),
-  email_public: z.preprocess(
+  phone_home: nullableString(40),
+  phone_office: nullableString(40),
+  email_home: z.preprocess(
     (value) => {
       if (typeof value !== "string") {
         return value;
@@ -66,6 +67,20 @@ export const profileSchema = z.object({
     },
     z.email().max(120).nullable().optional(),
   ),
+  email_office: z.preprocess(
+    (value) => {
+      if (typeof value !== "string") {
+        return value;
+      }
+
+      const trimmed = value.trim();
+      return trimmed.length ? trimmed : null;
+    },
+    z.email().max(120).nullable().optional(),
+  ),
+  accent_color: z.enum(PROFILE_ACCENT_OPTIONS).default("#3b82f6"),
+  avatar_shape: z.enum(["circle", "rounded"]).default("circle"),
+  profile_alignment: z.enum(["center", "left"]).default("center"),
   avatar_path: nullableString(500),
   cover_path: nullableString(500),
   is_published: z.boolean().default(true),

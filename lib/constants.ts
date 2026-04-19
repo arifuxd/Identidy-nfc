@@ -26,6 +26,15 @@ export const SOCIAL_PLATFORM_OPTIONS = [
   "custom",
 ] as const;
 
+export const PROFILE_ACCENT_OPTIONS = [
+  "#3b82f6", // Blue
+  "#ef4444", // Red
+  "#10b981", // Emerald
+  "#f59e0b", // Amber
+  "#8b5cf6", // Violet
+  "#ec4899", // Pink
+] as const;
+
 export const SOCIAL_PLATFORM_LABELS: Record<
   (typeof SOCIAL_PLATFORM_OPTIONS)[number],
   string

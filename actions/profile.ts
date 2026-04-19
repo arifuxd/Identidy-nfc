@@ -40,25 +40,61 @@ export async function saveProfileAction(values: ProfileFormValues) {
     return { error: "That slug is already taken." };
   }
 
-  const { data: updatedProfile, error: profileError } = await supabase
+  const baseProfileUpdate = {
+    display_name: parsed.display_name,
+    username: parsed.username,
+    slug: parsed.slug,
+    bio: parsed.bio ?? null,
+    job_title: parsed.job_title ?? null,
+    company_name: parsed.company_name ?? null,
+    address: parsed.address ?? null,
+    phone_public: parsed.phone_home ?? parsed.phone_office ?? null,
+    email_public: parsed.email_home ?? parsed.email_office ?? null,
+    avatar_path: parsed.avatar_path ?? null,
+    cover_path: parsed.cover_path ?? null,
+    accent_color: parsed.accent_color,
+    avatar_shape: parsed.avatar_shape,
+    profile_alignment: parsed.profile_alignment,
+    is_published: parsed.is_published,
+  };
+
+  const extendedProfileUpdate = {
+    ...baseProfileUpdate,
+    phone_home: parsed.phone_home ?? null,
+    phone_office: parsed.phone_office ?? null,
+    email_home: parsed.email_home ?? null,
+    email_office: parsed.email_office ?? null,
+  };
+
+  let profileResult = await supabase
     .from("profiles")
-    .update({
-      display_name: parsed.display_name,
-      username: parsed.username,
-      slug: parsed.slug,
-      bio: parsed.bio ?? null,
-      job_title: parsed.job_title ?? null,
-      company_name: parsed.company_name ?? null,
-      address: parsed.address ?? null,
-      phone_public: parsed.phone_public ?? null,
-      email_public: parsed.email_public ?? null,
-      avatar_path: parsed.avatar_path ?? null,
-      cover_path: parsed.cover_path ?? null,
-      is_published: parsed.is_published,
-    })
+    .update(extendedProfileUpdate)
     .eq("id", user.id)
     .select("id")
     .maybeSingle();
+
+  if (profileResult.error) {
+    const message = profileResult.error.message.toLowerCase();
+    const missingExtendedColumns =
+      message.includes("email_home") ||
+      message.includes("email_office") ||
+      message.includes("phone_home") ||
+      message.includes("phone_office") ||
+      message.includes("accent_color") ||
+      message.includes("avatar_shape") ||
+      message.includes("profile_alignment");
+
+    if (missingExtendedColumns) {
+      profileResult = await supabase
+        .from("profiles")
+        .update(baseProfileUpdate)
+        .eq("id", user.id)
+        .select("id")
+        .maybeSingle();
+    }
+  }
+
+  const { data: updatedProfile, error: profileError } = profileResult;
 
   if (profileError) {
     return { error: profileError.message };
