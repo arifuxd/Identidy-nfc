@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+:root {
+  --background: #07111f;
+  --background-soft: #0b1728;
+  --surface: rgba(14, 25, 44, 0.88);
+  --surface-strong: #13233c;
+  --foreground: #f2f7ff;
+  --muted: #8da4c7;
+  --primary: #3b82f6;
+  --primary-strong: #2563eb;
+  --border: rgba(141, 164, 199, 0.18);
+  --success: #10b981;
+  --danger: #ef4444;
+  --ring: rgba(59, 130, 246, 0.45);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-soft: var(--background-soft);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
+  --color-border: var(--border);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-space-grotesk);
+  --font-mono: var(--font-ibm-plex-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(59, 130, 246, 0.18), transparent 32%),
+    linear-gradient(180deg, #091322 0%, #050c16 100%);
+  color: var(--foreground);
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(59, 130, 246, 0.35);
+  color: var(--foreground);
+}
+
+.shell {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.glass-panel {
+  @apply border border-border bg-surface shadow-[0_12px_40px_rgba(4,10,20,0.35)] backdrop-blur-xl;
+}
+
+.section-title {
+  @apply text-3xl font-semibold tracking-tight text-white sm:text-4xl;
+}
+
+.section-copy {
+  @apply text-sm leading-7 text-muted sm:text-base;
+}
+
+.input-base {
+  @apply w-full rounded-2xl border border-border bg-white/5 px-4 py-3 text-sm text-white outline-none transition placeholder:text-muted/70 focus:border-primary focus:ring-4 focus:ring-[var(--ring)];
+}
+
+.card-grid {
+  @apply grid gap-4 md:grid-cols-2 xl:grid-cols-4;
+}
