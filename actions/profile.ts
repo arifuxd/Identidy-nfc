@@ -40,24 +40,35 @@ export async function saveProfileAction(values: ProfileFormValues) {
     return { error: "That slug is already taken." };
   }
 
-  const { error: profileError } = await supabase.from("profiles").upsert({
-    id: user.id,
-    display_name: parsed.display_name,
-    username: parsed.username,
-    slug: parsed.slug,
-    bio: parsed.bio ?? null,
-    job_title: parsed.job_title ?? null,
-    company_name: parsed.company_name ?? null,
-    address: parsed.address ?? null,
-    phone_public: parsed.phone_public ?? null,
-    email_public: parsed.email_public ?? null,
-    avatar_path: parsed.avatar_path ?? null,
-    cover_path: parsed.cover_path ?? null,
-    is_published: parsed.is_published,
-  });
+  const { data: updatedProfile, error: profileError } = await supabase
+    .from("profiles")
+    .update({
+      display_name: parsed.display_name,
+      username: parsed.username,
+      slug: parsed.slug,
+      bio: parsed.bio ?? null,
+      job_title: parsed.job_title ?? null,
+      company_name: parsed.company_name ?? null,
+      address: parsed.address ?? null,
+      phone_public: parsed.phone_public ?? null,
+      email_public: parsed.email_public ?? null,
+      avatar_path: parsed.avatar_path ?? null,
+      cover_path: parsed.cover_path ?? null,
+      is_published: parsed.is_published,
+    })
+    .eq("id", user.id)
+    .select("id")
+    .maybeSingle();
 
   if (profileError) {
     return { error: profileError.message };
+  }
+
+  if (!updatedProfile) {
+    return {
+      error:
+        "Profile row not found for this account. Please run the latest Supabase migration and try again.",
+    };
   }
 
   const { error: deleteLinksError } = await supabase

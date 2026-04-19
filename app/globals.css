@@ -51,6 +51,7 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
 }
 
 button,
@@ -58,6 +59,13 @@ input,
 textarea,
 select {
   font: inherit;
+}
+
+button,
+select,
+summary,
+label[for] {
+  cursor: pointer;
 }
 
 ::selection {

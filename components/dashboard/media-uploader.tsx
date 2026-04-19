@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import { useState, useTransition } from "react";
+import { useRef, useState, type ChangeEvent } from "react";
 import { LoaderCircle, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -22,8 +22,41 @@ export function MediaUploader({
   value,
   onChange,
 }: MediaUploaderProps) {
-  const [isPending, startTransition] = useTransition();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const handleUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setError(null);
+    setIsUploading(true);
+
+    try {
+      const supabase = createClient();
+      const filePath = `${userId}/${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
+      const { error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, file, {
+          upsert: true,
+        });
+
+      if (uploadError) {
+        setError(uploadError.message);
+        return;
+      }
+
+      const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
+      onChange(data.publicUrl);
+    } finally {
+      setIsUploading(false);
+      event.target.value = "";
+    }
+  };
 
   return (
     <div className="rounded-3xl border border-white/8 bg-white/4 p-4">
@@ -34,48 +67,30 @@ export function MediaUploader({
             Upload directly to Supabase Storage.
           </p>
         </div>
-        <label>
-          <input
-            className="hidden"
-            type="file"
-            accept="image/*"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-
-              if (!file) {
-                return;
-              }
-
-              setError(null);
-
-              startTransition(async () => {
-                const supabase = createClient();
-                const filePath = `${userId}/${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
-                const { error: uploadError } = await supabase.storage
-                  .from(bucket)
-                  .upload(filePath, file, {
-                    upsert: true,
-                  });
-
-                if (uploadError) {
-                  setError(uploadError.message);
-                  return;
-                }
-
-                const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
-                onChange(data.publicUrl);
-              });
-            }}
-          />
-          <Button type="button" variant="secondary">
-            {isPending ? (
-              <LoaderCircle className="size-4 animate-spin" />
-            ) : (
-              <Upload className="size-4" />
-            )}
-            Upload
-          </Button>
+        <label htmlFor={`${bucket}-upload-${userId}`} className="sr-only">
+          Upload {label}
         </label>
+        <input
+          id={`${bucket}-upload-${userId}`}
+          ref={inputRef}
+          className="hidden"
+          type="file"
+          accept="image/*"
+          onChange={handleUpload}
+        />
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={isUploading}
+          onClick={() => inputRef.current?.click()}
+        >
+          {isUploading ? (
+            <LoaderCircle className="size-4 animate-spin" />
+          ) : (
+            <Upload className="size-4" />
+          )}
+          {isUploading ? "Uploading..." : "Upload"}
+        </Button>
       </div>
 
       {value ? (
