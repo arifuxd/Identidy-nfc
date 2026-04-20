@@ -209,7 +209,6 @@ export function Style2Corporate({ profile, socialLinks, experiences }: ProfileSt
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
   const accent = profile.accent_color || "#3b82f6";
-  const avatarShape = profile.avatar_shape === "rounded" ? "rounded-lg" : "rounded-full";
   const roleText = [profile.job_title, profile.company_name].filter(Boolean).join(" · ");
   const sortedLinks = [...socialLinks].sort((a, b) => a.sort_order - b.sort_order);
   const contacts = buildContacts(profile);
@@ -223,7 +222,7 @@ export function Style2Corporate({ profile, socialLinks, experiences }: ProfileSt
   return (
     <div
       style={profileStyle}
-      className="overflow-hidden rounded-[1rem] border border-[#1a1a22] bg-[#0d0d0f] text-[#e2e8f0]"
+      className="overflow-hidden border-[#1a1a22] bg-[#0d0d0f] text-[#e2e8f0]"
     >
       <section className="relative h-[148px] overflow-hidden bg-[#0a0a10]">
         <Image
@@ -239,17 +238,17 @@ export function Style2Corporate({ profile, socialLinks, experiences }: ProfileSt
       </section>
 
       <section className="px-[18px]">
-        <div className="-mt-8 mb-3.5 flex items-end gap-3">
+        <div className="-mt-14 mb-3.5 flex items-end gap-3">
           <div
-            className={`flex h-[72px] w-[72px] shrink-0 items-center justify-center overflow-hidden border-2 border-[#0d0d0f] bg-[#13131a] shadow-[0_0_0_1.5px_#2a2a35] ${avatarShape}`}
+            className={`flex h-[112px] w-[112px] shrink-0 items-center justify-center overflow-hidden border-2 border-[#0d0d0f] bg-[#13131a] shadow-[0_0_0_1.5px_#2a2a35] rounded-full`}
           >
-            <div className={`relative h-full w-full ${avatarShape}`}>
+            <div className={`relative h-full w-full rounded-full`}>
               <Image
                 src={avatarUrl}
                 alt={`${profile.display_name} profile photo`}
                 fill
                 className="object-cover"
-                sizes="72px"
+                sizes="112px"
                 quality={100}
                 priority
               />

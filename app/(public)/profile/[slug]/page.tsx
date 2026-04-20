@@ -60,8 +60,10 @@ export default async function PublicProfilePage({
         : undefined;
   const styleId = resolveProfileStyleDefinition(forcedStyle ?? profile.profile_style).id;
 
+  const isFullWidth = styleId !== "style-1";
+
   return (
-    <main className="mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-6 sm:py-8">
+    <main className={isFullWidth ? "mx-auto min-h-screen w-full max-w-xl" : "mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-6 sm:py-8"}>
       <PublicProfileViewTracker slug={profile.slug} />
       <DebugStyleFlyout activeStyle={styleId} />
       {styleId === "style-2" ? (

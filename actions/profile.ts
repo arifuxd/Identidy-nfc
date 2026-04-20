@@ -184,7 +184,6 @@ export async function saveProfileStylingAction(values: ProfileStylingValues) {
     .update({
       profile_style: parsed.profile_style,
       accent_color: parsed.accent_color,
-      avatar_shape: parsed.avatar_shape,
     })
     .eq("id", user.id);
 
@@ -192,8 +191,7 @@ export async function saveProfileStylingAction(values: ProfileStylingValues) {
     const message = error.message.toLowerCase();
     const missingStylingColumns =
       message.includes("profile_style") ||
-      message.includes("accent_color") ||
-      message.includes("avatar_shape");
+      message.includes("accent_color");
 
     if (missingStylingColumns) {
       return {

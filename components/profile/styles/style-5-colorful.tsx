@@ -223,7 +223,7 @@ export function Style5Colorful({ profile, socialLinks, experiences }: ProfileSty
 
   return (
     <div
-      className={`${spaceGrotesk.className} overflow-hidden rounded-[1.2rem] border-[3px] border-black bg-[#f5f0e8] text-black shadow-[6px_6px_0_#000]`}
+      className={`${spaceGrotesk.className} overflow-hidden bg-[#f5f0e8] text-black`}
     >
       <section className="relative h-52 overflow-visible border-b-[3px] border-black">
         <Image
@@ -235,20 +235,20 @@ export function Style5Colorful({ profile, socialLinks, experiences }: ProfileSty
           quality={100}
           priority
         />
-        <div className="absolute -bottom-[52px] left-5 z-20 h-[104px] w-[104px] -rotate-2 border-4 border-black bg-[#FF3B3B] shadow-[5px_5px_0_#000]">
+        <div className="absolute -bottom-[56px] left-5 z-20 h-[112px] w-[112px] -rotate-2 border-4 border-black bg-[#FF3B3B] shadow-[5px_5px_0_#000]">
           <Image
             src={avatarUrl}
             alt={`${profile.display_name} profile photo`}
             fill
             className="object-cover"
-            sizes="104px"
+            sizes="112px"
             quality={100}
             priority
           />
         </div>
       </section>
 
-      <section className="border-b-[3px] border-black px-5 pb-4 pt-[66px]">
+      <section className="border-b-[3px] border-black px-5 pb-4 pt-[70px]">
         <h1 className={`${spaceMono.className} text-[30px] font-bold leading-none tracking-[-0.04em]`}>
           {profile.display_name}
           <span className="text-[#FF3B3B]">.</span>

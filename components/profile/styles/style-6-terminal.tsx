@@ -147,7 +147,16 @@ export function Style6Terminal({ profile, socialLinks, experiences }: ProfileSty
   const sortedLinks = [...socialLinks].sort((a, b) => a.sort_order - b.sort_order);
 
   return (
-    <div className="overflow-hidden rounded-[6px] border border-white/8 bg-[#0d0d0d] font-mono text-[#c9c9c4]">
+    <div className="overflow-hidden bg-[#0d0d0d] font-mono text-[#c9c9c4]">
+      <div className="flex items-center gap-2.5 border-b border-white/10 bg-black/70 px-3.5 py-2.5">
+        <span className="h-2 w-2 rounded-full bg-[#ff5f57]/80" />
+        <span className="h-2 w-2 rounded-full bg-[#febc2e]/80" />
+        <span className="h-2 w-2 rounded-full bg-[#28c840]/80" />
+        <span className="ml-1 text-[11px] tracking-[0.04em] text-emerald-400/80">
+          <span className="text-emerald-300/55">~</span>/profile/{profile.slug}
+        </span>
+      </div>
+
       <section className="relative h-[180px] overflow-hidden">
         <Image
           src={coverUrl}
@@ -159,23 +168,15 @@ export function Style6Terminal({ profile, socialLinks, experiences }: ProfileSty
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-br from-[#0d1a12]/55 via-[#0d0f1a]/45 to-[#0d1410]/55" />
-        <div className="absolute inset-x-0 top-0 flex items-center gap-2.5 border-b border-white/10 bg-black/70 px-3.5 py-2.5">
-          <span className="h-2 w-2 rounded-full bg-[#ff5f57]/80" />
-          <span className="h-2 w-2 rounded-full bg-[#febc2e]/80" />
-          <span className="h-2 w-2 rounded-full bg-[#28c840]/80" />
-          <span className="ml-1 text-[11px] tracking-[0.04em] text-emerald-400/80">
-            <span className="text-emerald-300/55">~</span>/profile
-          </span>
-        </div>
       </section>
 
       <section className="relative z-10 mb-1 flex items-end gap-3 px-4 pt-0">
-        <div className="-mt-7 h-[72px] w-[72px] shrink-0 overflow-hidden rounded-md border-2 border-[#1a2e1f] bg-[#141414] shadow-[0_0_0_1px_rgba(74,222,128,0.15)]">
+        <div className="-mt-11 h-[90px] w-[90px] shrink-0 overflow-hidden rounded-md border-2 border-[#1a2e1f] bg-[#141414] shadow-[0_0_0_1px_rgba(74,222,128,0.15)]">
           <Image
             src={avatarUrl}
             alt={`${profile.display_name} profile photo`}
-            width={72}
-            height={72}
+            width={90}
+            height={90}
             className="h-full w-full object-cover"
             quality={100}
           />

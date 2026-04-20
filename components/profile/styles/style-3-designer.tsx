@@ -350,7 +350,6 @@ export function Style3Designer({ profile, socialLinks, experiences }: ProfileSty
   const accentSoft = mixHex(accent, [255, 255, 255], 0.28);
   const accentDeep = mixHex(accent, [0, 0, 0], 0.35);
   const accentCyan = mixHex(accent, [56, 189, 248], 0.3);
-  const avatarShape = profile.avatar_shape === "rounded" ? "rounded-3xl" : "rounded-full";
   const sortedLinks = [...socialLinks].sort((a, b) => a.sort_order - b.sort_order);
   const contacts = buildContactItems(profile);
   const showJobOrCompany = profile.job_title || profile.company_name;
@@ -372,7 +371,7 @@ export function Style3Designer({ profile, socialLinks, experiences }: ProfileSty
   return (
     <div
       style={profileVars}
-      className={`${dmSans.className} overflow-hidden rounded-[2rem] border border-[var(--border)] bg-[var(--c1)] text-[var(--text1)] shadow-[0_24px_52px_rgba(4,4,10,0.42)]`}
+      className={`${dmSans.className} overflow-hidden bg-[var(--c1)] text-[var(--text1)]`}
     >
       <section className="relative h-40 overflow-visible sm:h-52">
         <div className="absolute inset-0 overflow-hidden">
@@ -396,18 +395,18 @@ export function Style3Designer({ profile, socialLinks, experiences }: ProfileSty
 
         <div className="absolute -bottom-14 left-1/2 z-10 -translate-x-1/2">
           <div
-            className={`size-[120px] p-[3px] shadow-[0_0_34px_var(--glow)] ${avatarShape}`}
+            className={`size-[112px] p-[3px] shadow-[0_0_34px_var(--glow)] rounded-full`}
             style={{
               background: `conic-gradient(from 180deg, ${accent}, ${accentSoft}, ${accentCyan}, ${accent})`,
             }}
           >
-            <div className={`relative size-full overflow-hidden border-[4px] border-[var(--c1)] ${avatarShape}`}>
+            <div className={`relative size-full overflow-hidden border-[4px] border-[var(--c1)] rounded-full`}>
               <Image
                 src={avatarUrl}
                 alt={`${profile.display_name} profile photo`}
                 fill
                 className="object-cover object-center"
-                sizes="120px"
+                sizes="112px"
                 quality={100}
                 priority
               />

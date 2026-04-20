@@ -21,7 +21,6 @@ export function Style1Default({ profile, socialLinks, experiences }: ProfileStyl
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
   const accentColor = profile.accent_color || "#3b82f6";
-  const avatarShape = profile.avatar_shape === "rounded" ? "rounded-3xl" : "rounded-full";
   const profileStyle = {
     "--primary": accentColor,
     "--primary-strong": accentColor,
@@ -44,8 +43,8 @@ export function Style1Default({ profile, socialLinks, experiences }: ProfileStyl
         </div>
         <div className="px-5 pb-5">
           <div className="relative z-20 -mt-16 flex justify-center">
-            <div className={`p-[3px] ring-3 ring-primary shadow-xl shadow-primary/20 ${avatarShape}`}>
-              <div className={`relative size-28 overflow-hidden ${avatarShape}`}>
+            <div className={`p-[3px] ring-3 ring-primary shadow-xl shadow-primary/20 rounded-full`}>
+              <div className={`relative size-28 overflow-hidden rounded-full`}>
                 <Image
                   src={avatarUrl}
                   alt={`${profile.display_name} profile photo`}

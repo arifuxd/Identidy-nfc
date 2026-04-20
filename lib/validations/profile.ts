@@ -92,7 +92,6 @@ export type ProfileFormValues = z.output<typeof profileSchema>;
 export const profileStylingSchema = z.object({
   profile_style: z.enum(PROFILE_STYLE_OPTIONS).default("style-1"),
   accent_color: z.enum(PROFILE_ACCENT_OPTIONS).default("#3b82f6"),
-  avatar_shape: z.enum(["circle", "rounded"]).default("circle"),
 });
 
 export type ProfileStylingInput = z.input<typeof profileStylingSchema>;

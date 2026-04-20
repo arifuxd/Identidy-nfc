@@ -217,7 +217,6 @@ export function Style4Corporate({ profile, socialLinks, experiences }: ProfileSt
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
   const accent = profile.accent_color || "#3b82f6";
-  const avatarShape = profile.avatar_shape === "rounded" ? "rounded-2xl" : "rounded-full";
   const softBg = withAlpha(accent, "1a");
   const lineColor = withAlpha(accent, "55");
   const borderColor = withAlpha(accent, "33");
@@ -234,7 +233,7 @@ export function Style4Corporate({ profile, socialLinks, experiences }: ProfileSt
   return (
     <div
       style={styleVars}
-      className="overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#f7f9fc] text-[#0f1d34] shadow-[0_16px_40px_rgba(4,10,20,0.2)]"
+      className="overflow-hidden bg-[#f7f9fc] text-[#0f1d34]"
     >
       <section className="relative h-[180px] overflow-hidden">
         <Image
@@ -250,14 +249,14 @@ export function Style4Corporate({ profile, socialLinks, experiences }: ProfileSt
       </section>
 
       <section className="relative px-6 pb-1">
-        <div className="-mt-11 flex justify-center">
-          <div className={`relative h-[88px] w-[88px] overflow-hidden border-[3px] border-[#f7f9fc] bg-[#e7eef8] ${avatarShape}`}>
+        <div className="-mt-14 flex justify-center">
+          <div className={`relative h-[112px] w-[112px] overflow-hidden border-[3px] border-[#f7f9fc] bg-[#e7eef8] rounded-full`}>
             <Image
               src={avatarUrl}
               alt={`${profile.display_name} profile photo`}
               fill
               className="object-cover"
-              sizes="88px"
+              sizes="112px"
               quality={100}
               priority
             />
