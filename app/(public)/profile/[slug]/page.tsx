@@ -63,7 +63,7 @@ export default async function PublicProfilePage({
   return (
     <main className="mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-6 sm:py-8">
       <PublicProfileViewTracker slug={profile.slug} />
-      {process.env.NODE_ENV !== "production" ? <DebugStyleFlyout activeStyle={styleId} /> : null}
+      <DebugStyleFlyout activeStyle={styleId} />
       {styleId === "style-2" ? (
         <Style2Corporate
           profile={profile}
