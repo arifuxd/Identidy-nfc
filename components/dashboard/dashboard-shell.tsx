@@ -1,5 +1,13 @@
 import Link from "next/link";
-import { LayoutDashboard, Shield, UserRound, BarChart3, Settings, LogOut } from "lucide-react";
+import {
+  LayoutDashboard,
+  Shield,
+  UserRound,
+  BarChart3,
+  Settings,
+  LogOut,
+  SwatchBook,
+} from "lucide-react";
 
 import { logoutAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
@@ -8,6 +16,7 @@ import { cn } from "@/lib/utils";
 const items = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/profile", label: "Profile", icon: UserRound },
+  { href: "/dashboard/styling", label: "Styling", icon: SwatchBook },
   { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];

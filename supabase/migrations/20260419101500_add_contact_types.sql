@@ -5,7 +5,8 @@ alter table public.profiles
   add column if not exists email_office text,
   add column if not exists accent_color text not null default '#3b82f6',
   add column if not exists avatar_shape text not null default 'circle',
-  add column if not exists profile_alignment text not null default 'center';
+  add column if not exists profile_alignment text not null default 'center',
+  add column if not exists profile_style text not null default 'style-1';
 
 update public.profiles
 set
@@ -46,3 +47,10 @@ alter table public.profiles
 alter table public.profiles
   add constraint profiles_profile_alignment_check
   check (profile_alignment in ('center', 'left'));
+
+alter table public.profiles
+  drop constraint if exists profiles_profile_style_check;
+
+alter table public.profiles
+  add constraint profiles_profile_style_check
+  check (profile_style in ('style-1', 'style-2', 'style-3'));

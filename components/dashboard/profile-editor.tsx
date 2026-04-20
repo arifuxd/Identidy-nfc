@@ -6,17 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
 
 import { saveProfileAction } from "@/actions/profile";
+import { MediaUploader } from "@/components/dashboard/media-uploader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  DEFAULT_AVATAR,
-  DEFAULT_COVER,
-  PROFILE_ACCENT_OPTIONS,
-  SOCIAL_PLATFORM_LABELS,
-  SOCIAL_PLATFORM_OPTIONS,
-} from "@/lib/constants";
+import { SOCIAL_PLATFORM_LABELS, SOCIAL_PLATFORM_OPTIONS } from "@/lib/constants";
 import { normalizeSlug } from "@/lib/slug";
 import {
   profileSchema,
@@ -24,7 +19,6 @@ import {
   type ProfileFormValues,
 } from "@/lib/validations/profile";
 import type { Database } from "@/types/database";
-import { MediaUploader } from "@/components/dashboard/media-uploader";
 
 interface ProfileEditorProps {
   userId: string;
@@ -57,11 +51,6 @@ export function ProfileEditor({
   const [resultMessage, setResultMessage] = useState<string | null>(null);
   const [resultType, setResultType] = useState<"success" | "error" | null>(null);
   const [isPending, startTransition] = useTransition();
-  const profileAccent = PROFILE_ACCENT_OPTIONS.includes(
-    profile.accent_color as (typeof PROFILE_ACCENT_OPTIONS)[number],
-  )
-    ? (profile.accent_color as (typeof PROFILE_ACCENT_OPTIONS)[number])
-    : "#3b82f6";
 
   const defaultValues = useMemo<ProfileFormInput>(
     () => ({
@@ -76,10 +65,6 @@ export function ProfileEditor({
       phone_office: profile.phone_office ?? "",
       email_home: profile.email_home ?? profile.email_public ?? "",
       email_office: profile.email_office ?? "",
-      accent_color: profileAccent,
-      avatar_shape: profile.avatar_shape === "rounded" ? "rounded" : "circle",
-      profile_alignment:
-        profile.profile_alignment === "left" ? "left" : "center",
       avatar_path: profile.avatar_path ?? "",
       cover_path: profile.cover_path ?? "",
       is_published: profile.is_published,
@@ -106,7 +91,7 @@ export function ProfileEditor({
         }),
       ),
     }),
-    [experiences, profile, profileAccent, socialLinks],
+    [experiences, profile, socialLinks],
   );
 
   const form = useForm<ProfileFormInput, undefined, ProfileFormValues>({
@@ -125,24 +110,6 @@ export function ProfileEditor({
   });
 
   const slugValue = form.watch("slug");
-  const accentColor = form.watch("accent_color");
-  const profileAlignment = form.watch("profile_alignment");
-  const avatarShape = form.watch("avatar_shape");
-  const previewDisplayName = String(form.watch("display_name") ?? "");
-  const previewJobTitle = String(form.watch("job_title") ?? "");
-  const previewCompany = String(form.watch("company_name") ?? "");
-  const previewBio = String(form.watch("bio") ?? "");
-  const previewCover =
-    (form.watch("cover_path") as string | undefined) ||
-    profile.cover_path ||
-    DEFAULT_COVER;
-  const previewAvatar =
-    (form.watch("avatar_path") as string | undefined) ||
-    profile.avatar_path ||
-    DEFAULT_AVATAR;
-  const alignmentClass = profileAlignment === "left" ? "text-left" : "text-center";
-  const avatarRowClass = profileAlignment === "left" ? "justify-start" : "justify-center";
-  const avatarShapeClass = avatarShape === "rounded" ? "rounded-3xl" : "rounded-full";
   const errors = form.formState.errors;
 
   useEffect(() => {
@@ -217,120 +184,14 @@ export function ProfileEditor({
         <div className="flex flex-col gap-6">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.28em] text-blue-200/72">
-              Styling
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold text-white">
-              Theme & layout
-            </h2>
-            <p className="mt-2 text-sm text-muted">
-              Preview updates live as you change these settings.
-            </p>
-          </div>
-
-          <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0c1729]">
-              <div
-                className="h-28 w-full bg-cover bg-center"
-                style={{
-                  backgroundImage: `url(${previewCover})`,
-                }}
-              />
-            <div className="p-4">
-              <div className={`-mt-12 flex ${avatarRowClass}`}>
-                <div
-                  className={`size-24 border-4 border-[#0c1729] bg-cover bg-center ${avatarShapeClass}`}
-                  style={{
-                    backgroundImage: `url(${previewAvatar})`,
-                  }}
-                />
-              </div>
-              <div className={`mt-4 ${alignmentClass}`}>
-                <p className="text-xl font-semibold text-white">{previewDisplayName}</p>
-                {(previewJobTitle || previewCompany) ? (
-                  <p className="mt-1 text-sm text-blue-100/78">
-                    {[previewJobTitle, previewCompany]
-                      .filter(Boolean)
-                      .join(" at ")}
-                  </p>
-                ) : null}
-                {previewBio ? (
-                  <p className="mt-2 text-sm text-muted">{previewBio}</p>
-                ) : null}
-              </div>
-              <div className="mt-4">
-                <button
-                  type="button"
-                  className="w-full rounded-full px-5 py-3 text-sm font-medium text-white"
-                  style={{
-                    backgroundColor: accentColor,
-                    boxShadow: `0 16px 40px ${accentColor}59`,
-                  }}
-                >
-                  Save Contact
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2 md:col-span-2">
-              <label className="text-sm text-blue-50/85">Accent color</label>
-              <div className="flex flex-wrap gap-3">
-                {PROFILE_ACCENT_OPTIONS.map((color) => (
-                  <button
-                    key={color}
-                    type="button"
-                    aria-label={`Select accent color ${color}`}
-                    className={`h-10 w-14 rounded-md border-2 transition ${
-                      accentColor === color
-                        ? "border-white"
-                        : "border-transparent hover:border-white/50"
-                    }`}
-                    style={{ backgroundColor: color }}
-                    onClick={() => form.setValue("accent_color", color)}
-                  />
-                ))}
-              </div>
-              <FieldErrorText message={errors.accent_color?.message} />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm text-blue-50/85">Profile picture shape</label>
-              <select className="input-base" {...form.register("avatar_shape")}>
-                <option value="circle" className="bg-[#0b1728]">
-                  Rounded circle
-                </option>
-                <option value="rounded" className="bg-[#0b1728]">
-                  Rounded rectangle
-                </option>
-              </select>
-              <FieldErrorText message={errors.avatar_shape?.message} />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm text-blue-50/85">Alignment</label>
-              <select className="input-base" {...form.register("profile_alignment")}>
-                <option value="center" className="bg-[#0b1728]">
-                  Middle align
-                </option>
-                <option value="left" className="bg-[#0b1728]">
-                  Left align
-                </option>
-              </select>
-              <FieldErrorText message={errors.profile_alignment?.message} />
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      <Card className="rounded-[2rem]">
-        <div className="flex flex-col gap-6">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-[0.28em] text-blue-200/72">
               Profile Basics
             </p>
             <h2 className="mt-3 text-2xl font-semibold text-white">
               Public identity
             </h2>
+            <p className="mt-2 text-sm text-muted">
+              Style settings are now under the Styling tab.
+            </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">

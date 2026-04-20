@@ -7,7 +7,9 @@ import { normalizeSlug, isReservedSlug } from "@/lib/slug";
 import { createClient } from "@/lib/supabase/server";
 import {
   profileSchema,
+  profileStylingSchema,
   type ProfileFormValues,
+  type ProfileStylingValues,
 } from "@/lib/validations/profile";
 
 export async function saveProfileAction(values: ProfileFormValues) {
@@ -52,9 +54,6 @@ export async function saveProfileAction(values: ProfileFormValues) {
     email_public: parsed.email_home ?? parsed.email_office ?? null,
     avatar_path: parsed.avatar_path ?? null,
     cover_path: parsed.cover_path ?? null,
-    accent_color: parsed.accent_color,
-    avatar_shape: parsed.avatar_shape,
-    profile_alignment: parsed.profile_alignment,
     is_published: parsed.is_published,
   };
 
@@ -79,10 +78,7 @@ export async function saveProfileAction(values: ProfileFormValues) {
       message.includes("email_home") ||
       message.includes("email_office") ||
       message.includes("phone_home") ||
-      message.includes("phone_office") ||
-      message.includes("accent_color") ||
-      message.includes("avatar_shape") ||
-      message.includes("profile_alignment");
+      message.includes("phone_office");
 
     if (missingExtendedColumns) {
       profileResult = await supabase
@@ -170,4 +166,50 @@ export async function saveProfileAction(values: ProfileFormValues) {
   revalidatePath(`/profile/${parsed.slug}`);
 
   return { success: "Profile updated successfully." };
+}
+
+export async function saveProfileStylingAction(values: ProfileStylingValues) {
+  const user = await requireUser();
+  const supabase = await createClient();
+  const parsed = profileStylingSchema.parse(values);
+
+  const { data: existingProfile } = await supabase
+    .from("profiles")
+    .select("slug")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      profile_style: parsed.profile_style,
+      accent_color: parsed.accent_color,
+      avatar_shape: parsed.avatar_shape,
+    })
+    .eq("id", user.id);
+
+  if (error) {
+    const message = error.message.toLowerCase();
+    const missingStylingColumns =
+      message.includes("profile_style") ||
+      message.includes("accent_color") ||
+      message.includes("avatar_shape");
+
+    if (missingStylingColumns) {
+      return {
+        error:
+          "Styling columns are missing in the database. Please run the latest Supabase migration and try again.",
+      };
+    }
+
+    return { error: error.message };
+  }
+
+  revalidatePath("/dashboard/styling");
+  revalidatePath("/dashboard/profile");
+  if (existingProfile?.slug) {
+    revalidatePath(`/profile/${existingProfile.slug}`);
+  }
+
+  return { success: "Styling updated successfully." };
 }

@@ -120,6 +120,7 @@ export type Database = {
           phone_home: string | null;
           phone_office: string | null;
           profile_alignment: string;
+          profile_style: string;
           slug: string;
           updated_at: string;
           username: string;
@@ -146,6 +147,7 @@ export type Database = {
           phone_home?: string | null;
           phone_office?: string | null;
           profile_alignment?: string;
+          profile_style?: string;
           slug: string;
           updated_at?: string;
           username: string;
@@ -172,6 +174,7 @@ export type Database = {
           phone_home?: string | null;
           phone_office?: string | null;
           profile_alignment?: string;
+          profile_style?: string;
           slug?: string;
           updated_at?: string;
           username?: string;

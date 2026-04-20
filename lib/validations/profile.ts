@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { PROFILE_ACCENT_OPTIONS, SOCIAL_PLATFORM_OPTIONS } from "@/lib/constants";
+import { PROFILE_STYLE_OPTIONS } from "@/lib/profile-styles";
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const nullableString = (max: number) =>
@@ -78,9 +79,6 @@ export const profileSchema = z.object({
     },
     z.email().max(120).nullable().optional(),
   ),
-  accent_color: z.enum(PROFILE_ACCENT_OPTIONS).default("#3b82f6"),
-  avatar_shape: z.enum(["circle", "rounded"]).default("circle"),
-  profile_alignment: z.enum(["center", "left"]).default("center"),
   avatar_path: nullableString(500),
   cover_path: nullableString(500),
   is_published: z.boolean().default(true),
@@ -90,3 +88,12 @@ export const profileSchema = z.object({
 
 export type ProfileFormInput = z.input<typeof profileSchema>;
 export type ProfileFormValues = z.output<typeof profileSchema>;
+
+export const profileStylingSchema = z.object({
+  profile_style: z.enum(PROFILE_STYLE_OPTIONS).default("style-1"),
+  accent_color: z.enum(PROFILE_ACCENT_OPTIONS).default("#3b82f6"),
+  avatar_shape: z.enum(["circle", "rounded"]).default("circle"),
+});
+
+export type ProfileStylingInput = z.input<typeof profileStylingSchema>;
+export type ProfileStylingValues = z.output<typeof profileStylingSchema>;
