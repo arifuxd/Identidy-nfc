@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { DebugStyleFlyout } from "@/components/profile/debug-style-flyout";
 import { PublicProfileViewTracker } from "@/components/profile/public-profile-view-tracker";
 import { Style1Default } from "@/components/profile/styles/style-1-default";
 import { Style2Corporate } from "@/components/profile/styles/style-2-corporate";
@@ -12,6 +13,7 @@ import { getProfileBundleBySlug } from "@/lib/db/profiles";
 import { resolveProfileStyleDefinition } from "@/lib/profile-styles";
 
 type Params = Promise<{ slug: string }>;
+type SearchParams = Promise<{ style?: string | string[] }>;
 
 export async function generateMetadata({
   params,
@@ -36,10 +38,13 @@ export async function generateMetadata({
 
 export default async function PublicProfilePage({
   params,
+  searchParams,
 }: {
   params: Params;
+  searchParams: SearchParams;
 }) {
   const { slug } = await params;
+  const query = await searchParams;
   const data = await getProfileBundleBySlug(slug);
 
   if (!data) {
@@ -47,11 +52,18 @@ export default async function PublicProfilePage({
   }
 
   const { profile, socialLinks, experiences } = data;
-  const styleId = resolveProfileStyleDefinition(profile.profile_style).id;
+  const forcedStyle =
+    typeof query.style === "string"
+      ? query.style
+      : Array.isArray(query.style)
+        ? query.style[0]
+        : undefined;
+  const styleId = resolveProfileStyleDefinition(forcedStyle ?? profile.profile_style).id;
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-6 sm:py-8">
       <PublicProfileViewTracker slug={profile.slug} />
+      {process.env.NODE_ENV !== "production" ? <DebugStyleFlyout activeStyle={styleId} /> : null}
       {styleId === "style-2" ? (
         <Style2Corporate
           profile={profile}
