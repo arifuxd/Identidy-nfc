@@ -9,6 +9,8 @@ import { Style3Designer } from "@/components/profile/styles/style-3-designer";
 import { Style4Corporate } from "@/components/profile/styles/style-4-corporate";
 import { Style5Colorful } from "@/components/profile/styles/style-5-colorful";
 import { Style6Terminal } from "@/components/profile/styles/style-6-terminal";
+import { Style7Scifi } from "@/components/profile/styles/style-7-scifi";
+import { Style8Cinema } from "@/components/profile/styles/style-8-cinema";
 import { getProfileBundleBySlug } from "@/lib/db/profiles";
 import { resolveProfileStyleDefinition } from "@/lib/profile-styles";
 
@@ -92,6 +94,18 @@ export default async function PublicProfilePage({
         />
       ) : styleId === "style-6" ? (
         <Style6Terminal
+          profile={profile}
+          socialLinks={socialLinks}
+          experiences={experiences}
+        />
+      ) : styleId === "style-7" ? (
+        <Style7Scifi
+          profile={profile}
+          socialLinks={socialLinks}
+          experiences={experiences}
+        />
+      ) : styleId === "style-8" ? (
+        <Style8Cinema
           profile={profile}
           socialLinks={socialLinks}
           experiences={experiences}

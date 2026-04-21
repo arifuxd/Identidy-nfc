@@ -197,6 +197,37 @@ function PreviewStyle6({ coverUrl, avatarUrl, profile }: {
   );
 }
 
+function PreviewStyle7({ coverUrl, avatarUrl, profile }: {
+  coverUrl: string; avatarUrl: string;
+  profile: Database["public"]["Tables"]["profiles"]["Row"];
+}) {
+  return (
+    <div className="overflow-hidden rounded-3xl border border-[rgba(0,212,255,0.12)] bg-[#030712] font-sans text-[#e8f4ff]">
+      <div className="relative h-24 bg-cover bg-center" style={{ backgroundImage: `url(${coverUrl})`, filter: 'brightness(0.4) saturate(0.8) hue-rotate(10deg)' }}>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#030712]" />
+      </div>
+      <div className="-mt-8 flex justify-center relative z-10">
+        <div className="size-16 overflow-hidden rounded-full border-2 border-[#030712] bg-cover bg-center shadow-[0_0_15px_rgba(0,212,255,0.2)]" style={{ backgroundImage: `url(${avatarUrl})` }} />
+      </div>
+      <div className="px-4 pb-4 pt-2 text-center">
+        <p className="text-[13px] font-bold tracking-widest text-[#e8f4ff] uppercase" style={{ textShadow: "0 0 10px rgba(0,212,255,0.3)" }}>
+          {profile.display_name}
+        </p>
+        <div className="mt-1 flex items-center justify-center gap-2 opacity-80">
+          <div className="h-[1px] w-4 bg-gradient-to-r from-transparent to-[#00d4ff]" />
+          <p className="text-[9px] uppercase tracking-[1.5px] text-[#67e8f9]">{(profile.job_title || "PRO").substring(0, 15)}</p>
+          <div className="h-[1px] w-4 bg-gradient-to-r from-[#00d4ff] to-transparent" />
+        </div>
+        <div className="mt-3">
+          <button type="button" className="w-full rounded border border-[rgba(0,212,255,0.35)] bg-[rgba(0,212,255,0.08)] px-5 py-2 text-[10px] font-bold uppercase tracking-widest text-[#e8f4ff] shadow-[0_0_10px_rgba(0,212,255,0.1)] backdrop-blur-sm">
+            Save Contact
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function StylingEditor({ profile }: StylingEditorProps) {
   const [resultMessage, setResultMessage] = useState<string | null>(null);
   const [resultType, setResultType] = useState<"success" | "error" | null>(null);
@@ -226,7 +257,7 @@ export function StylingEditor({ profile }: StylingEditorProps) {
     () => PROFILE_STYLE_DEFINITIONS.find((item) => item.id === profileStyle),
     [profileStyle],
   );
-  const isColorfulStyle = profileStyle === "style-5";
+  const isColorfulStyle = profileStyle === "style-5" || profileStyle === "style-7" || profileStyle === "style-8";
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
 
@@ -243,6 +274,10 @@ export function StylingEditor({ profile }: StylingEditorProps) {
         return <PreviewStyle5 coverUrl={coverUrl} avatarUrl={avatarUrl} profile={profile} />;
       case "style-6":
         return <PreviewStyle6 coverUrl={coverUrl} avatarUrl={avatarUrl} profile={profile} />;
+      case "style-7":
+        return <PreviewStyle7 coverUrl={coverUrl} avatarUrl={avatarUrl} profile={profile} />;
+      case "style-8":
+        return <PreviewStyle8 coverUrl={coverUrl} avatarUrl={avatarUrl} profile={profile} />;
       default:
         return <PreviewStyle1 {...commonProps} />;
     }
@@ -298,11 +333,10 @@ export function StylingEditor({ profile }: StylingEditorProps) {
                 <button
                   key={style.id}
                   type="button"
-                  className={`rounded-2xl border p-4 text-left transition ${
-                    selected
+                  className={`rounded-2xl border p-4 text-left transition ${selected
                       ? "border-primary bg-primary/12"
                       : "border-white/10 bg-white/4 hover:border-white/30"
-                  }`}
+                    }`}
                   onClick={() => form.setValue("profile_style", style.id)}
                 >
                   <p className="text-sm font-semibold text-white">{style.name}</p>
@@ -323,7 +357,7 @@ export function StylingEditor({ profile }: StylingEditorProps) {
               <label className="text-sm font-medium text-blue-50/85">Theme Color</label>
               {isColorfulStyle && (
                 <span className="rounded-full bg-amber-500/15 border border-amber-400/25 px-2.5 py-0.5 text-[10px] font-medium text-amber-200/90">
-                  Style 5 keeps its own fixed colors
+                  {profileStyle === "style-8" ? "Cinema Style" : profileStyle === "style-7" ? "Sci-Fi Style" : "Style 5"} keeps its own fixed colors
                 </span>
               )}
             </div>
@@ -335,11 +369,10 @@ export function StylingEditor({ profile }: StylingEditorProps) {
                     key={color}
                     type="button"
                     aria-label={`Select ${ACCENT_LABELS[color] ?? color} as theme color`}
-                    className={`relative size-10 rounded-full transition-all duration-200 ${
-                      isSelected
+                    className={`relative size-10 rounded-full transition-all duration-200 ${isSelected
                         ? "ring-2 ring-white ring-offset-2 ring-offset-[#0b1728]"
                         : ""
-                    }`}
+                      }`}
                     style={{
                       backgroundColor: color,
                       border: `2px solid ${withAlpha(color, "33")}`,

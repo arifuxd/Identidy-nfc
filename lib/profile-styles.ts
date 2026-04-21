@@ -5,6 +5,8 @@ export const PROFILE_STYLE_OPTIONS = [
   "style-4",
   "style-5",
   "style-6",
+  "style-7",
+  "style-8",
 ] as const;
 
 export type ProfileStyleId = (typeof PROFILE_STYLE_OPTIONS)[number];
@@ -45,6 +47,16 @@ export const PROFILE_STYLE_DEFINITIONS: ProfileStyleDefinition[] = [
     id: "style-6",
     name: "Style 6 (Terminal)",
     description: "Terminal shell inspired profile with command-style sections.",
+  },
+  {
+    id: "style-7",
+    name: "Style 7 (Sci-Fi)",
+    description: "Futuristic sci-fi terminal layout with HUD elements.",
+  },
+  {
+    id: "style-8",
+    name: "Style 8 (Cinema)",
+    description: "Minimalist black-and-white cinematic design.",
   },
 ];
 
