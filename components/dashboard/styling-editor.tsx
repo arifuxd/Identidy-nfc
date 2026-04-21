@@ -228,6 +228,41 @@ function PreviewStyle7({ coverUrl, avatarUrl, profile }: {
   );
 }
 
+function PreviewStyle8({ coverUrl, avatarUrl, profile }: {
+  coverUrl: string; avatarUrl: string;
+  profile: Database["public"]["Tables"]["profiles"]["Row"];
+}) {
+  return (
+    <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#080808] font-sans text-[#F0EDE6]">
+      <div className="h-6 w-full bg-[#0c0c0c] border-b border-[#1a1a1a] flex items-center gap-1 px-2">
+        <div className="w-2 h-3 border border-[#2a2a2a] bg-black rounded-[1px]" />
+        <div className="w-2 h-3 border border-[#2a2a2a] bg-black rounded-[1px]" />
+        <div className="flex-1 h-[1px] bg-[#1a1a1a]" />
+      </div>
+      <div className="relative h-28 bg-cover bg-center" style={{ backgroundImage: `url(${coverUrl})` }}>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#080808]" />
+      </div>
+      <div className="-mt-10 px-4 flex items-end gap-3 relative z-10">
+        <div className="size-14 overflow-hidden border border-[#8A6F30] bg-[#141414] relative">
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#C9A84C] via-black to-[#C9A84C]" />
+          <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${avatarUrl})` }} />
+        </div>
+        <div className="pb-1">
+          <p className="text-[14px] font-bold tracking-tight uppercase leading-none">
+            {profile.display_name}
+          </p>
+          <p className="text-[7px] tracking-[0.1em] text-[#C9A84C] uppercase mt-1">{(profile.job_title || "Director")}</p>
+        </div>
+      </div>
+      <div className="p-4 pt-3">
+        <div className="w-full border border-[#8A6F30] bg-transparent py-2 text-[8px] font-bold uppercase tracking-[0.2em] text-[#C9A84C] text-center">
+          Save Contact
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function StylingEditor({ profile }: StylingEditorProps) {
   const [resultMessage, setResultMessage] = useState<string | null>(null);
   const [resultType, setResultType] = useState<"success" | "error" | null>(null);
