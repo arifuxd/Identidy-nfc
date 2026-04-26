@@ -48,8 +48,16 @@ export function Style1Default({
             quality={100}
             priority
           />
+          <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between p-3 sm:p-4">
+            <Style1ProfileActions
+              profileUrl={profileUrl ?? `/${profile.slug}`}
+              profileName={profile.display_name}
+              accentColor={accentColor}
+              compact
+            />
+          </div>
         </div>
-        <div className="px-5 pb-5">
+        <div className="px-3 pb-4 sm:px-3 sm:pb-5">
           <div className="relative z-20 -mt-16 flex justify-center">
             <div className={`p-[3px] ring-3 ring-primary shadow-xl shadow-primary/20 rounded-full`}>
               <div className={`relative size-28 overflow-hidden rounded-full`}>
@@ -77,25 +85,27 @@ export function Style1Default({
           </div>
 
           <div className="mt-5">
-            <a href={`/api/public/vcf/${profile.slug}`} className="flex-1">
-              <Button
-                className="w-full"
-                style={{
-                  backgroundColor: accentColor,
-                  boxShadow: `0 16px 40px ${withAlpha(accentColor, "59")}`,
-                }}
-              >
-                <Download className="size-4" />
-                Save Contact
-              </Button>
-            </a>
+            <div className="grid grid-cols-[1.3fr_1fr] gap-2.5">
+              <a href={`/api/public/vcf/${profile.slug}`} className="flex-1">
+                <Button
+                  className="h-10 w-full whitespace-nowrap px-3 text-[10px] sm:text-[11px]"
+                  style={{
+                    backgroundColor: accentColor,
+                    boxShadow: `0 16px 40px ${withAlpha(accentColor, "59")}`,
+                  }}
+                >
+                  <Download className="size-4" />
+                  Save Contact
+                </Button>
+              </a>
+              <Style1ProfileActions
+                profileUrl={profileUrl ?? `/${profile.slug}`}
+                profileName={profile.display_name}
+                accentColor={accentColor}
+                connectOnly
+              />
+            </div>
           </div>
-
-          <Style1ProfileActions
-            profileUrl={profileUrl ?? `/${profile.slug}`}
-            profileName={profile.display_name}
-            accentColor={accentColor}
-          />
         </div>
       </section>
 

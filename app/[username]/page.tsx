@@ -73,7 +73,7 @@ export default async function PublicProfilePage({
       className={
         isFullWidth
           ? "mx-auto min-h-screen w-full max-w-xl"
-          : "mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-6 sm:py-8"
+          : "mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-4 sm:py-4"
       }
     >
       <PublicProfileViewTracker slug={profile.slug} />

@@ -97,6 +97,41 @@ export type Database = {
           },
         ];
       };
+      profile_connections: {
+        Row: {
+          created_at: string;
+          id: string;
+          profile_id: string;
+          visitor_email: string | null;
+          visitor_name: string;
+          visitor_phone: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          profile_id: string;
+          visitor_email?: string | null;
+          visitor_name: string;
+          visitor_phone: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          profile_id?: string;
+          visitor_email?: string | null;
+          visitor_name?: string;
+          visitor_phone?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "profile_connections_profile_id_fkey";
+            columns: ["profile_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           address: string | null;

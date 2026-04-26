@@ -5,6 +5,7 @@ import {
   UserRound,
   BarChart3,
   Settings,
+  Handshake,
   LogOut,
   SwatchBook,
 } from "lucide-react";
@@ -18,6 +19,7 @@ const items = [
   { href: "/dashboard/profile", label: "Profile", icon: UserRound },
   { href: "/dashboard/styling", label: "Styling", icon: SwatchBook },
   { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/dashboard/connections", label: "Connections", icon: Handshake },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 

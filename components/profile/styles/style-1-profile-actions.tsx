@@ -6,14 +6,17 @@ import QRCode from "qrcode";
 import {
   Copy,
   Download,
+  LoaderCircle,
   Mail,
   MessageCircle,
   QrCode,
   Share2,
+  UserPlus,
   X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 function withAlpha(hexColor: string, alphaHex: string) {
   if (!/^#[0-9a-f]{6}$/i.test(hexColor)) {
@@ -66,10 +69,14 @@ export function Style1ProfileActions({
   profileUrl,
   profileName,
   accentColor,
+  compact = false,
+  connectOnly = false,
 }: {
   profileUrl: string;
   profileName: string;
   accentColor: string;
+  compact?: boolean;
+  connectOnly?: boolean;
 }) {
   const [isQrOpen, setIsQrOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
@@ -77,6 +84,15 @@ export function Style1ProfileActions({
   const [copied, setCopied] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
   const [isMounted, setIsMounted] = useState(false);
+  const [isConnectOpen, setIsConnectOpen] = useState(false);
+  const [connectName, setConnectName] = useState("");
+  const [connectPhone, setConnectPhone] = useState("");
+  const [connectEmail, setConnectEmail] = useState("");
+  const [isSubmittingConnect, setIsSubmittingConnect] = useState(false);
+  const [connectMessage, setConnectMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -219,6 +235,52 @@ export function Style1ProfileActions({
   const accentBorder = withAlpha(accentColor, "45");
   const accentSurface = withAlpha(accentColor, "18");
 
+  async function submitConnectRequest(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setConnectMessage(null);
+    setIsSubmittingConnect(true);
+
+    try {
+      const response = await fetch("/api/public/connect", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          slug: new URL(profileUrl).pathname.replace(/^\/+/, ""),
+          name: connectName,
+          phone: connectPhone,
+          email: connectEmail,
+        }),
+      });
+
+      const payload = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        setConnectMessage({
+          type: "error",
+          text: payload.error ?? "Unable to send the connection request.",
+        });
+        return;
+      }
+
+      setConnectMessage({
+        type: "success",
+        text: "Connection request sent successfully.",
+      });
+      setConnectName("");
+      setConnectPhone("");
+      setConnectEmail("");
+    } catch {
+      setConnectMessage({
+        type: "error",
+        text: "Unable to send the connection request right now.",
+      });
+    } finally {
+      setIsSubmittingConnect(false);
+    }
+  }
+
   const qrModal = isQrOpen ? (
     <div className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-[#020817]/62 px-4 py-6 backdrop-blur-[6px]">
       <div
@@ -350,36 +412,203 @@ export function Style1ProfileActions({
     </div>
   ) : null;
 
+  const connectModal = isConnectOpen ? (
+    <div className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-[#020817]/62 px-4 py-6 backdrop-blur-[6px]">
+      <div
+        className="glass-panel relative w-full max-w-[24rem] overflow-hidden rounded-[1.75rem] border p-5"
+        style={{ borderColor: accentBorder, boxShadow: `0 24px 64px ${withAlpha(accentColor, "30")}` }}
+      >
+        <button
+          type="button"
+          onClick={() => setIsConnectOpen(false)}
+          aria-label="Close connect modal"
+          className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/6 text-white transition hover:bg-white/10"
+        >
+          <X className="size-4" />
+        </button>
+
+        <p className="text-xs font-medium uppercase tracking-[0.28em] text-blue-200/72">
+          Connect
+        </p>
+        <h2 className="mt-2.5 text-xl font-semibold text-white">Share your contact</h2>
+        <p className="mt-2 text-xs leading-5 text-muted">
+          Send your details so the profile owner can follow up from their dashboard.
+        </p>
+
+        <form className="mt-5 space-y-3" onSubmit={(event) => void submitConnectRequest(event)}>
+          <div className="space-y-2">
+            <label className="text-xs text-blue-50/82" htmlFor="connect-name">
+              Name
+            </label>
+            <input
+              id="connect-name"
+              value={connectName}
+              onChange={(event) => setConnectName(event.target.value)}
+              required
+              className="input-base"
+              placeholder="Your name"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs text-blue-50/82" htmlFor="connect-phone">
+              Mobile number
+            </label>
+            <input
+              id="connect-phone"
+              value={connectPhone}
+              onChange={(event) => setConnectPhone(event.target.value)}
+              required
+              className="input-base"
+              placeholder="Mobile number"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs text-blue-50/82" htmlFor="connect-email">
+              Email (Optional)
+            </label>
+            <input
+              id="connect-email"
+              value={connectEmail}
+              onChange={(event) => setConnectEmail(event.target.value)}
+              type="email"
+              className="input-base"
+              placeholder="Email address"
+            />
+          </div>
+
+          {connectMessage ? (
+            <p
+              className={`text-xs leading-5 ${
+                connectMessage.type === "error" ? "text-red-300" : "text-emerald-300"
+              }`}
+            >
+              {connectMessage.text}
+            </p>
+          ) : null}
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isSubmittingConnect}
+            style={{
+              backgroundColor: accentColor,
+              boxShadow: actionShadow,
+            }}
+          >
+            {isSubmittingConnect ? (
+              <>
+                <LoaderCircle className="size-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              <>
+                <UserPlus className="size-4" />
+                Send connect request
+              </>
+            )}
+          </Button>
+        </form>
+      </div>
+    </div>
+  ) : null;
+
   return (
     <>
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        <Button
-          type="button"
-          variant="secondary"
-          className="w-full border-white/10 bg-white/6"
-          onClick={() => setIsQrOpen(true)}
-        >
-          <QrCode className="size-4" />
-          QR
-        </Button>
-        <Button
-          type="button"
-          className="w-full"
-          style={{
-            backgroundColor: accentColor,
-            boxShadow: actionShadow,
-          }}
-          onClick={() => {
-            setShareMessage("");
-            setIsShareOpen(true);
-          }}
-        >
-          <Share2 className="size-4" />
-          Share
-        </Button>
+      <div
+        className={cn(
+          "gap-3",
+          connectOnly
+            ? "grid grid-cols-1"
+            : compact
+              ? "grid w-full grid-cols-2"
+              : "mt-4 grid grid-cols-3",
+        )}
+      >
+        {connectOnly ? (
+          <Button
+            type="button"
+            variant="secondary"
+            className="h-10 w-full whitespace-nowrap border-white/10 bg-white/6 px-3 text-[10px] sm:text-[11px]"
+            onClick={() => {
+              setConnectMessage(null);
+              setIsConnectOpen(true);
+            }}
+          >
+            <UserPlus className="size-[15px] shrink-0" />
+            Connect
+          </Button>
+        ) : compact ? (
+          <>
+            <button
+              type="button"
+              onClick={() => setIsQrOpen(true)}
+              aria-label="Open QR code"
+              title="QR code"
+              className="inline-flex size-10 items-center justify-center self-start rounded-full border border-white/14 bg-[#020817]/52 text-white backdrop-blur-[8px] transition hover:bg-[#020817]/66"
+            >
+              <QrCode className="size-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setShareMessage("");
+                setIsShareOpen(true);
+              }}
+              aria-label="Open share options"
+              title="Share profile"
+              className="justify-self-end inline-flex size-10 items-center justify-center self-start rounded-full text-white transition"
+              style={{
+                backgroundColor: withAlpha(accentColor, "d9"),
+                boxShadow: `0 10px 24px ${withAlpha(accentColor, "45")}`,
+              }}
+            >
+              <Share2 className="size-4" />
+            </button>
+          </>
+        ) : (
+          <>
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full border-white/10 bg-white/6"
+              onClick={() => setIsQrOpen(true)}
+            >
+              <QrCode className="size-4" />
+              QR
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full border-white/10 bg-white/6"
+              onClick={() => {
+                setConnectMessage(null);
+                setIsConnectOpen(true);
+              }}
+            >
+              <UserPlus className="size-4" />
+              Connect
+            </Button>
+            <Button
+              type="button"
+              className="w-full"
+              style={{
+                backgroundColor: accentColor,
+                boxShadow: actionShadow,
+              }}
+              onClick={() => {
+                setShareMessage("");
+                setIsShareOpen(true);
+              }}
+            >
+              <Share2 className="size-4" />
+              Share
+            </Button>
+          </>
+        )}
       </div>
 
       {isMounted ? createPortal(qrModal, document.body) : null}
+      {isMounted ? createPortal(connectModal, document.body) : null}
       {isMounted ? createPortal(shareModal, document.body) : null}
     </>
   );
