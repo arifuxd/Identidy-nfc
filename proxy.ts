@@ -41,10 +41,13 @@ export async function proxy(request: NextRequest) {
   if (
     !user &&
     (request.nextUrl.pathname.startsWith("/dashboard") ||
-      request.nextUrl.pathname.startsWith("/admin"))
+      (request.nextUrl.pathname.startsWith("/admin") &&
+        request.nextUrl.pathname !== "/admin"))
   ) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/login";
+    redirectUrl.pathname = request.nextUrl.pathname.startsWith("/admin")
+      ? "/admin"
+      : "/login";
     redirectUrl.searchParams.set("next", request.nextUrl.pathname);
 
     return NextResponse.redirect(redirectUrl);
@@ -54,5 +57,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*", "/login", "/signup"],
+  matcher: ["/dashboard/:path*", "/admin/:path*", "/login"],
 };

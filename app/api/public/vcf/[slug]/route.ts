@@ -65,7 +65,7 @@ export async function GET(
     title: profile.job_title,
     company: profile.company_name,
     address: profile.address,
-    profileUrl: absoluteUrl(`/profile/${profile.slug}`),
+    profileUrl: absoluteUrl(`/${profile.slug}`),
     links,
     photoBase64,
     photoType,

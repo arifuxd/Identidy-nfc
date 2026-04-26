@@ -14,8 +14,11 @@ Production-ready SaaS-style NFC business card platform built with Next.js App Ro
 ## Features
 
 - Marketing landing page
-- Mobile-first public profile pages at `/profile/[slug]`
+- Mobile-first public profile pages at `/{username}`
 - Save Contact `.vcf` download
+- User login at `/login`
+- Admin login and workspace at `/admin`
+- Admin-created user accounts only (no public signup)
 - User dashboard for profile editing
 - Debounced slug availability checking
 - Profile visit analytics
@@ -27,13 +30,15 @@ Production-ready SaaS-style NFC business card platform built with Next.js App Ro
 1. Copy `.env.example` to `.env.local`
 2. Fill in Supabase credentials
 3. Run the SQL in [supabase/migrations/20260418234500_initial_schema.sql](/Volumes/Works/Web Development Projects/Identidy/supabase/migrations/20260418234500_initial_schema.sql)
-4. Install dependencies:
+4. Run the latest migration in [`supabase/migrations/20260426090000_split_admin_accounts_from_public_profiles.sql`](/E:/Identidy-nfc/supabase/migrations/20260426090000_split_admin_accounts_from_public_profiles.sql)
+5. If you need to bootstrap the first admin manually, use [`supabase/create-admin-account.sql`](/E:/Identidy-nfc/supabase/create-admin-account.sql)
+6. Install dependencies:
 
 ```bash
 npm install
 ```
 
-5. Start development:
+7. Start development:
 
 ```bash
 npm run dev
@@ -49,18 +54,19 @@ npm run dev
 ## Route map
 
 - `/` marketing page
-- `/login`, `/signup`
-- `/profile/[slug]` public profile
+- `/login`
+- `/admin`
+- `/{username}` public profile
 - `/dashboard`
 - `/dashboard/profile`
 - `/dashboard/analytics`
 - `/dashboard/settings`
-- `/admin`
 - `/admin/users`
 
 ## Supabase notes
 
-- New `auth.users` rows automatically create a profile and default `user` role
+- User accounts create a profile row automatically
+- Admin accounts keep an admin role but do not get a public profile row
 - Media uploads use public buckets: `avatars` and `covers`
 - Public profile view tracking is stored in `profile_views` with hourly de-duplication
 - Admin actions rely on the service role key and must remain server-only

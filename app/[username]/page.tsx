@@ -14,7 +14,7 @@ import { Style8Cinema } from "@/components/profile/styles/style-8-cinema";
 import { getProfileBundleBySlug } from "@/lib/db/profiles";
 import { resolveProfileStyleDefinition } from "@/lib/profile-styles";
 
-type Params = Promise<{ slug: string }>;
+type Params = Promise<{ username: string }>;
 type SearchParams = Promise<{ style?: string | string[] }>;
 
 export async function generateMetadata({
@@ -22,8 +22,8 @@ export async function generateMetadata({
 }: {
   params: Params;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const data = await getProfileBundleBySlug(slug);
+  const { username } = await params;
+  const data = await getProfileBundleBySlug(username);
 
   if (!data) {
     return {
@@ -45,9 +45,9 @@ export default async function PublicProfilePage({
   params: Params;
   searchParams: SearchParams;
 }) {
-  const { slug } = await params;
+  const { username } = await params;
   const query = await searchParams;
-  const data = await getProfileBundleBySlug(slug);
+  const data = await getProfileBundleBySlug(username);
 
   if (!data) {
     notFound();
@@ -65,7 +65,13 @@ export default async function PublicProfilePage({
   const isFullWidth = styleId !== "style-1";
 
   return (
-    <main className={isFullWidth ? "mx-auto min-h-screen w-full max-w-xl" : "mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-6 sm:py-8"}>
+    <main
+      className={
+        isFullWidth
+          ? "mx-auto min-h-screen w-full max-w-xl"
+          : "mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-6 sm:py-8"
+      }
+    >
       <PublicProfileViewTracker slug={profile.slug} />
       <DebugStyleFlyout activeStyle={styleId} />
       {styleId === "style-2" ? (

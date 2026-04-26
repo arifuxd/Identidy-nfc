@@ -161,9 +161,9 @@ export async function saveProfileAction(values: ProfileFormValues) {
   revalidatePath("/dashboard/profile");
   revalidatePath("/dashboard/analytics");
   if (existingProfile?.slug) {
-    revalidatePath(`/profile/${existingProfile.slug}`);
+    revalidatePath(`/${existingProfile.slug}`);
   }
-  revalidatePath(`/profile/${parsed.slug}`);
+  revalidatePath(`/${parsed.slug}`);
 
   return { success: "Profile updated successfully." };
 }
@@ -206,7 +206,7 @@ export async function saveProfileStylingAction(values: ProfileStylingValues) {
   revalidatePath("/dashboard/styling");
   revalidatePath("/dashboard/profile");
   if (existingProfile?.slug) {
-    revalidatePath(`/profile/${existingProfile.slug}`);
+    revalidatePath(`/${existingProfile.slug}`);
   }
 
   return { success: "Styling updated successfully." };

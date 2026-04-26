@@ -78,8 +78,11 @@ export default async function AdminUsersPage({
                         {user.display_name}
                       </p>
                       <p className="mt-1 text-sm text-muted">
-                        /profile/{user.slug} | {role}
+                        {user.hasProfile ? `/${user.slug}` : "No public profile"} | {role}
                       </p>
+                      {user.email ? (
+                        <p className="mt-1 text-sm text-muted">{user.email}</p>
+                      ) : null}
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row">
                       <form action={updateUserRoleAction} className="flex gap-2">

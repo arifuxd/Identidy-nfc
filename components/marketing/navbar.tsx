@@ -27,7 +27,10 @@ export function MarketingNavbar() {
             FAQ
           </a>
           <Link href="/login" className="transition hover:text-white">
-            Sign in
+            User login
+          </Link>
+          <Link href="/admin" className="transition hover:text-white">
+            Admin
           </Link>
         </nav>
 
@@ -38,9 +41,9 @@ export function MarketingNavbar() {
               Dashboard
             </Button>
           </Link>
-          <a href="#cta">
-            <Button>Get Started</Button>
-          </a>
+          <Link href="/login">
+            <Button>User Login</Button>
+          </Link>
         </div>
       </div>
     </header>

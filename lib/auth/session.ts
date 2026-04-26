@@ -2,7 +2,9 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
 
-export async function requireUser() {
+type UserRole = "user" | "admin";
+
+async function requireAuthenticatedUser() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -15,6 +17,17 @@ export async function requireUser() {
   return user;
 }
 
+export async function getCurrentUserRole(userId: string): Promise<UserRole> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  return data?.role === "admin" ? "admin" : "user";
+}
+
 export async function getOptionalUser() {
   const supabase = await createClient();
   const {
@@ -24,16 +37,22 @@ export async function getOptionalUser() {
   return user;
 }
 
-export async function requireAdmin() {
-  const user = await requireUser();
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", user.id)
-    .maybeSingle();
+export async function requireUser() {
+  const user = await requireAuthenticatedUser();
+  const role = await getCurrentUserRole(user.id);
 
-  if (error || data?.role !== "admin") {
+  if (role !== "user") {
+    redirect("/admin");
+  }
+
+  return user;
+}
+
+export async function requireAdmin() {
+  const user = await requireAuthenticatedUser();
+  const role = await getCurrentUserRole(user.id);
+
+  if (role !== "admin") {
     redirect("/dashboard");
   }
 

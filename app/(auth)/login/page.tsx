@@ -4,7 +4,7 @@ import { loginAction } from "@/actions/auth";
 import { AuthCard } from "@/components/auth/auth-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getOptionalUser } from "@/lib/auth/session";
+import { getCurrentUserRole, getOptionalUser } from "@/lib/auth/session";
 
 type SearchParams = Promise<{ error?: string }>;
 
@@ -17,16 +17,17 @@ export default async function LoginPage({
   const { error } = await searchParams;
 
   if (user) {
-    redirect("/dashboard");
+    const role = await getCurrentUserRole(user.id);
+    redirect(role === "admin" ? "/admin" : "/dashboard");
   }
 
   return (
     <AuthCard
       title="Welcome back"
-      description="Sign in to edit your NFC profile, manage links, and review your analytics."
-      footerLabel="Need an account?"
-      footerHref="/signup"
-      footerAction="Create one"
+      description="Sign in to manage your profile, update contact details, and review your analytics."
+      footerLabel="Admin account?"
+      footerHref="/admin"
+      footerAction="Use the admin portal"
     >
       {error ? <p className="mb-4 text-sm text-red-300">{error}</p> : null}
       <form action={loginAction} className="space-y-4">

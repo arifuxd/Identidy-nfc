@@ -46,7 +46,7 @@ export default async function DashboardOverviewPage() {
                 Edit profile
               </Button>
             </Link>
-            <Link href={`/profile/${data.profile.slug}`}>
+            <Link href={`/${data.profile.slug}`}>
               <Button variant="secondary">
                 <ArrowUpRight className="size-4" />
                 View public page

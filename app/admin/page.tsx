@@ -1,14 +1,61 @@
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { UsersRound, Shield } from "lucide-react";
 
+import { adminLoginAction } from "@/actions/auth";
+import { AuthCard } from "@/components/auth/auth-card";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { requireAdmin } from "@/lib/auth/session";
+import { Input } from "@/components/ui/input";
+import { getCurrentUserRole, getOptionalUser } from "@/lib/auth/session";
 import { getAdminUsers } from "@/lib/db/profiles";
 
-export default async function AdminPage() {
-  await requireAdmin();
+type SearchParams = Promise<{ error?: string }>;
+
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const user = await getOptionalUser();
+  const { error } = await searchParams;
+
+  if (!user) {
+    return (
+      <AuthCard
+        title="Admin portal"
+        description="Sign in with an administrator account to manage users and workspace access."
+        footerLabel="User account?"
+        footerHref="/login"
+        footerAction="Go to user login"
+      >
+        {error ? <p className="mb-4 text-sm text-red-300">{error}</p> : null}
+        <form action={adminLoginAction} className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm text-blue-50/86" htmlFor="email">
+              Email
+            </label>
+            <Input id="email" name="email" type="email" required />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm text-blue-50/86" htmlFor="password">
+              Password
+            </label>
+            <Input id="password" name="password" type="password" required />
+          </div>
+          <Button className="w-full">Sign in as admin</Button>
+        </form>
+      </AuthCard>
+    );
+  }
+
+  const role = await getCurrentUserRole(user.id);
+
+  if (role !== "admin") {
+    redirect("/dashboard");
+  }
+
   const users = await getAdminUsers();
   const admins = users.filter((user) => user.role === "admin").length;
 

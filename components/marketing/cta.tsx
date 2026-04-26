@@ -20,12 +20,12 @@ export function MarketingCta() {
             production use, not just a demo.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="/signup">
-              <Button size="lg">Get Started</Button>
-            </Link>
             <Link href="/login">
+              <Button size="lg">User Login</Button>
+            </Link>
+            <Link href="/admin">
               <Button variant="secondary" size="lg">
-                Sign in
+                Admin Login
               </Button>
             </Link>
           </div>

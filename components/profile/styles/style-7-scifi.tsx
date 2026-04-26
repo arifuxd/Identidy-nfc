@@ -93,7 +93,7 @@ const platformLabels: Record<string, string> = {
 function getSocialBrand(platform: string, url: string) {
   const isTwitter = platform === "twitter" || /(x\.com|twitter\.com)/i.test(url);
   if (isTwitter) return { color: "#e7e9ea", bg: "rgba(255,255,255,0.05)" };
-  
+
   switch (platform) {
     case "linkedin": return { color: "#0a66c2", bg: "rgba(10,102,194,0.15)" };
     case "github": return { color: "#ffffff", bg: "rgba(255,255,255,0.15)" };
@@ -135,59 +135,59 @@ export function Style7Scifi({ profile, socialLinks, experiences }: ProfileStyleP
   const contacts = [
     phoneHome
       ? {
-          key: "phone-home",
-          label: "Voice Line",
-          value: phoneHome,
-          href: `tel:${toPhoneDigits(phoneHome)}`,
-          iconColor: "var(--cyan)",
-          wrapBg: "rgba(0,212,255,0.07)",
-          wrapBorder: "rgba(0,212,255,0.2)",
-        }
+        key: "phone-home",
+        label: "Voice Line",
+        value: phoneHome,
+        href: `tel:${toPhoneDigits(phoneHome)}`,
+        iconColor: "var(--cyan)",
+        wrapBg: "rgba(0,212,255,0.07)",
+        wrapBorder: "rgba(0,212,255,0.2)",
+      }
       : null,
     phoneOffice
       ? {
-          key: "phone-office",
-          label: "Office Line",
-          value: phoneOffice,
-          href: `tel:${toPhoneDigits(phoneOffice)}`,
-          iconColor: "var(--cyan)",
-          wrapBg: "rgba(0,212,255,0.07)",
-          wrapBorder: "rgba(0,212,255,0.2)",
-        }
+        key: "phone-office",
+        label: "Office Line",
+        value: phoneOffice,
+        href: `tel:${toPhoneDigits(phoneOffice)}`,
+        iconColor: "var(--cyan)",
+        wrapBg: "rgba(0,212,255,0.07)",
+        wrapBorder: "rgba(0,212,255,0.2)",
+      }
       : null,
     emailHome
       ? {
-          key: "email-home",
-          label: "Encrypted Mail",
-          value: emailHome,
-          href: `mailto:${emailHome}`,
-          iconColor: "var(--purple)",
-          wrapBg: "rgba(139,92,246,0.07)",
-          wrapBorder: "rgba(139,92,246,0.2)",
-        }
+        key: "email-home",
+        label: "Encrypted Mail",
+        value: emailHome,
+        href: `mailto:${emailHome}`,
+        iconColor: "var(--purple)",
+        wrapBg: "rgba(139,92,246,0.07)",
+        wrapBorder: "rgba(139,92,246,0.2)",
+      }
       : null,
     emailOffice
       ? {
-          key: "email-office",
-          label: "Office Mail",
-          value: emailOffice,
-          href: `mailto:${emailOffice}`,
-          iconColor: "var(--purple)",
-          wrapBg: "rgba(139,92,246,0.07)",
-          wrapBorder: "rgba(139,92,246,0.2)",
-        }
+        key: "email-office",
+        label: "Office Mail",
+        value: emailOffice,
+        href: `mailto:${emailOffice}`,
+        iconColor: "var(--purple)",
+        wrapBg: "rgba(139,92,246,0.07)",
+        wrapBorder: "rgba(139,92,246,0.2)",
+      }
       : null,
     location
       ? {
-          key: "location",
-          label: "Base Location",
-          value: location,
-          href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`,
-          iconColor: "var(--blue)",
-          wrapBg: "rgba(59,130,246,0.07)",
-          wrapBorder: "rgba(59,130,246,0.2)",
-          external: true,
-        }
+        key: "location",
+        label: "Base Location",
+        value: location,
+        href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`,
+        iconColor: "var(--blue)",
+        wrapBg: "rgba(59,130,246,0.07)",
+        wrapBorder: "rgba(59,130,246,0.2)",
+        external: true,
+      }
       : null,
   ].filter(Boolean) as Array<any>;
 
@@ -456,14 +456,14 @@ export function Style7Scifi({ profile, socialLinks, experiences }: ProfileStyleP
               const Icon = platformIcons[link.platform] ?? ExternalLink;
               const title = link.label?.trim() || platformLabels[link.platform] || "Social";
               const brand = getSocialBrand(link.platform, link.url);
-              
+
               return (
                 <a key={link.id} className="scifi-social-card" href={link.url} target="_blank" rel="noreferrer">
                   <div className="scifi-social-icon" style={{ background: brand.bg }}>
                     {link.platform === 'instagram' ? (
                       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={brand.stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <defs><linearGradient id="ig" x1="0" y1="24" x2="24" y2="0"><stop offset="0%" stopColor="#f09433"/><stop offset="60%" stopColor="#dc2743"/><stop offset="100%" stopColor="#cc2366"/></linearGradient></defs>
-                        <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="#dc2743" stroke="none"/>
+                        <defs><linearGradient id="ig" x1="0" y1="24" x2="24" y2="0"><stop offset="0%" stopColor="#f09433" /><stop offset="60%" stopColor="#dc2743" /><stop offset="100%" stopColor="#cc2366" /></linearGradient></defs>
+                        <rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="0.5" fill="#dc2743" stroke="none" />
                       </svg>
                     ) : (
                       <Icon className="w-[17px] h-[17px]" style={{ color: brand.color }} />
@@ -517,7 +517,7 @@ export function Style7Scifi({ profile, socialLinks, experiences }: ProfileStyleP
             {experiences.map((item, index) => {
               const start = formatDateLabel(item.start_date);
               const end = item.is_current ? "Present" : formatDateLabel(item.end_date);
-              
+
               return (
                 <div key={item.id} className="scifi-exp-item">
                   <div className="scifi-exp-tl">
@@ -532,13 +532,13 @@ export function Style7Scifi({ profile, socialLinks, experiences }: ProfileStyleP
                     <div className="scifi-exp-meta">
                       {(start || end) && (
                         <span className="scifi-exp-meta-item">
-                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
                           {[start, end].filter(Boolean).join(" — ")}
                         </span>
                       )}
                       {item.location && (
                         <span className="scifi-exp-meta-item">
-                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>
                           {item.location}
                         </span>
                       )}

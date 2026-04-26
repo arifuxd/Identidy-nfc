@@ -5,9 +5,9 @@ import { Card } from "@/components/ui/card";
 interface AuthCardProps {
   title: string;
   description: string;
-  footerLabel: string;
-  footerHref: string;
-  footerAction: string;
+  footerLabel?: string;
+  footerHref?: string;
+  footerAction?: string;
   children: React.ReactNode;
 }
 
@@ -30,12 +30,14 @@ export function AuthCard({
           <p className="mt-3 text-sm leading-7 text-muted">{description}</p>
         </div>
         <div className="mt-8">{children}</div>
-        <p className="mt-6 text-sm text-muted">
-          {footerLabel}{" "}
-          <Link href={footerHref} className="font-medium text-white underline">
-            {footerAction}
-          </Link>
-        </p>
+        {footerLabel && footerHref && footerAction ? (
+          <p className="mt-6 text-sm text-muted">
+            {footerLabel}{" "}
+            <Link href={footerHref} className="font-medium text-white underline">
+              {footerAction}
+            </Link>
+          </p>
+        ) : null}
       </Card>
     </div>
   );

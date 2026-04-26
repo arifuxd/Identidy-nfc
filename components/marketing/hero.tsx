@@ -20,14 +20,19 @@ export function MarketingHero() {
             social links, contact saving, and visit analytics built in.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="/signup">
+            <Link href="/login">
               <Button size="lg">
-                Create Your Profile
+                User Login
                 <ArrowRight className="size-4" />
               </Button>
             </Link>
-            <a href="#features">
+            <Link href="/admin">
               <Button variant="secondary" size="lg">
+                Admin Login
+              </Button>
+            </Link>
+            <a href="#features">
+              <Button variant="ghost" size="lg">
                 See How It Works
               </Button>
             </a>
