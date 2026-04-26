@@ -83,42 +83,49 @@ export default async function PublicProfilePage({
           profile={profile}
           socialLinks={socialLinks}
           experiences={experiences}
+          profileUrl={profileUrl}
         />
       ) : styleId === "style-3" ? (
         <Style3Designer
           profile={profile}
           socialLinks={socialLinks}
           experiences={experiences}
+          profileUrl={profileUrl}
         />
       ) : styleId === "style-4" ? (
         <Style4Corporate
           profile={profile}
           socialLinks={socialLinks}
           experiences={experiences}
+          profileUrl={profileUrl}
         />
       ) : styleId === "style-5" ? (
         <Style5Colorful
           profile={profile}
           socialLinks={socialLinks}
           experiences={experiences}
+          profileUrl={profileUrl}
         />
       ) : styleId === "style-6" ? (
         <Style6Terminal
           profile={profile}
           socialLinks={socialLinks}
           experiences={experiences}
+          profileUrl={profileUrl}
         />
       ) : styleId === "style-7" ? (
         <Style7Scifi
           profile={profile}
           socialLinks={socialLinks}
           experiences={experiences}
+          profileUrl={profileUrl}
         />
       ) : styleId === "style-8" ? (
         <Style8Cinema
           profile={profile}
           socialLinks={socialLinks}
           experiences={experiences}
+          profileUrl={profileUrl}
         />
       ) : (
         <Style1Default

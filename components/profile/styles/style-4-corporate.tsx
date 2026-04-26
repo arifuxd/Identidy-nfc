@@ -17,6 +17,7 @@ import { DEFAULT_AVATAR, DEFAULT_COVER } from "@/lib/constants";
 import type { Database } from "@/types/database";
 
 import type { ProfileStyleProps } from "./types";
+import { ProfileActionSuite } from "./style-1-profile-actions";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type IconComponent = ComponentType<{ className?: string; style?: CSSProperties }>;
@@ -213,7 +214,12 @@ function buildContacts(profile: Profile) {
   }>;
 }
 
-export function Style4Corporate({ profile, socialLinks, experiences }: ProfileStyleProps) {
+export function Style4Corporate({
+  profile,
+  socialLinks,
+  experiences,
+  profileUrl,
+}: ProfileStyleProps & { profileUrl?: string }) {
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
   const accent = profile.accent_color || "#3b82f6";
@@ -246,6 +252,15 @@ export function Style4Corporate({ profile, socialLinks, experiences }: ProfileSt
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a142e]/20 to-[#0a142e]/55" />
+        <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between px-4 py-4">
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor={accent}
+            compact
+            theme="style-4"
+          />
+        </div>
       </section>
 
       <section className="relative px-6 pb-1">
@@ -276,19 +291,29 @@ export function Style4Corporate({ profile, socialLinks, experiences }: ProfileSt
       </section>
 
       <section className="px-6 pt-4">
-        <a
-          href={`/api/public/vcf/${profile.slug}`}
-          className="block w-full rounded-[8px] border px-4 py-[11px] text-center text-sm font-medium transition hover:bg-[var(--corporate-soft)]"
-          style={{
-            color: accent,
-            borderColor: accent,
-          }}
-        >
-          <span className="inline-flex items-center gap-2">
-            <Download className="size-4" />
-            Save Contact
-          </span>
-        </a>
+        <div className="grid grid-cols-[1.28fr_0.9fr] gap-2.5">
+          <a
+            href={`/api/public/vcf/${profile.slug}`}
+            className="block w-full rounded-[8px] border px-4 py-[11px] text-center text-sm font-medium transition hover:bg-[var(--corporate-soft)]"
+            style={{
+              color: accent,
+              borderColor: accent,
+            }}
+          >
+            <span className="inline-flex items-center gap-2">
+              <Download className="size-4" />
+              Save Contact
+            </span>
+          </a>
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor={accent}
+            connectOnly
+            theme="style-4"
+            connectClassName="text-sm font-medium"
+          />
+        </div>
       </section>
 
       {sortedLinks.length ? (

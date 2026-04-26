@@ -17,6 +17,7 @@ import {
 import { DEFAULT_AVATAR, DEFAULT_COVER } from "@/lib/constants";
 
 import type { ProfileStyleProps } from "./types";
+import { ProfileActionSuite } from "./style-1-profile-actions";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -142,7 +143,12 @@ function formatDateLabel(value: string | null) {
   return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(parsed);
 }
 
-export function Style5Colorful({ profile, socialLinks, experiences }: ProfileStyleProps) {
+export function Style5Colorful({
+  profile,
+  socialLinks,
+  experiences,
+  profileUrl,
+}: ProfileStyleProps & { profileUrl?: string }) {
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
   const sortedLinks = [...socialLinks].sort((a, b) => a.sort_order - b.sort_order);
@@ -235,6 +241,15 @@ export function Style5Colorful({ profile, socialLinks, experiences }: ProfileSty
           quality={100}
           priority
         />
+        <div className="absolute inset-x-0 top-0 z-20 flex items-start justify-between px-3 py-3">
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor={profile.accent_color || "#ff3b3b"}
+            compact
+            theme="style-5"
+          />
+        </div>
         <div className="absolute -bottom-[56px] left-5 z-20 h-[112px] w-[112px] -rotate-2 border-4 border-black bg-[#FF3B3B] shadow-[5px_5px_0_#000]">
           <Image
             src={avatarUrl}
@@ -266,13 +281,23 @@ export function Style5Colorful({ profile, socialLinks, experiences }: ProfileSty
       </section>
 
       <section className="border-b-[3px] border-black px-5 py-4">
-        <a
-          href={`/api/public/vcf/${profile.slug}`}
-          className={`${spaceMono.className} flex w-full items-center justify-center gap-2 border-[3px] border-black bg-[#FFE000] px-4 py-4 text-[15px] font-bold uppercase tracking-[0.12em] shadow-[4px_4px_0_#000] transition active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0_#000]`}
-        >
-          <Download className="size-5" />
-          Save Contact (.vcf)
-        </a>
+        <div className="grid gap-2.5 sm:grid-cols-[1.35fr_0.95fr]">
+          <a
+            href={`/api/public/vcf/${profile.slug}`}
+            className={`${spaceMono.className} flex w-full items-center justify-center gap-2 border-[3px] border-black bg-[#FFE000] px-4 py-4 text-[15px] font-bold uppercase tracking-[0.12em] shadow-[4px_4px_0_#000] transition active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0_#000]`}
+          >
+            <Download className="size-5" />
+            Save Contact (.vcf)
+          </a>
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor={profile.accent_color || "#ff3b3b"}
+            connectOnly
+            theme="style-5"
+            connectClassName={`${spaceMono.className} text-[15px] font-bold uppercase tracking-[0.12em]`}
+          />
+        </div>
       </section>
 
       {sortedLinks.length ? (

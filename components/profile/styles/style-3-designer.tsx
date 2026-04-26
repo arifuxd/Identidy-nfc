@@ -19,6 +19,7 @@ import { DEFAULT_AVATAR, DEFAULT_COVER } from "@/lib/constants";
 import type { Database } from "@/types/database";
 
 import type { ProfileStyleProps } from "./types";
+import { ProfileActionSuite } from "./style-1-profile-actions";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -343,7 +344,12 @@ function ExperienceSection({ experiences }: { experiences: Experience[] }) {
   );
 }
 
-export function Style3Designer({ profile, socialLinks, experiences }: ProfileStyleProps) {
+export function Style3Designer({
+  profile,
+  socialLinks,
+  experiences,
+  profileUrl,
+}: ProfileStyleProps & { profileUrl?: string }) {
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
   const accent = profile.accent_color || "#3b82f6";
@@ -390,6 +396,15 @@ export function Style3Designer({ profile, socialLinks, experiences }: ProfileSty
               background:
                 "linear-gradient(to bottom, rgba(9,9,16,0.08) 0%, rgba(9,9,16,0.25) 45%, rgba(9,9,16,0.82) 77%, var(--c1) 100%)",
             }}
+          />
+        </div>
+        <div className="absolute inset-x-0 top-0 z-20 flex items-start justify-between px-3 py-3 sm:px-4 sm:py-4">
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor={accent}
+            compact
+            theme="style-3"
           />
         </div>
 
@@ -439,10 +454,10 @@ export function Style3Designer({ profile, socialLinks, experiences }: ProfileSty
           <p className="mx-auto mt-3 max-w-[320px] text-sm leading-7 text-[var(--text2)]">{profile.bio}</p>
         ) : null}
 
-        <div className="mt-5">
-          <a href={`/api/public/vcf/${profile.slug}`}>
+        <div className="mt-5 grid gap-2.5 sm:grid-cols-[1.35fr_0.95fr]">
+          <a href={`/api/public/vcf/${profile.slug}`} className="min-w-0">
             <span
-              className={`relative inline-flex w-full max-w-[340px] items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-3.5 text-sm font-bold text-white ${syne.className}`}
+              className={`relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-5 py-3.5 text-sm font-bold text-white ${syne.className}`}
               style={{
                 backgroundImage: `linear-gradient(135deg, ${accent} 0%, ${accentSoft} 100%)`,
                 boxShadow: `0 10px 30px ${withAlpha(accentDeep, "88")}`,
@@ -453,6 +468,14 @@ export function Style3Designer({ profile, socialLinks, experiences }: ProfileSty
               <span className="relative">Save Contact</span>
             </span>
           </a>
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor={accent}
+            connectOnly
+            theme="style-3"
+            connectClassName={`${syne.className} text-sm font-bold`}
+          />
         </div>
       </section>
 

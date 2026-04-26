@@ -16,6 +16,7 @@ import {
 
 import { DEFAULT_AVATAR, DEFAULT_COVER } from "@/lib/constants";
 import type { ProfileStyleProps } from "./types";
+import { ProfileActionSuite } from "./style-1-profile-actions";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -121,7 +122,12 @@ function formatDateLabel(value: string | null) {
   return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(parsed);
 }
 
-export function Style7Scifi({ profile, socialLinks, experiences }: ProfileStyleProps) {
+export function Style7Scifi({
+  profile,
+  socialLinks,
+  experiences,
+  profileUrl,
+}: ProfileStyleProps & { profileUrl?: string }) {
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
   const sortedLinks = [...socialLinks].sort((a, b) => a.sort_order - b.sort_order);
@@ -400,6 +406,15 @@ export function Style7Scifi({ profile, socialLinks, experiences }: ProfileStyleP
           <div className="scifi-cover-tag">SYS // ONLINE</div>
           <div className="scifi-cover-tag">NFC // v2.4</div>
         </div>
+        <div className="absolute inset-x-[18px] top-[54px] z-[5] flex items-start justify-between">
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor="#00d4ff"
+            compact
+            theme="style-7"
+          />
+        </div>
         {/* Avatar */}
         <div className="scifi-avatar-wrap">
           <div className="scifi-avatar-outer">
@@ -435,12 +450,22 @@ export function Style7Scifi({ profile, socialLinks, experiences }: ProfileStyleP
 
       {/* ── CTA ── */}
       <div className="scifi-cta-wrap">
-        <a className="scifi-save-btn"
-          href={`/api/public/vcf/${profile.slug}`}
-        >
-          <Download className="scifi-btn-icon" />
-          SAVE CONTACT
-        </a>
+        <div className="w-full max-w-[320px] space-y-3">
+          <a className="scifi-save-btn"
+            href={`/api/public/vcf/${profile.slug}`}
+          >
+            <Download className="scifi-btn-icon" />
+            SAVE CONTACT
+          </a>
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor="#00d4ff"
+            connectOnly
+            theme="style-7"
+            connectClassName={`${orbitron.className} text-[12px] font-medium uppercase tracking-[2px]`}
+          />
+        </div>
       </div>
 
       {/* ── SOCIAL ── */}

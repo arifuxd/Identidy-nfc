@@ -17,6 +17,7 @@ import { DEFAULT_AVATAR, DEFAULT_COVER } from "@/lib/constants";
 import type { Database } from "@/types/database";
 
 import type { ProfileStyleProps } from "./types";
+import { ProfileActionSuite } from "./style-1-profile-actions";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type IconComponent = ComponentType<{ className?: string; style?: CSSProperties }>;
@@ -138,7 +139,12 @@ function buildContacts(profile: Profile) {
   }>;
 }
 
-export function Style6Terminal({ profile, socialLinks, experiences }: ProfileStyleProps) {
+export function Style6Terminal({
+  profile,
+  socialLinks,
+  experiences,
+  profileUrl,
+}: ProfileStyleProps & { profileUrl?: string }) {
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
   const roleText = profile.job_title?.trim() || "Professional";
@@ -168,6 +174,15 @@ export function Style6Terminal({ profile, socialLinks, experiences }: ProfileSty
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-br from-[#0d1a12]/55 via-[#0d0f1a]/45 to-[#0d1410]/55" />
+        <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between px-3 py-3">
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor="#4ade80"
+            compact
+            theme="style-6"
+          />
+        </div>
       </section>
 
       <section className="relative z-10 mb-1 flex items-end gap-3 px-4 pt-0">
@@ -236,19 +251,27 @@ export function Style6Terminal({ profile, socialLinks, experiences }: ProfileSty
           <span className="text-xs text-[#c9c9c4]/65">run</span>
           <span className="ml-1 text-xs text-emerald-400/75">actions</span>
         </div>
-        <div className="flex flex-wrap gap-2 px-3.5 py-2.5 text-xs">
+        <div className="grid grid-cols-[1.25fr_0.95fr] gap-2 px-3.5 py-2.5 text-xs">
           <a
             href={`/api/public/vcf/${profile.slug}`}
-            className="inline-flex items-center gap-1.5 rounded-[3px] border border-emerald-400/30 bg-[#0d1a12] px-2.5 py-1.5 text-emerald-400 transition hover:bg-[#122018]"
+            className="inline-flex items-center justify-center gap-1.5 rounded-[3px] border border-emerald-400/30 bg-[#0d1a12] px-2.5 py-2 text-emerald-400 transition hover:bg-[#122018]"
           >
             <span className="text-[11px] opacity-55">&gt;</span>
             <Download className="size-3.5" />
             download_vcard
           </a>
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor="#4ade80"
+            connectOnly
+            theme="style-6"
+            connectClassName="font-mono text-xs"
+          />
           {contacts.find((item) => item.label.includes("email")) ? (
             <a
               href={contacts.find((item) => item.label.includes("email"))?.href}
-              className="inline-flex items-center gap-1.5 rounded-[3px] border border-white/15 bg-transparent px-2.5 py-1.5 text-[#9ca3af] transition hover:bg-[#1a1a1a]"
+              className="col-span-2 inline-flex items-center gap-1.5 rounded-[3px] border border-white/15 bg-transparent px-2.5 py-1.5 text-[#9ca3af] transition hover:bg-[#1a1a1a]"
             >
               <span className="text-[11px] opacity-55">&gt;</span>
               <Mail className="size-3.5" />

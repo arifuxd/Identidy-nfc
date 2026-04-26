@@ -19,6 +19,7 @@ import { DEFAULT_AVATAR, DEFAULT_COVER } from "@/lib/constants";
 import type { Database } from "@/types/database";
 
 import type { ProfileStyleProps } from "./types";
+import { ProfileActionSuite } from "./style-1-profile-actions";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type IconComponent = ComponentType<{ className?: string; style?: CSSProperties }>;
@@ -205,7 +206,12 @@ function buildContacts(profile: Profile) {
   }>;
 }
 
-export function Style2Corporate({ profile, socialLinks, experiences }: ProfileStyleProps) {
+export function Style2Corporate({
+  profile,
+  socialLinks,
+  experiences,
+  profileUrl,
+}: ProfileStyleProps & { profileUrl?: string }) {
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
   const accent = profile.accent_color || "#3b82f6";
@@ -235,6 +241,15 @@ export function Style2Corporate({ profile, socialLinks, experiences }: ProfileSt
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0d0d0f]/25 to-[#0d0d0f]/80" />
+        <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between px-3 py-3">
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor={accent}
+            compact
+            theme="style-2"
+          />
+        </div>
       </section>
 
       <section className="px-[18px]">
@@ -273,7 +288,7 @@ export function Style2Corporate({ profile, socialLinks, experiences }: ProfileSt
           ) : null}
         </div>
 
-        <div className="mb-[22px]">
+        <div className="mb-[22px] grid grid-cols-[1.28fr_0.92fr] gap-2.5">
           <a
             href={`/api/public/vcf/${profile.slug}`}
             className="block w-full rounded-[5px] px-3 py-3 text-center text-[13px] font-medium tracking-[0.04em] text-white transition hover:brightness-110"
@@ -284,6 +299,14 @@ export function Style2Corporate({ profile, socialLinks, experiences }: ProfileSt
               $ save_contact --format vcf
             </span>
           </a>
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor={accent}
+            connectOnly
+            theme="style-2"
+            connectClassName="font-mono text-[13px] font-medium tracking-[0.04em]"
+          />
         </div>
 
         {sortedLinks.length ? (

@@ -16,6 +16,7 @@ import {
 
 import { DEFAULT_AVATAR, DEFAULT_COVER } from "@/lib/constants";
 import type { ProfileStyleProps } from "./types";
+import { ProfileActionSuite } from "./style-1-profile-actions";
 
 const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
@@ -78,7 +79,12 @@ function toPhoneDigits(value: string) {
   return value.replace(/[^\d+]/g, "").replace(/^(\+)?0+/, "$1");
 }
 
-export function Style8Cinema({ profile, socialLinks, experiences }: ProfileStyleProps) {
+export function Style8Cinema({
+  profile,
+  socialLinks,
+  experiences,
+  profileUrl,
+}: ProfileStyleProps & { profileUrl?: string }) {
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
   const sortedLinks = [...socialLinks].sort((a, b) => a.sort_order - b.sort_order);
@@ -553,6 +559,15 @@ export function Style8Cinema({ profile, socialLinks, experiences }: ProfileStyle
             <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "8px", letterSpacing: "0.18em", color: "var(--muted)" }}>TAKE 01</span>
           </div>
         </div>
+        <div style={{ position: "absolute", inset: "54px 18px auto", zIndex: 10 }}>
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor="#C9A84C"
+            compact
+            theme="style-8"
+          />
+        </div>
 
         <div className="hero-bottom">
           <div className="cast-card">
@@ -612,10 +627,20 @@ export function Style8Cinema({ profile, socialLinks, experiences }: ProfileStyle
       </div>
 
       <div className="cta-section">
-        <a href={`/api/public/vcf/${profile.slug}`} className="save-btn">
-          <Download size={14} />
-          Download .vcf Card
-        </a>
+        <div style={{ display: "grid", gap: "10px", gridTemplateColumns: "1.35fr 0.95fr" }}>
+          <a href={`/api/public/vcf/${profile.slug}`} className="save-btn">
+            <Download size={14} />
+            Download .vcf Card
+          </a>
+          <ProfileActionSuite
+            profileUrl={profileUrl ?? `/${profile.slug}`}
+            profileName={profile.display_name}
+            accentColor="#C9A84C"
+            connectOnly
+            theme="style-8"
+            connectClassName={`${dmMono.className} text-[10.5px] uppercase tracking-[0.25em] font-normal`}
+          />
+        </div>
       </div>
 
       {/* SOCIAL */}
