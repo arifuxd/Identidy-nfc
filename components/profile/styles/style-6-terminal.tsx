@@ -266,7 +266,7 @@ export function Style6Terminal({
             accentColor="#4ade80"
             connectOnly
             theme="style-6"
-            connectClassName="font-mono text-xs"
+            connectClassName="font-mono text-xs font-normal"
           />
           {contacts.find((item) => item.label.includes("email")) ? (
             <a

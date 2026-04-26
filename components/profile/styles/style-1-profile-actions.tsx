@@ -100,7 +100,7 @@ function getThemePreset(theme: ThemeName, accentColor: string) {
       boxShadow: `0 10px 24px ${withAlpha(accentColor, "45")}`,
     },
     connectButtonClass:
-      "inline-flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/10 bg-white/6 px-3.5 text-[10px] font-medium text-white transition hover:bg-white/10 sm:text-[11px]",
+      "inline-flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/10 bg-white/6 px-3.5 text-white transition hover:bg-white/10",
     modalStyle: undefined as React.CSSProperties | undefined,
     eyebrowStyle: undefined as React.CSSProperties | undefined,
     closeStyle: undefined as React.CSSProperties | undefined,
@@ -157,7 +157,7 @@ function getThemePreset(theme: ThemeName, accentColor: string) {
         border: `1px solid ${withAlpha(accentColor, "40")}`,
       },
       connectButtonClass:
-        "inline-flex h-[46px] w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-[5px] border bg-[#0e1117] px-3 text-[12px] font-medium tracking-[0.04em] transition hover:bg-[#151b24]",
+        "inline-flex h-[46px] w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-[5px] border bg-[#0e1117] px-3 transition hover:bg-[#151b24]",
       connectButtonStyle: {
         borderColor: withAlpha(accentColor, "45"),
         color: accentColor,
@@ -187,7 +187,7 @@ function getThemePreset(theme: ThemeName, accentColor: string) {
         boxShadow: `0 10px 24px ${withAlpha(accentColor, "35")}`,
       },
       connectButtonClass:
-        "inline-flex h-[52px] w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border border-[rgba(139,92,246,0.2)] bg-[#1b1b28] px-5 text-[12px] font-semibold text-[#f6f0ff] transition hover:bg-[#232336]",
+        "inline-flex h-[52px] w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border border-[rgba(139,92,246,0.2)] bg-[#1b1b28] px-5 text-[#f6f0ff] transition hover:bg-[#232336]",
     };
   }
 
@@ -218,7 +218,7 @@ function getThemePreset(theme: ThemeName, accentColor: string) {
         boxShadow: `0 10px 24px ${withAlpha(accentColor, "18")}`,
       },
       connectButtonClass:
-        "inline-flex h-[46px] w-full items-center justify-center gap-2 whitespace-nowrap rounded-[8px] border border-[#d7dfec] bg-white px-4 text-sm font-medium text-[#0f1f3a] transition hover:bg-[#f7f9fc]",
+        "inline-flex h-[46px] w-full items-center justify-center gap-2 whitespace-nowrap rounded-[8px] border border-[#d7dfec] bg-white px-4 text-[#0f1f3a] transition hover:bg-[#f7f9fc]",
     };
   }
 
@@ -249,7 +249,7 @@ function getThemePreset(theme: ThemeName, accentColor: string) {
         boxShadow: "3px 3px 0 #000",
       },
       connectButtonClass:
-        "inline-flex h-[62px] w-full items-center justify-center gap-2 whitespace-nowrap border-[3px] border-black bg-[#1B66FF] px-4 text-[13px] font-bold uppercase tracking-[0.12em] text-white shadow-[3px_3px_0_#000] transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0_#000]",
+        "inline-flex h-[62px] w-full items-center justify-center gap-2 whitespace-nowrap border-[3px] border-black bg-[#1B66FF] px-4 text-white shadow-[3px_3px_0_#000] transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0_#000]",
     };
   }
 
@@ -278,7 +278,7 @@ function getThemePreset(theme: ThemeName, accentColor: string) {
         border: `1px solid ${withAlpha(accentColor, "40")}`,
       },
       connectButtonClass:
-        "inline-flex h-[36px] w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-[3px] border border-emerald-400/30 bg-[#0d1a12] px-3 text-[11px] tracking-[0.03em] text-emerald-300 transition hover:bg-[#122018]",
+        "inline-flex h-[36px] w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-[3px] border border-emerald-400/30 bg-[#0d1a12] px-3 text-emerald-300 transition hover:bg-[#122018]",
     };
   }
 
@@ -307,7 +307,7 @@ function getThemePreset(theme: ThemeName, accentColor: string) {
         border: `1px solid ${withAlpha(accentColor, "40")}`,
       },
       connectButtonClass:
-        "inline-flex h-[48px] w-full items-center justify-center gap-2 whitespace-nowrap rounded-[4px] border border-cyan-400/25 bg-[#0a1628] px-4 text-[12px] font-medium tracking-[0.16em] text-cyan-100 transition hover:bg-[#10213a]",
+        "inline-flex h-[48px] w-full items-center justify-center gap-2 whitespace-nowrap rounded-[4px] border border-cyan-400/25 bg-[#0a1628] px-4 text-cyan-100 transition hover:bg-[#10213a]",
     };
   }
 
@@ -337,7 +337,7 @@ function getThemePreset(theme: ThemeName, accentColor: string) {
         boxShadow: "0 10px 24px rgba(201,168,76,0.18)",
       },
       connectButtonClass:
-        "inline-flex h-[48px] w-full items-center justify-center gap-2 whitespace-nowrap border border-[#8A6F30] bg-[#101010] px-4 text-[10.5px] uppercase tracking-[0.24em] text-[#C9A84C] transition hover:bg-[#161616]",
+        "inline-flex h-[48px] w-full items-center justify-center gap-2 whitespace-nowrap border border-[#8A6F30] bg-[#101010] px-4 text-[#C9A84C] transition hover:bg-[#161616]",
     };
   }
 
@@ -670,7 +670,7 @@ export function ProfileActionSuite({
               key={option.id}
               type="button"
               onClick={() => void option.onClick()}
-              className={cn("flex min-h-[84px] flex-col items-center justify-center gap-1.5 rounded-[1.15rem] px-2.5 py-3 text-center text-[9px] font-medium transition", themePreset.tileClass)}
+              className={cn("flex min-h-[84px] flex-col items-center justify-center gap-1.5 rounded-[1.15rem] px-2.5 py-3 text-center font-medium transition", themePreset.tileClass)}
               style={themePreset.tileStyle}
             >
               <span
@@ -679,7 +679,7 @@ export function ProfileActionSuite({
               >
                 {option.icon}
               </span>
-              <span>{option.label}</span>
+              <span className="text-[13px] leading-4">{option.label}</span>
             </button>
           ))}
         </div>
@@ -696,11 +696,15 @@ export function ProfileActionSuite({
               type="button"
               variant="secondary"
               size="sm"
-              className={themePreset.secondaryButtonClass}
-              style={themePreset.secondaryButtonStyle}
+              className={cn("gap-1.5 px-3 py-1.5 text-[13px]", themePreset.secondaryButtonClass)}
+              style={{
+                ...themePreset.secondaryButtonStyle,
+                fontSize: "13px",
+                lineHeight: "16px",
+              }}
               onClick={() => void copyProfileUrl()}
             >
-              <Copy className="size-4" />
+              <Copy className="size-[13px]" />
               Copy
             </Button>
           </div>

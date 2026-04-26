@@ -103,6 +103,7 @@ export function Style1Default({
                 profileName={profile.display_name}
                 accentColor={accentColor}
                 connectOnly
+                connectClassName="text-[10px] font-medium sm:text-[11px]"
               />
             </div>
           </div>
