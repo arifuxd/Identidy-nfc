@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { DebugStyleFlyout } from "@/components/profile/debug-style-flyout";
@@ -13,6 +14,7 @@ import { Style7Scifi } from "@/components/profile/styles/style-7-scifi";
 import { Style8Cinema } from "@/components/profile/styles/style-8-cinema";
 import { getProfileBundleBySlug } from "@/lib/db/profiles";
 import { resolveProfileStyleDefinition } from "@/lib/profile-styles";
+import { absoluteUrl } from "@/lib/utils";
 
 type Params = Promise<{ username: string }>;
 type SearchParams = Promise<{ style?: string | string[] }>;
@@ -54,6 +56,8 @@ export default async function PublicProfilePage({
   }
 
   const { profile, socialLinks, experiences } = data;
+  const requestHeaders = await headers();
+  const profileUrl = absoluteUrl(`/${profile.slug}`, { headers: requestHeaders });
   const forcedStyle =
     typeof query.style === "string"
       ? query.style
@@ -121,6 +125,7 @@ export default async function PublicProfilePage({
           profile={profile}
           socialLinks={socialLinks}
           experiences={experiences}
+          profileUrl={profileUrl}
         />
       )}
     </main>

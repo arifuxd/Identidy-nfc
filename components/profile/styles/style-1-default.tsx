@@ -6,7 +6,6 @@ import { ExperienceList } from "@/components/profile/experience-list";
 import { SocialLinksList } from "@/components/profile/social-links-list";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_AVATAR, DEFAULT_COVER } from "@/lib/constants";
-import { absoluteUrl } from "@/lib/utils";
 
 import type { ProfileStyleProps } from "./types";
 import { Style1ProfileActions } from "./style-1-profile-actions";
@@ -19,11 +18,17 @@ function withAlpha(hexColor: string, alphaHex: string) {
   return `${hexColor}${alphaHex}`;
 }
 
-export function Style1Default({ profile, socialLinks, experiences }: ProfileStyleProps) {
+export function Style1Default({
+  profile,
+  socialLinks,
+  experiences,
+  profileUrl,
+}: ProfileStyleProps & {
+  profileUrl?: string;
+}) {
   const coverUrl = profile.cover_path || DEFAULT_COVER;
   const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
   const accentColor = profile.accent_color || "#3b82f6";
-  const profileUrl = absoluteUrl(`/${profile.slug}`);
   const profileStyle = {
     "--primary": accentColor,
     "--primary-strong": accentColor,
@@ -87,7 +92,7 @@ export function Style1Default({ profile, socialLinks, experiences }: ProfileStyl
           </div>
 
           <Style1ProfileActions
-            profileUrl={profileUrl}
+            profileUrl={profileUrl ?? `/${profile.slug}`}
             profileName={profile.display_name}
             accentColor={accentColor}
           />

@@ -7,7 +7,7 @@ import { buildVCard } from "@/lib/vcf";
 type Params = Promise<{ slug: string }>;
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Params },
 ) {
   const { slug } = await params;
@@ -65,7 +65,7 @@ export async function GET(
     title: profile.job_title,
     company: profile.company_name,
     address: profile.address,
-    profileUrl: absoluteUrl(`/${profile.slug}`),
+    profileUrl: absoluteUrl(`/${profile.slug}`, { headers: request.headers }),
     links,
     photoBase64,
     photoType,
