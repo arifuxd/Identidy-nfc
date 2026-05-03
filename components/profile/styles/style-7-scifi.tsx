@@ -307,7 +307,7 @@ export function Style7Scifi({
         .scifi-glow-div { margin: 20px auto 0; width: 120px; height: 1px; background: linear-gradient(90deg,transparent,var(--cyan),var(--blue),var(--purple),transparent); opacity: 0; animation: fadeD 0.5s ease 0.65s forwards; }
 
         .scifi-cta-wrap { padding: 22px 24px 26px; display: flex; justify-content: center; position: relative; z-index: 1; opacity: 0; animation: fadeD 0.5s ease 0.7s forwards; }
-        .scifi-save-btn { display: inline-flex; align-items: center; gap: 10px; width: 100%; max-width: 320px; justify-content: center; padding: 15px 32px; font-family: var(--font-orbitron), sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--text1); text-decoration: none; position: relative; overflow: hidden; border-radius: 4px; border: 1px solid rgba(0,212,255,0.35); background: linear-gradient(135deg, rgba(0,212,255,0.08) 0%, rgba(59,130,246,0.1) 50%, rgba(139,92,246,0.08) 100%); backdrop-filter: blur(12px); box-shadow: 0 0 20px rgba(0,212,255,0.1), inset 0 1px 0 rgba(255,255,255,0.05); transition: all 0.25s ease; }
+        .scifi-save-btn { display: inline-flex; align-items: center; gap: 10px; width: 100%; max-width: 320px; justify-content: center; padding: 15px 32px; font-family: var(--font-orbitron), sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--text1); text-decoration: none; position: relative; overflow: hidden; border-radius: 4px; border: 1px solid rgba(0,212,255,0.35); background: linear-gradient(135deg, rgba(0,212,255,0.08) 0%, rgba(59,130,246,0.1) 50%, rgba(139,92,246,0.08) 100%); backdrop-filter: blur(12px); box-shadow: 0 0 20px rgba(0,212,255,0.1), inset 0 1px 0 rgba(255,255,255,0.05); transition: all 0.25s ease; }
         .scifi-save-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.06) 50%, transparent 100%); transform: translateX(-100%); animation: btn-sweep 3s ease-in-out 2s infinite; }
         
         @keyframes btn-sweep {
@@ -463,7 +463,7 @@ export function Style7Scifi({
             accentColor="#00d4ff"
             connectOnly
             theme="style-7"
-            connectClassName={`${orbitron.className} text-[12px] font-medium uppercase tracking-[2px]`}
+            connectClassName={`${orbitron.className} text-[13px] font-medium uppercase tracking-[2px]`}
           />
         </div>
       </div>

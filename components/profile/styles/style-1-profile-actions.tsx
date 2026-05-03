@@ -100,7 +100,7 @@ function getThemePreset(theme: ThemeName, accentColor: string) {
       boxShadow: `0 10px 24px ${withAlpha(accentColor, "45")}`,
     },
     connectButtonClass:
-      "inline-flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/10 bg-white/6 px-3.5 text-white transition hover:bg-white/10",
+      "inline-flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/10 bg-white/6 px-3.5 text-[13px] text-white transition hover:bg-white/10",
     modalStyle: undefined as React.CSSProperties | undefined,
     eyebrowStyle: undefined as React.CSSProperties | undefined,
     closeStyle: undefined as React.CSSProperties | undefined,
@@ -352,6 +352,7 @@ export function ProfileActionSuite({
   connectOnly = false,
   theme = "style-1",
   connectClassName,
+  connectStyle,
 }: {
   profileUrl: string;
   profileName: string;
@@ -360,6 +361,7 @@ export function ProfileActionSuite({
   connectOnly?: boolean;
   theme?: ThemeName;
   connectClassName?: string;
+  connectStyle?: React.CSSProperties;
 }) {
   const [isQrOpen, setIsQrOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
@@ -826,9 +828,8 @@ export function ProfileActionSuite({
 
           {connectMessage ? (
             <p
-              className={`text-xs leading-5 ${
-                connectMessage.type === "error" ? "text-red-300" : "text-emerald-300"
-              }`}
+              className={`text-xs leading-5 ${connectMessage.type === "error" ? "text-red-300" : "text-emerald-300"
+                }`}
             >
               {connectMessage.text}
             </p>
@@ -875,8 +876,8 @@ export function ProfileActionSuite({
         {connectOnly ? (
           <button
             type="button"
-            className={cn(themePreset.connectButtonClass, connectClassName)}
-            style={themePreset.connectButtonStyle}
+            className={cn(themePreset.connectButtonClass, theme === "style-1" ? "text-[16px]" : "text-[13px]", connectClassName)}
+            style={{ ...themePreset.connectButtonStyle, fontSize: theme === "style-1" ? "16px" : "13px", ...connectStyle }}
             onClick={() => {
               setConnectMessage(null);
               setIsConnectOpen(true);
@@ -919,7 +920,7 @@ export function ProfileActionSuite({
             <Button
               type="button"
               variant="secondary"
-              className={cn("w-full", themePreset.secondaryButtonClass)}
+              className={cn("w-full text-[13px]", themePreset.secondaryButtonClass)}
               onClick={() => setIsQrOpen(true)}
             >
               <QrCode className="size-4" />
@@ -928,7 +929,7 @@ export function ProfileActionSuite({
             <Button
               type="button"
               variant="secondary"
-              className={cn("w-full", themePreset.secondaryButtonClass)}
+              className={cn("w-full", theme === "style-1" ? "text-[16px]" : "text-[13px]", themePreset.secondaryButtonClass)}
               onClick={() => {
                 setConnectMessage(null);
                 setIsConnectOpen(true);
@@ -939,7 +940,7 @@ export function ProfileActionSuite({
             </Button>
             <Button
               type="button"
-              className="w-full"
+              className={cn("w-full", theme === "style-1" ? "text-[16px]" : "text-[13px]")}
               style={{
                 backgroundColor: accentColor,
                 boxShadow: actionShadow,

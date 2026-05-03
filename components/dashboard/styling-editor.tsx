@@ -63,7 +63,7 @@ function PreviewStyle1({ coverUrl, avatarUrl, accentColor, profile }: {
           {profile.bio && <p className="mt-2 text-sm leading-7 text-muted">{profile.bio}</p>}
         </div>
         <div className="mt-4">
-          <button type="button" className="w-full rounded-full px-5 py-3 text-sm font-medium text-white" style={{ backgroundColor: accentColor, boxShadow: `0 16px 40px ${withAlpha(accentColor, "59")}` }}>
+          <button type="button" className="w-full rounded-full px-5 py-3 text-[13px] font-medium text-white" style={{ backgroundColor: accentColor, boxShadow: `0 16px 40px ${withAlpha(accentColor, "59")}` }}>
             Save Contact
           </button>
         </div>
@@ -88,7 +88,7 @@ function PreviewStyle2({ coverUrl, avatarUrl, accentColor, profile }: {
         </p>
         {profile.bio && <p className="mt-1 text-xs text-[#94a3b8]">{profile.bio}</p>}
         <div className="mt-3 mb-4">
-          <button type="button" className="w-full rounded-md px-3 py-2.5 text-center text-xs font-medium text-white" style={{ backgroundColor: accentColor }}>
+          <button type="button" className="w-full rounded-md px-3 py-2.5 text-center text-[13px] font-medium text-white" style={{ backgroundColor: accentColor }}>
             $ save_contact --format vcf
           </button>
         </div>
@@ -114,7 +114,7 @@ function PreviewStyle3({ coverUrl, avatarUrl, accentColor, profile }: {
           {profile.display_name}
         </p>
         <div className="mt-3">
-          <button type="button" className="w-full rounded-full px-5 py-2.5 text-xs font-bold text-white" style={{ backgroundImage: `linear-gradient(135deg, ${accentColor}, ${withAlpha(accentColor, "cc")})`, boxShadow: `0 8px 20px ${withAlpha(accentColor, "55")}` }}>
+          <button type="button" className="w-full rounded-full px-5 py-2.5 text-[13px] font-bold text-white" style={{ backgroundImage: `linear-gradient(135deg, ${accentColor}, ${withAlpha(accentColor, "cc")})`, boxShadow: `0 8px 20px ${withAlpha(accentColor, "55")}` }}>
             Save Contact
           </button>
         </div>
@@ -138,7 +138,7 @@ function PreviewStyle4({ coverUrl, avatarUrl, accentColor, profile }: {
           <p className="text-sm font-semibold text-[#0e203e]">{profile.display_name}</p>
         </div>
         <div className="mt-3">
-          <button type="button" className="w-full rounded-lg border px-4 py-2.5 text-center text-xs font-medium transition" style={{ color: accentColor, borderColor: accentColor }}>
+          <button type="button" className="w-full rounded-lg border px-4 py-2.5 text-center text-[13px] font-medium transition" style={{ color: accentColor, borderColor: accentColor }}>
             Save Contact
           </button>
         </div>
@@ -159,7 +159,7 @@ function PreviewStyle5({ coverUrl, avatarUrl, profile }: {
       <div className="px-4 pb-4 pt-8">
         <p className="text-sm font-bold">{profile.display_name}<span className="text-[#FF3B3B]">.</span></p>
         <div className="mt-3">
-          <button type="button" className="w-full border-[3px] border-black bg-[#FFE000] px-4 py-2.5 text-xs font-bold uppercase tracking-[0.1em] shadow-[3px_3px_0_#000]">
+          <button type="button" className="w-full border-[3px] border-black bg-[#FFE000] px-4 py-2.5 text-[13px] font-bold uppercase tracking-[0.1em] shadow-[3px_3px_0_#000]">
             Save Contact
           </button>
         </div>
@@ -189,7 +189,7 @@ function PreviewStyle6({ coverUrl, avatarUrl, profile }: {
         </div>
       </div>
       <div className="px-3 pb-3 pt-1">
-        <button type="button" className="inline-flex items-center gap-1 rounded-sm border border-emerald-400/30 bg-[#0d1a12] px-2 py-1 text-[9px] text-emerald-400">
+        <button type="button" className="inline-flex items-center gap-1 rounded-sm border border-emerald-400/30 bg-[#0d1a12] px-2 py-1 text-[13px] text-emerald-400">
           &gt; download_vcard
         </button>
       </div>
@@ -219,7 +219,7 @@ function PreviewStyle7({ coverUrl, avatarUrl, profile }: {
           <div className="h-[1px] w-4 bg-gradient-to-r from-[#00d4ff] to-transparent" />
         </div>
         <div className="mt-3">
-          <button type="button" className="w-full rounded border border-[rgba(0,212,255,0.35)] bg-[rgba(0,212,255,0.08)] px-5 py-2 text-[10px] font-bold uppercase tracking-widest text-[#e8f4ff] shadow-[0_0_10px_rgba(0,212,255,0.1)] backdrop-blur-sm">
+          <button type="button" className="w-full rounded border border-[rgba(0,212,255,0.35)] bg-[rgba(0,212,255,0.08)] px-5 py-2 text-[13px] font-bold uppercase tracking-widest text-[#e8f4ff] shadow-[0_0_10px_rgba(0,212,255,0.1)] backdrop-blur-sm">
             Save Contact
           </button>
         </div>
@@ -255,7 +255,7 @@ function PreviewStyle8({ coverUrl, avatarUrl, profile }: {
         </div>
       </div>
       <div className="p-4 pt-3">
-        <div className="w-full border border-[#8A6F30] bg-transparent py-2 text-[8px] font-bold uppercase tracking-[0.2em] text-[#C9A84C] text-center">
+        <div className="w-full border border-[#8A6F30] bg-transparent py-2 text-[13px] font-bold uppercase tracking-[0.2em] text-[#C9A84C] text-center">
           Save Contact
         </div>
       </div>

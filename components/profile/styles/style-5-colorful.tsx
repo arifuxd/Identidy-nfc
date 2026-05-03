@@ -284,7 +284,7 @@ export function Style5Colorful({
         <div className="grid gap-2.5 sm:grid-cols-[1.35fr_0.95fr]">
           <a
             href={`/api/public/vcf/${profile.slug}`}
-            className={`${spaceMono.className} flex w-full items-center justify-center gap-2 border-[3px] border-black bg-[#FFE000] px-4 py-4 text-[15px] font-bold uppercase tracking-[0.12em] shadow-[4px_4px_0_#000] transition active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0_#000]`}
+            className={`${spaceMono.className} flex w-full items-center justify-center gap-2 border-[3px] border-black bg-[#FFE000] px-4 py-4 text-[13px] font-bold uppercase tracking-[0.12em] shadow-[4px_4px_0_#000] transition active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0_#000]`}
           >
             <Download className="size-5" />
             Save Contact (.vcf)
@@ -295,7 +295,7 @@ export function Style5Colorful({
             accentColor={profile.accent_color || "#ff3b3b"}
             connectOnly
             theme="style-5"
-            connectClassName={`${spaceMono.className} text-[15px] font-bold uppercase tracking-[0.12em]`}
+            connectClassName={`${spaceMono.className} text-[13px] font-bold uppercase tracking-[0.12em]`}
           />
         </div>
       </section>

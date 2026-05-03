@@ -254,7 +254,7 @@ export function Style6Terminal({
         <div className="grid grid-cols-[1.25fr_0.95fr] gap-2 px-3.5 py-2.5 text-xs">
           <a
             href={`/api/public/vcf/${profile.slug}`}
-            className="inline-flex items-center justify-center gap-1.5 rounded-[3px] border border-emerald-400/30 bg-[#0d1a12] px-2.5 py-2 text-emerald-400 transition hover:bg-[#122018]"
+            className="inline-flex items-center justify-center gap-1.5 rounded-[3px] border border-emerald-400/30 bg-[#0d1a12] px-2.5 py-2 text-[13px] text-emerald-400 transition hover:bg-[#122018]"
           >
             <span className="text-[11px] opacity-55">&gt;</span>
             <Download className="size-3.5" />
@@ -266,7 +266,7 @@ export function Style6Terminal({
             accentColor="#4ade80"
             connectOnly
             theme="style-6"
-            connectClassName="font-mono text-xs font-normal"
+            connectClassName="font-mono text-[13px] font-normal"
           />
           {contacts.find((item) => item.label.includes("email")) ? (
             <a

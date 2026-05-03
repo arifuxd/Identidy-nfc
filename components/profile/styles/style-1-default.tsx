@@ -88,7 +88,7 @@ export function Style1Default({
             <div className="grid grid-cols-[1.3fr_1fr] gap-2.5">
               <a href={`/api/public/vcf/${profile.slug}`} className="flex-1">
                 <Button
-                  className="h-10 w-full whitespace-nowrap px-3 text-[10px] sm:text-[11px]"
+                  className="h-10 w-full whitespace-nowrap px-3 text-[13px]"
                   style={{
                     backgroundColor: accentColor,
                     boxShadow: `0 16px 40px ${withAlpha(accentColor, "59")}`,
@@ -103,7 +103,7 @@ export function Style1Default({
                 profileName={profile.display_name}
                 accentColor={accentColor}
                 connectOnly
-                connectClassName="text-[10px] font-medium sm:text-[11px]"
+                connectClassName="text-[13px] font-medium"
               />
             </div>
           </div>

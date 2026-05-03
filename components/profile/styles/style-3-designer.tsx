@@ -457,7 +457,7 @@ export function Style3Designer({
         <div className="mt-5 grid gap-2.5 sm:grid-cols-[1.35fr_0.95fr]">
           <a href={`/api/public/vcf/${profile.slug}`} className="min-w-0">
             <span
-              className={`relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-5 py-3.5 text-sm font-bold text-white ${syne.className}`}
+              className={`relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-5 py-3.5 text-[13px] font-bold text-white ${syne.className}`}
               style={{
                 backgroundImage: `linear-gradient(135deg, ${accent} 0%, ${accentSoft} 100%)`,
                 boxShadow: `0 10px 30px ${withAlpha(accentDeep, "88")}`,
@@ -474,7 +474,8 @@ export function Style3Designer({
             accentColor={accent}
             connectOnly
             theme="style-3"
-            connectClassName={`${syne.className} text-sm font-bold`}
+            connectClassName={`${syne.className} text-[13px] font-bold`}
+            connectStyle={{ fontFamily: syne.style.fontFamily, fontWeight: "bold" }}
           />
         </div>
       </section>

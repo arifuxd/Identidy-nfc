@@ -468,7 +468,7 @@ export function Style8Cinema({
         .clapper-section-title { font-family: var(--font-bebas), sans-serif; font-size: 20px; letter-spacing: 0.06em; color: var(--text); }
 
         .cta-section { padding: 18px 20px 0; }
-        .save-btn { width: 100%; padding: 16px; background: transparent; border: 1px solid var(--gold-dim); color: var(--gold); font-family: var(--font-dm-mono), monospace; font-size: 10.5px; letter-spacing: 0.25em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; text-decoration: none; }
+        .save-btn { width: 100%; padding: 16px; background: transparent; border: 1px solid var(--gold-dim); color: var(--gold); font-family: var(--font-dm-mono), monospace; font-size: 13px; letter-spacing: 0.25em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; text-decoration: none; }
         .save-btn:active { transform: scale(0.98); background: var(--gold-faint); }
 
         .social-section { padding: 24px 20px 0; }
@@ -638,12 +638,12 @@ export function Style8Cinema({
             accentColor="#C9A84C"
             connectOnly
             theme="style-8"
-            connectClassName={`${dmMono.className} text-[10.5px] uppercase tracking-[0.25em] font-normal`}
+            connectClassName={`${dmMono.className} text-[13px] uppercase tracking-[0.25em] font-normal`}
           />
         </div>
       </div>
 
-      {/* SOCIAL */}
+      SOCIAL
       {sortedLinks.length > 0 && (
         <div className="social-section">
           <div className="sec-label">// Connect / Distribution</div>

@@ -294,7 +294,7 @@ export function Style4Corporate({
         <div className="grid grid-cols-[1.28fr_0.9fr] gap-2.5">
           <a
             href={`/api/public/vcf/${profile.slug}`}
-            className="block w-full rounded-[8px] border px-4 py-[11px] text-center text-sm font-medium transition hover:bg-[var(--corporate-soft)]"
+            className="block w-full rounded-[8px] border px-4 py-[11px] text-center text-[13px] font-medium transition hover:bg-[var(--corporate-soft)]"
             style={{
               color: accent,
               borderColor: accent,
@@ -311,7 +311,7 @@ export function Style4Corporate({
             accentColor={accent}
             connectOnly
             theme="style-4"
-            connectClassName="text-sm font-medium"
+            connectClassName="text-[13px] font-medium"
           />
         </div>
       </section>

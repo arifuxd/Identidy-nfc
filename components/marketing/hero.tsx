@@ -105,7 +105,7 @@ export function MarketingHero() {
                       ),
                     )}
                   </div>
-                  <div className="mt-4 rounded-2xl bg-primary px-4 py-3 text-center text-sm font-medium text-white">
+                  <div className="mt-4 rounded-2xl bg-primary px-4 py-3 text-center text-[13px] font-medium text-white">
                     Save Contact
                   </div>
                 </div>
