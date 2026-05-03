@@ -1,0 +1,64 @@
+[
+  {
+    "account": {
+      "email": "jane@example.com",
+      "password": "StrongPass#123",
+      "display_name": "Jane Doe",
+      "role": "user"
+    },
+    "profile": {
+      "username": "jane-doe",
+      "slug": "jane-doe",
+      "bio": "Founder building modern customer experiences.",
+      "address": "San Francisco, CA",
+      "job_title": "Founder & CEO",
+      "company_name": "Nova Labs",
+      "phone_home": "+1-415-555-0101",
+      "phone_office": "+1-415-555-0110",
+      "email_home": "jane@example.com",
+      "email_office": "hello@novalabs.com",
+      "avatar_path": "https://your-project.supabase.co/storage/v1/object/public/avatars/example/jane.webp",
+      "cover_path": "https://your-project.supabase.co/storage/v1/object/public/covers/example/jane-cover.webp",
+      "is_published": true,
+      "profile_style": "style-1",
+      "accent_color": "#3b82f6"
+    },
+    "social_links": [
+      {
+        "platform": "linkedin",
+        "label": "LinkedIn",
+        "url": "https://linkedin.com/in/janedoe",
+        "sort_order": 0
+      },
+      {
+        "platform": "portfolio",
+        "label": "Website",
+        "url": "https://janedoe.com",
+        "sort_order": 1
+      }
+    ],
+    "experiences": [
+      {
+        "title": "Founder & CEO",
+        "company": "Nova Labs",
+        "location": "San Francisco",
+        "description": "Leading product and growth.",
+        "start_date": "2021-01-01",
+        "end_date": null,
+        "is_current": true,
+        "sort_order": 0
+      }
+    ]
+  },
+  {
+    "account": {
+      "email": "ops-admin@example.com",
+      "password": "StrongPass#123",
+      "display_name": "Ops Admin",
+      "role": "admin"
+    },
+    "profile": null,
+    "social_links": [],
+    "experiences": []
+  }
+]

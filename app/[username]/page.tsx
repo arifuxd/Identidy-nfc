@@ -69,72 +69,74 @@ export default async function PublicProfilePage({
   const isFullWidth = styleId !== "style-1";
 
   return (
-    <main
-      className={
-        isFullWidth
-          ? "mx-auto min-h-screen w-full max-w-xl"
-          : "mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-4 sm:py-4"
-      }
-    >
-      <PublicProfileViewTracker slug={profile.slug} />
-      <DebugStyleFlyout activeStyle={styleId} />
-      {styleId === "style-2" ? (
-        <Style2Corporate
-          profile={profile}
-          socialLinks={socialLinks}
-          experiences={experiences}
-          profileUrl={profileUrl}
-        />
-      ) : styleId === "style-3" ? (
-        <Style3Designer
-          profile={profile}
-          socialLinks={socialLinks}
-          experiences={experiences}
-          profileUrl={profileUrl}
-        />
-      ) : styleId === "style-4" ? (
-        <Style4Corporate
-          profile={profile}
-          socialLinks={socialLinks}
-          experiences={experiences}
-          profileUrl={profileUrl}
-        />
-      ) : styleId === "style-5" ? (
-        <Style5Colorful
-          profile={profile}
-          socialLinks={socialLinks}
-          experiences={experiences}
-          profileUrl={profileUrl}
-        />
-      ) : styleId === "style-6" ? (
-        <Style6Terminal
-          profile={profile}
-          socialLinks={socialLinks}
-          experiences={experiences}
-          profileUrl={profileUrl}
-        />
-      ) : styleId === "style-7" ? (
-        <Style7Scifi
-          profile={profile}
-          socialLinks={socialLinks}
-          experiences={experiences}
-          profileUrl={profileUrl}
-        />
-      ) : styleId === "style-8" ? (
-        <Style8Cinema
-          profile={profile}
-          socialLinks={socialLinks}
-          experiences={experiences}
-          profileUrl={profileUrl}
-        />
-      ) : (
-        <Style1Default
-          profile={profile}
-          socialLinks={socialLinks}
-          experiences={experiences}
-          profileUrl={profileUrl}
-        />
-      )}
-    </main>
+    <div className="min-h-screen bg-[#0b1728]">
+      <main
+        className={
+          isFullWidth
+            ? "mx-auto min-h-screen w-full max-w-xl"
+            : "mx-auto min-h-screen w-full max-w-xl px-4 py-4 sm:px-4 sm:py-4"
+        }
+      >
+        <PublicProfileViewTracker slug={profile.slug} />
+        <DebugStyleFlyout activeStyle={styleId} />
+        {styleId === "style-2" ? (
+          <Style2Corporate
+            profile={profile}
+            socialLinks={socialLinks}
+            experiences={experiences}
+            profileUrl={profileUrl}
+          />
+        ) : styleId === "style-3" ? (
+          <Style3Designer
+            profile={profile}
+            socialLinks={socialLinks}
+            experiences={experiences}
+            profileUrl={profileUrl}
+          />
+        ) : styleId === "style-4" ? (
+          <Style4Corporate
+            profile={profile}
+            socialLinks={socialLinks}
+            experiences={experiences}
+            profileUrl={profileUrl}
+          />
+        ) : styleId === "style-5" ? (
+          <Style5Colorful
+            profile={profile}
+            socialLinks={socialLinks}
+            experiences={experiences}
+            profileUrl={profileUrl}
+          />
+        ) : styleId === "style-6" ? (
+          <Style6Terminal
+            profile={profile}
+            socialLinks={socialLinks}
+            experiences={experiences}
+            profileUrl={profileUrl}
+          />
+        ) : styleId === "style-7" ? (
+          <Style7Scifi
+            profile={profile}
+            socialLinks={socialLinks}
+            experiences={experiences}
+            profileUrl={profileUrl}
+          />
+        ) : styleId === "style-8" ? (
+          <Style8Cinema
+            profile={profile}
+            socialLinks={socialLinks}
+            experiences={experiences}
+            profileUrl={profileUrl}
+          />
+        ) : (
+          <Style1Default
+            profile={profile}
+            socialLinks={socialLinks}
+            experiences={experiences}
+            profileUrl={profileUrl}
+          />
+        )}
+      </main>
+    </div>
   );
 }

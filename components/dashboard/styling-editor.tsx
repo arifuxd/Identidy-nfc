@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { saveProfileStylingAction } from "@/actions/profile";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { DEFAULT_AVATAR, DEFAULT_COVER, PROFILE_ACCENT_OPTIONS } from "@/lib/constants";
+import { PROFILE_ACCENT_OPTIONS } from "@/lib/constants";
 import {
   PROFILE_STYLE_DEFINITIONS,
   PROFILE_STYLE_OPTIONS,
@@ -24,14 +24,6 @@ interface StylingEditorProps {
   profile: Database["public"]["Tables"]["profiles"]["Row"];
 }
 
-function withAlpha(hexColor: string, alphaHex: string) {
-  if (!/^#[0-9a-f]{6}$/i.test(hexColor)) {
-    return hexColor;
-  }
-
-  return `${hexColor}${alphaHex}`;
-}
-
 const ACCENT_LABELS: Record<string, string> = {
   "#3b82f6": "Blue",
   "#ef4444": "Red",
@@ -41,232 +33,31 @@ const ACCENT_LABELS: Record<string, string> = {
   "#ec4899": "Pink",
 };
 
-/* ------------------------------------------------------------------ */
-/*  Style-specific mini preview renderers                             */
-/* ------------------------------------------------------------------ */
+const STYLE_PREVIEW_MAP: Record<ProfileStyleId, string> = {
+  "style-1": "/style-previews/style-1.png",
+  "style-2": "/style-previews/style-2.png",
+  "style-3": "/style-previews/style-3.png",
+  "style-4": "/style-previews/style-4.png",
+  "style-5": "/style-previews/style-5.png",
+  "style-6": "/style-previews/style-6.png",
+  "style-7": "/style-previews/style-7.png",
+  "style-8": "/style-previews/style-8.png",
+};
+const PREVIEW_SCROLL_MS = 3200;
 
-function PreviewStyle1({ coverUrl, avatarUrl, accentColor, profile }: {
-  coverUrl: string; avatarUrl: string; accentColor: string;
-  profile: Database["public"]["Tables"]["profiles"]["Row"];
-}) {
-  return (
-    <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0c1729]">
-      <div className="h-28 w-full bg-cover bg-center" style={{ backgroundImage: `url(${coverUrl})` }} />
-      <div className="p-4">
-        <div className="-mt-12 flex justify-center">
-          <div className="size-24 rounded-full border-4 border-[#0c1729] bg-cover bg-center" style={{ backgroundImage: `url(${avatarUrl})` }} />
-        </div>
-        <div className="mt-4 text-center">
-          {(profile.job_title || profile.company_name) && (
-            <p className="text-sm text-blue-100/78">{[profile.job_title, profile.company_name].filter(Boolean).join(" at ")}</p>
-          )}
-          {profile.bio && <p className="mt-2 text-sm leading-7 text-muted">{profile.bio}</p>}
-        </div>
-        <div className="mt-4">
-          <button type="button" className="w-full rounded-full px-5 py-3 text-[13px] font-medium text-white" style={{ backgroundColor: accentColor, boxShadow: `0 16px 40px ${withAlpha(accentColor, "59")}` }}>
-            Save Contact
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PreviewStyle2({ coverUrl, avatarUrl, accentColor, profile }: {
-  coverUrl: string; avatarUrl: string; accentColor: string;
-  profile: Database["public"]["Tables"]["profiles"]["Row"];
-}) {
-  return (
-    <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0d0d0f] text-[#e2e8f0]">
-      <div className="h-24 w-full bg-cover bg-center" style={{ backgroundImage: `url(${coverUrl})` }} />
-      <div className="px-4">
-        <div className="-mt-8 mb-2 flex items-end gap-2.5">
-          <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-[#0d0d0f] bg-cover bg-center" style={{ backgroundImage: `url(${avatarUrl})` }} />
-        </div>
-        <p className="text-sm font-medium text-slate-100">
-          <span style={{ color: accentColor }}>&lt;</span>{profile.display_name}<span style={{ color: accentColor }}> /&gt;</span>
-        </p>
-        {profile.bio && <p className="mt-1 text-xs text-[#94a3b8]">{profile.bio}</p>}
-        <div className="mt-3 mb-4">
-          <button type="button" className="w-full rounded-md px-3 py-2.5 text-center text-[13px] font-medium text-white" style={{ backgroundColor: accentColor }}>
-            $ save_contact --format vcf
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PreviewStyle3({ coverUrl, avatarUrl, accentColor, profile }: {
-  coverUrl: string; avatarUrl: string; accentColor: string;
-  profile: Database["public"]["Tables"]["profiles"]["Row"];
-}) {
-  return (
-    <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#090910] text-[#f0eeff]">
-      <div className="relative h-24 bg-cover bg-center brightness-[0.6]" style={{ backgroundImage: `url(${coverUrl})` }}>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#090910]" />
-      </div>
-      <div className="-mt-8 flex justify-center">
-        <div className="size-16 overflow-hidden rounded-full border-[3px] border-[#090910] bg-cover bg-center shadow-[0_0_24px_rgba(59,130,246,0.3)]" style={{ backgroundImage: `url(${avatarUrl})`, boxShadow: `0 0 24px ${withAlpha(accentColor, "55")}` }} />
-      </div>
-      <div className="px-4 pb-4 pt-2 text-center">
-        <p className="text-sm font-bold" style={{ backgroundImage: `linear-gradient(135deg, #fff 22%, ${accentColor})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-          {profile.display_name}
-        </p>
-        <div className="mt-3">
-          <button type="button" className="w-full rounded-full px-5 py-2.5 text-[13px] font-bold text-white" style={{ backgroundImage: `linear-gradient(135deg, ${accentColor}, ${withAlpha(accentColor, "cc")})`, boxShadow: `0 8px 20px ${withAlpha(accentColor, "55")}` }}>
-            Save Contact
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PreviewStyle4({ coverUrl, avatarUrl, accentColor, profile }: {
-  coverUrl: string; avatarUrl: string; accentColor: string;
-  profile: Database["public"]["Tables"]["profiles"]["Row"];
-}) {
-  return (
-    <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#f7f9fc] text-[#0f1d34]">
-      <div className="h-24 w-full bg-cover bg-center" style={{ backgroundImage: `url(${coverUrl})` }} />
-      <div className="px-4 pb-4">
-        <div className="-mt-8 flex justify-center">
-          <div className="size-16 overflow-hidden rounded-full border-[3px] border-[#f7f9fc] bg-cover bg-center" style={{ backgroundImage: `url(${avatarUrl})` }} />
-        </div>
-        <div className="mt-2 text-center">
-          <p className="text-sm font-semibold text-[#0e203e]">{profile.display_name}</p>
-        </div>
-        <div className="mt-3">
-          <button type="button" className="w-full rounded-lg border px-4 py-2.5 text-center text-[13px] font-medium transition" style={{ color: accentColor, borderColor: accentColor }}>
-            Save Contact
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PreviewStyle5({ coverUrl, avatarUrl, profile }: {
-  coverUrl: string; avatarUrl: string;
-  profile: Database["public"]["Tables"]["profiles"]["Row"];
-}) {
-  return (
-    <div className="overflow-hidden rounded-3xl border-[3px] border-black bg-[#f5f0e8] text-black shadow-[4px_4px_0_#000]">
-      <div className="relative h-24 border-b-[3px] border-black bg-cover bg-center" style={{ backgroundImage: `url(${coverUrl})` }}>
-        <div className="absolute -bottom-6 left-3 z-10 h-12 w-12 -rotate-2 border-[3px] border-black bg-[#FF3B3B] bg-cover bg-center shadow-[3px_3px_0_#000]" style={{ backgroundImage: `url(${avatarUrl})` }} />
-      </div>
-      <div className="px-4 pb-4 pt-8">
-        <p className="text-sm font-bold">{profile.display_name}<span className="text-[#FF3B3B]">.</span></p>
-        <div className="mt-3">
-          <button type="button" className="w-full border-[3px] border-black bg-[#FFE000] px-4 py-2.5 text-[13px] font-bold uppercase tracking-[0.1em] shadow-[3px_3px_0_#000]">
-            Save Contact
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PreviewStyle6({ coverUrl, avatarUrl, profile }: {
-  coverUrl: string; avatarUrl: string;
-  profile: Database["public"]["Tables"]["profiles"]["Row"];
-}) {
-  return (
-    <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0d0d0d] font-mono text-[#c9c9c4]">
-      <div className="flex items-center gap-1.5 border-b border-white/10 bg-black/70 px-3 py-1.5">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#ff5f57]/80" />
-        <span className="h-1.5 w-1.5 rounded-full bg-[#febc2e]/80" />
-        <span className="h-1.5 w-1.5 rounded-full bg-[#28c840]/80" />
-        <span className="ml-1 text-[9px] text-emerald-400/80">~/profile/{profile.slug}</span>
-      </div>
-      <div className="relative h-20 bg-cover bg-center brightness-[0.6]" style={{ backgroundImage: `url(${coverUrl})` }} />
-      <div className="flex items-end gap-2 px-3 pb-2">
-        <div className="-mt-5 h-10 w-10 shrink-0 overflow-hidden rounded-md border border-[#1a2e1f] bg-cover bg-center" style={{ backgroundImage: `url(${avatarUrl})` }} />
-        <div className="pb-0.5">
-          <p className="text-[11px] font-semibold text-[#e2e8e0]">{profile.display_name}</p>
-          <p className="text-[9px] text-emerald-400/70">@{profile.slug}</p>
-        </div>
-      </div>
-      <div className="px-3 pb-3 pt-1">
-        <button type="button" className="inline-flex items-center gap-1 rounded-sm border border-emerald-400/30 bg-[#0d1a12] px-2 py-1 text-[13px] text-emerald-400">
-          &gt; download_vcard
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function PreviewStyle7({ coverUrl, avatarUrl, profile }: {
-  coverUrl: string; avatarUrl: string;
-  profile: Database["public"]["Tables"]["profiles"]["Row"];
-}) {
-  return (
-    <div className="overflow-hidden rounded-3xl border border-[rgba(0,212,255,0.12)] bg-[#030712] font-sans text-[#e8f4ff]">
-      <div className="relative h-24 bg-cover bg-center" style={{ backgroundImage: `url(${coverUrl})`, filter: 'brightness(0.4) saturate(0.8) hue-rotate(10deg)' }}>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#030712]" />
-      </div>
-      <div className="-mt-8 flex justify-center relative z-10">
-        <div className="size-16 overflow-hidden rounded-full border-2 border-[#030712] bg-cover bg-center shadow-[0_0_15px_rgba(0,212,255,0.2)]" style={{ backgroundImage: `url(${avatarUrl})` }} />
-      </div>
-      <div className="px-4 pb-4 pt-2 text-center">
-        <p className="text-[13px] font-bold tracking-widest text-[#e8f4ff] uppercase" style={{ textShadow: "0 0 10px rgba(0,212,255,0.3)" }}>
-          {profile.display_name}
-        </p>
-        <div className="mt-1 flex items-center justify-center gap-2 opacity-80">
-          <div className="h-[1px] w-4 bg-gradient-to-r from-transparent to-[#00d4ff]" />
-          <p className="text-[9px] uppercase tracking-[1.5px] text-[#67e8f9]">{(profile.job_title || "PRO").substring(0, 15)}</p>
-          <div className="h-[1px] w-4 bg-gradient-to-r from-[#00d4ff] to-transparent" />
-        </div>
-        <div className="mt-3">
-          <button type="button" className="w-full rounded border border-[rgba(0,212,255,0.35)] bg-[rgba(0,212,255,0.08)] px-5 py-2 text-[13px] font-bold uppercase tracking-widest text-[#e8f4ff] shadow-[0_0_10px_rgba(0,212,255,0.1)] backdrop-blur-sm">
-            Save Contact
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PreviewStyle8({ coverUrl, avatarUrl, profile }: {
-  coverUrl: string; avatarUrl: string;
-  profile: Database["public"]["Tables"]["profiles"]["Row"];
-}) {
-  return (
-    <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#080808] font-sans text-[#F0EDE6]">
-      <div className="h-6 w-full bg-[#0c0c0c] border-b border-[#1a1a1a] flex items-center gap-1 px-2">
-        <div className="w-2 h-3 border border-[#2a2a2a] bg-black rounded-[1px]" />
-        <div className="w-2 h-3 border border-[#2a2a2a] bg-black rounded-[1px]" />
-        <div className="flex-1 h-[1px] bg-[#1a1a1a]" />
-      </div>
-      <div className="relative h-28 bg-cover bg-center" style={{ backgroundImage: `url(${coverUrl})` }}>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#080808]" />
-      </div>
-      <div className="-mt-10 px-4 flex items-end gap-3 relative z-10">
-        <div className="size-14 overflow-hidden border border-[#8A6F30] bg-[#141414] relative">
-          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#C9A84C] via-black to-[#C9A84C]" />
-          <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${avatarUrl})` }} />
-        </div>
-        <div className="pb-1">
-          <p className="text-[14px] font-bold tracking-tight uppercase leading-none">
-            {profile.display_name}
-          </p>
-          <p className="text-[7px] tracking-[0.1em] text-[#C9A84C] uppercase mt-1">{(profile.job_title || "Director")}</p>
-        </div>
-      </div>
-      <div className="p-4 pt-3">
-        <div className="w-full border border-[#8A6F30] bg-transparent py-2 text-[13px] font-bold uppercase tracking-[0.2em] text-[#C9A84C] text-center">
-          Save Contact
-        </div>
-      </div>
-    </div>
-  );
+function withAlpha(hexColor: string, alphaHex: string) {
+  if (!/^#[0-9a-f]{6}$/i.test(hexColor)) return hexColor;
+  return `${hexColor}${alphaHex}`;
 }
 
 export function StylingEditor({ profile }: StylingEditorProps) {
   const [resultMessage, setResultMessage] = useState<string | null>(null);
   const [resultType, setResultType] = useState<"success" | "error" | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [activePreviewId, setActivePreviewId] = useState<ProfileStyleId | null>(null);
+  const frameRefs = useRef<Partial<Record<ProfileStyleId, HTMLDivElement | null>>>({});
+  const imageRefs = useRef<Partial<Record<ProfileStyleId, HTMLImageElement | null>>>({});
+  const [scrollOffsets, setScrollOffsets] = useState<Partial<Record<ProfileStyleId, number>>>({});
 
   const defaultStyle = PROFILE_STYLE_OPTIONS.includes(profile.profile_style as ProfileStyleId)
     ? (profile.profile_style as ProfileStyleId)
@@ -292,31 +83,27 @@ export function StylingEditor({ profile }: StylingEditorProps) {
     () => PROFILE_STYLE_DEFINITIONS.find((item) => item.id === profileStyle),
     [profileStyle],
   );
-  const isColorfulStyle = profileStyle === "style-5" || profileStyle === "style-7" || profileStyle === "style-8";
-  const coverUrl = profile.cover_path || DEFAULT_COVER;
-  const avatarUrl = profile.avatar_path || DEFAULT_AVATAR;
+  const isColorfulStyle =
+    profileStyle === "style-5" || profileStyle === "style-7" || profileStyle === "style-8";
 
-  function renderPreview() {
-    const commonProps = { coverUrl, avatarUrl, accentColor, profile };
-    switch (profileStyle) {
-      case "style-2":
-        return <PreviewStyle2 {...commonProps} />;
-      case "style-3":
-        return <PreviewStyle3 {...commonProps} />;
-      case "style-4":
-        return <PreviewStyle4 {...commonProps} />;
-      case "style-5":
-        return <PreviewStyle5 coverUrl={coverUrl} avatarUrl={avatarUrl} profile={profile} />;
-      case "style-6":
-        return <PreviewStyle6 coverUrl={coverUrl} avatarUrl={avatarUrl} profile={profile} />;
-      case "style-7":
-        return <PreviewStyle7 coverUrl={coverUrl} avatarUrl={avatarUrl} profile={profile} />;
-      case "style-8":
-        return <PreviewStyle8 coverUrl={coverUrl} avatarUrl={avatarUrl} profile={profile} />;
-      default:
-        return <PreviewStyle1 {...commonProps} />;
-    }
-  }
+  useEffect(() => {
+    const recalc = () => {
+      const next: Partial<Record<ProfileStyleId, number>> = {};
+      PROFILE_STYLE_DEFINITIONS.forEach((style) => {
+        const frame = frameRefs.current[style.id];
+        const image = imageRefs.current[style.id];
+        if (!frame || !image) return;
+        const frameHeight = frame.clientHeight;
+        const imageHeight = image.clientHeight;
+        next[style.id] = Math.max(0, imageHeight - frameHeight);
+      });
+      setScrollOffsets(next);
+    };
+
+    recalc();
+    window.addEventListener("resize", recalc);
+    return () => window.removeEventListener("resize", recalc);
+  }, []);
 
   return (
     <form
@@ -332,50 +119,76 @@ export function StylingEditor({ profile }: StylingEditorProps) {
             setResultMessage(result.error);
             return;
           }
-
           setResultType("success");
           setResultMessage(result.success ?? "Styling updated.");
         });
       })}
     >
-      <Card className="rounded-[2rem]">
-        <div className="flex flex-col gap-6">
+      <Card className="rounded-2xl">
+        <div className="flex flex-col gap-5">
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.28em] text-blue-200/72">
-              Styling Preview
+            <p className="text-xs font-medium uppercase tracking-[0.24em] text-blue-200/72">
+              Select Design
             </p>
-            <h2 className="mt-3 text-2xl font-semibold text-white">Live Style Preview</h2>
+            <h2 className="mt-2 text-2xl font-semibold text-white">Choose profile style</h2>
+            <p className="mt-1 text-sm text-muted">
+              Hover on a design card to preview the full layout.
+            </p>
           </div>
 
-          {renderPreview()}
-        </div>
-      </Card>
-
-      <Card className="rounded-[2rem]">
-        <div className="flex flex-col gap-6">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-[0.28em] text-blue-200/72">
-              Style System
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold text-white">Choose profile style</h2>
-          </div>
-
-          <div className="grid gap-3 md:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {PROFILE_STYLE_DEFINITIONS.map((style) => {
               const selected = profileStyle === style.id;
+              const imageUrl = STYLE_PREVIEW_MAP[style.id];
+              const previewActive = activePreviewId === style.id;
 
               return (
                 <button
                   key={style.id}
                   type="button"
-                  className={`rounded-2xl border p-4 text-left transition ${selected
-                      ? "border-primary bg-primary/12"
+                  className={`group overflow-hidden rounded-xl border text-left transition ${
+                    selected
+                      ? "border-primary bg-primary/10"
                       : "border-white/10 bg-white/4 hover:border-white/30"
-                    }`}
-                  onClick={() => form.setValue("profile_style", style.id)}
+                  }`}
+                  onMouseEnter={() => setActivePreviewId(style.id)}
+                  onMouseLeave={() => setActivePreviewId(null)}
+                  onClick={() => {
+                    form.setValue("profile_style", style.id);
+                    setActivePreviewId((curr) => (curr === style.id ? null : style.id));
+                  }}
                 >
-                  <p className="text-sm font-semibold text-white">{style.name}</p>
-                  <p className="mt-1 text-xs text-muted">{style.description}</p>
+                  <div className="p-2.5">
+                    <div className="relative h-64 overflow-hidden rounded-lg border border-white/10 bg-[#0a1422] sm:h-72 xl:h-80">
+                      <div ref={(node) => { frameRefs.current[style.id] = node; }} className="h-full w-full overflow-hidden">
+                        <img
+                          ref={(node) => { imageRefs.current[style.id] = node; }}
+                          src={imageUrl}
+                          alt={`${style.name} preview`}
+                          className="block w-full max-w-none"
+                          draggable={false}
+                          onLoad={() => {
+                            const frame = frameRefs.current[style.id];
+                            const image = imageRefs.current[style.id];
+                            if (!frame || !image) return;
+                            const nextOffset = Math.max(0, image.clientHeight - frame.clientHeight);
+                            setScrollOffsets((prev) => ({ ...prev, [style.id]: nextOffset }));
+                          }}
+                          style={{
+                            transform: `translate3d(0, ${previewActive ? -(scrollOffsets[style.id] ?? 0) : 0}px, 0)`,
+                            transition: previewActive
+                              ? `transform ${PREVIEW_SCROLL_MS}ms linear`
+                              : "none",
+                            willChange: "transform",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="border-t border-white/10 px-3 py-2.5">
+                    <p className="text-sm font-semibold text-white">{style.name}</p>
+                    <p className="mt-0.5 text-xs text-muted">{style.description}</p>
+                  </div>
                 </button>
               );
             })}
@@ -390,11 +203,11 @@ export function StylingEditor({ profile }: StylingEditorProps) {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium text-blue-50/85">Theme Color</label>
-              {isColorfulStyle && (
-                <span className="rounded-full bg-amber-500/15 border border-amber-400/25 px-2.5 py-0.5 text-[10px] font-medium text-amber-200/90">
-                  {profileStyle === "style-8" ? "Cinema Style" : profileStyle === "style-7" ? "Sci-Fi Style" : "Style 5"} keeps its own fixed colors
+              {isColorfulStyle ? (
+                <span className="rounded-full border border-amber-400/25 bg-amber-500/15 px-2.5 py-0.5 text-[10px] font-medium text-amber-200/90">
+                  Fixed color for this style
                 </span>
-              )}
+              ) : null}
             </div>
             <div className={`flex flex-wrap gap-3 ${isColorfulStyle ? "pointer-events-none opacity-35" : ""}`}>
               {PROFILE_ACCENT_OPTIONS.map((color) => {
@@ -404,10 +217,9 @@ export function StylingEditor({ profile }: StylingEditorProps) {
                     key={color}
                     type="button"
                     aria-label={`Select ${ACCENT_LABELS[color] ?? color} as theme color`}
-                    className={`relative size-10 rounded-full transition-all duration-200 ${isSelected
-                        ? "ring-2 ring-white ring-offset-2 ring-offset-[#0b1728]"
-                        : ""
-                      }`}
+                    className={`relative size-10 rounded-full transition-all duration-200 ${
+                      isSelected ? "ring-2 ring-white ring-offset-2 ring-offset-[#0b1728]" : ""
+                    }`}
                     style={{
                       backgroundColor: color,
                       border: `2px solid ${withAlpha(color, "33")}`,
@@ -415,13 +227,13 @@ export function StylingEditor({ profile }: StylingEditorProps) {
                     disabled={isColorfulStyle}
                     onClick={() => form.setValue("accent_color", color)}
                   >
-                    {isSelected && (
+                    {isSelected ? (
                       <span className="absolute inset-0 flex items-center justify-center">
                         <svg className="size-4 text-white drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                       </span>
-                    )}
+                    ) : null}
                   </button>
                 );
               })}
@@ -433,7 +245,7 @@ export function StylingEditor({ profile }: StylingEditorProps) {
         </div>
       </Card>
 
-      <Card className="rounded-[2rem]">
+      <Card className="rounded-2xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted">Save and apply these style settings to your public profile.</p>
           <Button type="submit" disabled={isPending}>

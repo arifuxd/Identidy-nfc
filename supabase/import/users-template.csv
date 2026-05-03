@@ -1,0 +1,4 @@
+email,password,display_name,role
+jane@example.com,StrongPass#123,Jane Doe,user
+john@example.com,StrongPass#123,John Smith,user
+ops-admin@example.com,StrongPass#123,Ops Admin,admin
