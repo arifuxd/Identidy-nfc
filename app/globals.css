@@ -101,7 +101,7 @@ label[for] {
 }
 
 .input-base {
-  @apply w-full rounded-2xl border border-border bg-white/5 px-4 py-3 text-sm text-white outline-none transition placeholder:text-muted/70 focus:border-primary focus:ring-4 focus:ring-[var(--ring)];
+  @apply w-full rounded-xl border border-border bg-white/5 px-3.5 py-2.5 text-sm text-white outline-none transition placeholder:text-muted/70 focus:border-primary focus:ring-4 focus:ring-[var(--ring)];
 }
 
 .card-grid {

@@ -1,6 +1,7 @@
-import { Mail, Phone, UserRound } from "lucide-react";
+import { Download, Mail, Phone, UserRound } from "lucide-react";
 
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { requireUser } from "@/lib/auth/session";
 import { getConnectionsForUser } from "@/lib/db/connections";
@@ -27,98 +28,62 @@ export default async function DashboardConnectionsPage() {
 
   return (
     <DashboardShell currentPath="/dashboard/connections" isAdmin={role?.role === "admin"}>
-      <div className="space-y-6">
-        <Card className="rounded-[2rem]">
-          <p className="text-xs font-medium uppercase tracking-[0.28em] text-blue-200/72">
+      <div className="space-y-5">
+        <Card>
+          <p className="text-xs font-medium uppercase tracking-[0.24em] text-blue-200/72">
             Connections
           </p>
-          <h1 className="mt-3 text-3xl font-semibold text-white">Contact requests</h1>
-          <p className="mt-3 max-w-2xl text-sm leading-7 text-muted">
-            People who tapped Connect from your public profile appear here so you can
-            follow up and save their details.
-          </p>
+          <h1 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">
+            Contact requests
+          </h1>
         </Card>
 
         {connections.length ? (
-          <div className="space-y-4">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {connections.map((connection) => (
-              <Card key={connection.id} className="rounded-[2rem]">
-                <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-lg font-semibold text-white">
-                        {connection.visitor_name}
-                      </p>
-                      <p className="mt-1 text-xs uppercase tracking-[0.22em] text-blue-100/62">
-                        Submitted {formatSubmittedAt(connection.created_at)}
-                      </p>
-                    </div>
-
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <a
-                        href={`tel:${connection.visitor_phone}`}
-                        className="flex items-center gap-3 rounded-2xl border border-white/8 bg-white/4 px-4 py-3 transition hover:border-primary/35 hover:bg-white/7"
-                      >
-                        <span className="flex size-10 items-center justify-center rounded-2xl bg-primary/14 text-primary">
-                          <Phone className="size-4" />
-                        </span>
-                        <span>
-                          <span className="block text-sm text-muted">Phone</span>
-                          <span className="block text-sm font-medium text-white">
-                            {connection.visitor_phone}
-                          </span>
-                        </span>
-                      </a>
-
-                      {connection.visitor_email ? (
-                        <a
-                          href={`mailto:${connection.visitor_email}`}
-                          className="flex items-center gap-3 rounded-2xl border border-white/8 bg-white/4 px-4 py-3 transition hover:border-primary/35 hover:bg-white/7"
-                        >
-                          <span className="flex size-10 items-center justify-center rounded-2xl bg-primary/14 text-primary">
-                            <Mail className="size-4" />
-                          </span>
-                          <span>
-                            <span className="block text-sm text-muted">Email</span>
-                            <span className="block text-sm font-medium text-white">
-                              {connection.visitor_email}
-                            </span>
-                          </span>
-                        </a>
-                      ) : (
-                        <div className="flex items-center gap-3 rounded-2xl border border-white/8 bg-white/4 px-4 py-3">
-                          <span className="flex size-10 items-center justify-center rounded-2xl bg-white/8 text-blue-100/72">
-                            <Mail className="size-4" />
-                          </span>
-                          <span>
-                            <span className="block text-sm text-muted">Email</span>
-                            <span className="block text-sm font-medium text-white">
-                              Not provided
-                            </span>
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/8 bg-white/4 px-4 py-3 text-sm text-muted">
-                    <div className="flex items-center gap-2 text-white">
-                      <UserRound className="size-4 text-primary" />
-                      Lead captured
-                    </div>
-                    <p className="mt-2 max-w-xs leading-6">
-                      Reach out directly or save these details into your own contact workflow.
+              <Card key={connection.id} className="p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold text-white">{connection.visitor_name}</p>
+                    <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-blue-100/62">
+                      {formatSubmittedAt(connection.created_at)}
                     </p>
                   </div>
+                  <span className="rounded-lg bg-primary/15 p-1.5 text-primary">
+                    <UserRound className="size-3.5" />
+                  </span>
+                </div>
+                <div className="mt-3 space-y-2 text-xs">
+                  <a href={`tel:${connection.visitor_phone}`} className="flex items-center gap-2 text-white hover:text-primary">
+                    <Phone className="size-3.5 text-blue-100/80" />
+                    {connection.visitor_phone}
+                  </a>
+                  <div className="flex items-center gap-2 text-white">
+                    <Mail className="size-3.5 text-blue-100/80" />
+                    {connection.visitor_email ? (
+                      <a href={`mailto:${connection.visitor_email}`} className="hover:text-primary">
+                        {connection.visitor_email}
+                      </a>
+                    ) : (
+                      <span className="text-muted">Not provided</span>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <a href={`/api/dashboard/connections/${connection.id}/vcf`}>
+                    <Button variant="secondary" size="sm" className="w-full justify-center">
+                      <Download />
+                      Save contact
+                    </Button>
+                  </a>
                 </div>
               </Card>
             ))}
           </div>
         ) : (
-          <Card className="rounded-[2rem]">
+          <Card>
             <p className="text-sm text-muted">
-              No connection requests yet. Once someone uses Connect on your profile, their
-              details will appear here.
+              No contact requests yet. When someone connects from your profile, they will appear here.
             </p>
           </Card>
         )}

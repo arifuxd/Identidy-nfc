@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, CheckCircle2, Plus, Sparkles, Trash2 } from "lucide-react";
 
 import { saveProfileAction } from "@/actions/profile";
 import { MediaUploader } from "@/components/dashboard/media-uploader";
@@ -27,27 +27,17 @@ interface ProfileEditorProps {
   experiences: Database["public"]["Tables"]["experiences"]["Row"][];
 }
 
+const STEPS = ["Profile", "Links", "Experience"] as const;
 type SocialLinkInput = NonNullable<ProfileFormInput["social_links"]>[number];
-type ExperienceInput = NonNullable<ProfileFormInput["experiences"]>[number];
 
 function FieldErrorText({ message }: { message?: string }) {
-  if (!message) {
-    return null;
-  }
-
+  if (!message) return null;
   return <p className="text-xs text-red-300">{message}</p>;
 }
 
-export function ProfileEditor({
-  userId,
-  profile,
-  socialLinks,
-  experiences,
-}: ProfileEditorProps) {
-  const [slugStatus, setSlugStatus] = useState<{
-    state: "idle" | "checking" | "available" | "taken";
-    message?: string;
-  }>({ state: "idle" });
+export function ProfileEditor({ userId, profile, socialLinks, experiences }: ProfileEditorProps) {
+  const [step, setStep] = useState(0);
+  const [slugStatus, setSlugStatus] = useState<{ state: "idle" | "checking" | "available" | "taken"; message?: string }>({ state: "idle" });
   const [resultMessage, setResultMessage] = useState<string | null>(null);
   const [resultType, setResultType] = useState<"success" | "error" | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -68,28 +58,24 @@ export function ProfileEditor({
       avatar_path: profile.avatar_path ?? "",
       cover_path: profile.cover_path ?? "",
       is_published: profile.is_published,
-      social_links: socialLinks.map(
-        (item, index): SocialLinkInput => ({
-          id: item.id,
-          platform: item.platform as SocialLinkInput["platform"],
-          label: item.label ?? "",
-          url: item.url,
-          sort_order: index,
-        }),
-      ),
-      experiences: experiences.map(
-        (item, index): ExperienceInput => ({
-          id: item.id,
-          title: item.title,
-          company: item.company ?? "",
-          location: item.location ?? "",
-          description: item.description ?? "",
-          start_date: item.start_date ?? "",
-          end_date: item.end_date ?? "",
-          is_current: item.is_current,
-          sort_order: index,
-        }),
-      ),
+      social_links: socialLinks.map((item, index) => ({
+        id: item.id,
+        platform: item.platform as SocialLinkInput["platform"],
+        label: item.label ?? "",
+        url: item.url,
+        sort_order: index,
+      })),
+      experiences: experiences.map((item, index) => ({
+        id: item.id,
+        title: item.title,
+        company: item.company ?? "",
+        location: item.location ?? "",
+        description: item.description ?? "",
+        start_date: item.start_date ?? "",
+        end_date: item.end_date ?? "",
+        is_current: item.is_current,
+        sort_order: index,
+      })),
     }),
     [experiences, profile, socialLinks],
   );
@@ -98,63 +84,37 @@ export function ProfileEditor({
     resolver: zodResolver(profileSchema),
     defaultValues,
   });
-
-  const socialFieldArray = useFieldArray({
-    control: form.control,
-    name: "social_links",
-  });
-
-  const experienceFieldArray = useFieldArray({
-    control: form.control,
-    name: "experiences",
-  });
-
-  const slugValue = form.watch("slug");
+  const socialFieldArray = useFieldArray({ control: form.control, name: "social_links" });
+  const experienceFieldArray = useFieldArray({ control: form.control, name: "experiences" });
   const errors = form.formState.errors;
 
+  const slugValue = form.watch("slug");
   useEffect(() => {
     const normalized = normalizeSlug(slugValue ?? "");
-
     if (!normalized || normalized === profile.slug) {
       setSlugStatus({ state: "idle" });
       return;
     }
-
     const timer = setTimeout(async () => {
-      setSlugStatus({ state: "checking", message: "Checking availability..." });
-
-      const response = await fetch(
-        `/api/slug/check?slug=${encodeURIComponent(normalized)}`,
+      setSlugStatus({ state: "checking", message: "Checking..." });
+      const response = await fetch(`/api/slug/check?slug=${encodeURIComponent(normalized)}`);
+      const payload = (await response.json()) as { available: boolean; normalized: string };
+      setSlugStatus(
+        payload.available
+          ? { state: "available", message: `${payload.normalized} is available.` }
+          : { state: "taken", message: `${payload.normalized} is already taken.` },
       );
-      const payload = (await response.json()) as {
-        available: boolean;
-        normalized: string;
-      };
-
-      if (payload.available) {
-        setSlugStatus({
-          state: "available",
-          message: `${payload.normalized} is available.`,
-        });
-      } else {
-        setSlugStatus({
-          state: "taken",
-          message: `${payload.normalized} is already taken.`,
-        });
-      }
-    }, 450);
-
+    }, 350);
     return () => clearTimeout(timer);
   }, [profile.slug, slugValue]);
 
   return (
     <form
-      className="space-y-6"
+      className="space-y-5"
       onSubmit={form.handleSubmit(
         (values) => {
           setResultMessage(null);
           setResultType(null);
-
           startTransition(async () => {
             try {
               const result = await saveProfileAction(values);
@@ -163,340 +123,233 @@ export function ProfileEditor({
                 setResultType("error");
                 return;
               }
-
               setResultMessage(result.success ?? null);
               setResultType("success");
             } catch {
-              setResultMessage(
-                "Unable to save profile right now. Please try again in a moment.",
-              );
+              setResultMessage("Unable to save right now. Please try again.");
               setResultType("error");
             }
           });
         },
         () => {
           setResultType("error");
-          setResultMessage("Please fix the form errors, then try saving again.");
+          setResultMessage("Please fix the form errors and try again.");
         },
       )}
     >
-      <Card className="rounded-[2rem]">
-        <div className="flex flex-col gap-6">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-[0.28em] text-blue-200/72">
-              Profile Basics
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold text-white">
-              Public identity
-            </h2>
-            <p className="mt-2 text-sm text-muted">
-              Style settings are now under the Styling tab.
-            </p>
-          </div>
+      <Card>
+        <div className="relative flex items-center justify-between gap-2">
+          <div className="absolute left-0 right-0 top-1/2 hidden h-px -translate-y-1/2 bg-white/10 sm:block" />
+          {STEPS.map((label, idx) => (
+            <button key={label} type="button" className="relative flex items-center gap-2 bg-[#0d1a2f] pr-3" onClick={() => setStep(idx)}>
+              <span className={`flex size-6 items-center justify-center rounded-full border text-[11px] ${
+                idx <= step ? "border-primary bg-primary/20 text-white" : "border-white/20 text-blue-100/70"
+              }`}>{idx + 1}</span>
+              <span className={`text-xs ${idx <= step ? "text-white" : "text-blue-100/70"}`}>{label}</span>
+            </button>
+          ))}
+        </div>
+      </Card>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
+      {step === 0 ? (
+        <Card>
+          <div className="flex items-center gap-2">
+            <Sparkles className="size-4 text-primary" />
+            <h2 className="text-xl font-semibold text-white">Profile basics & media</h2>
+          </div>
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            <div className="space-y-1.5">
               <label className="text-sm text-blue-50/85">Display name</label>
               <Input {...form.register("display_name")} />
               <FieldErrorText message={errors.display_name?.message} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="text-sm text-blue-50/85">Username</label>
               <Input {...form.register("username")} />
-              <FieldErrorText message={errors.username?.message} />
             </div>
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-1.5 md:col-span-2">
               <label className="text-sm text-blue-50/85">Slug</label>
-              <Input
-                {...form.register("slug")}
-                onBlur={(event) =>
-                  form.setValue("slug", normalizeSlug(event.target.value))
-                }
-              />
+              <Input {...form.register("slug")} onBlur={(e) => form.setValue("slug", normalizeSlug(e.target.value))} />
               {slugStatus.message ? (
-                <p
-                  className={`text-xs ${
-                    slugStatus.state === "taken"
-                      ? "text-red-300"
-                      : "text-blue-100/72"
-                  }`}
-                >
-                  {slugStatus.message}
-                </p>
+                <p className={`text-xs ${slugStatus.state === "taken" ? "text-red-300" : "text-blue-100/72"}`}>{slugStatus.message}</p>
               ) : null}
               <FieldErrorText message={errors.slug?.message} />
             </div>
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-1.5 md:col-span-2">
               <label className="text-sm text-blue-50/85">Short bio</label>
-              <Textarea {...form.register("bio")} />
-              <FieldErrorText message={errors.bio?.message} />
+              <Textarea className="min-h-20" {...form.register("bio")} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="text-sm text-blue-50/85">Job title</label>
               <Input {...form.register("job_title")} />
-              <FieldErrorText message={errors.job_title?.message} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="text-sm text-blue-50/85">Company</label>
               <Input {...form.register("company_name")} />
-              <FieldErrorText message={errors.company_name?.message} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="text-sm text-blue-50/85">Email (Home)</label>
-              <Input {...form.register("email_home")} type="email" />
-              <FieldErrorText message={errors.email_home?.message} />
+              <Input type="email" {...form.register("email_home")} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="text-sm text-blue-50/85">Email (Office)</label>
-              <Input {...form.register("email_office")} type="email" />
-              <FieldErrorText message={errors.email_office?.message} />
+              <Input type="email" {...form.register("email_office")} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="text-sm text-blue-50/85">Phone (Home)</label>
               <Input {...form.register("phone_home")} />
-              <FieldErrorText message={errors.phone_home?.message} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="text-sm text-blue-50/85">Phone (Office)</label>
               <Input {...form.register("phone_office")} />
-              <FieldErrorText message={errors.phone_office?.message} />
             </div>
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-1.5 md:col-span-2">
               <label className="text-sm text-blue-50/85">Address</label>
-              <Textarea {...form.register("address")} />
-              <FieldErrorText message={errors.address?.message} />
+              <Textarea className="min-h-20" {...form.register("address")} />
             </div>
           </div>
-        </div>
-      </Card>
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="space-y-2">
-          <MediaUploader
-            bucket="avatars"
-            label="Profile image"
-            userId={userId}
-            value={form.watch("avatar_path") as string | undefined}
-            onChange={(url) => form.setValue("avatar_path", url)}
-          />
-          <FieldErrorText message={errors.avatar_path?.message} />
-        </div>
-        <div className="space-y-2">
-          <MediaUploader
-            bucket="covers"
-            label="Cover image"
-            userId={userId}
-            value={form.watch("cover_path") as string | undefined}
-            onChange={(url) => form.setValue("cover_path", url)}
-          />
-          <FieldErrorText message={errors.cover_path?.message} />
-        </div>
-      </div>
-
-      <Card className="rounded-[2rem]">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold text-white">Social links</h2>
-            <p className="mt-2 text-sm text-muted">
-              Add the destinations you want people to tap next.
-            </p>
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            <MediaUploader
+              bucket="avatars"
+              label="Profile image"
+              userId={userId}
+              value={form.watch("avatar_path") as string | undefined}
+              onChange={(url) => form.setValue("avatar_path", url)}
+            />
+            <MediaUploader
+              bucket="covers"
+              label="Cover image"
+              userId={userId}
+              value={form.watch("cover_path") as string | undefined}
+              onChange={(url) => form.setValue("cover_path", url)}
+            />
           </div>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() =>
-              socialFieldArray.append({
-                platform: "custom",
-                label: "",
-                url: "",
-                sort_order: socialFieldArray.fields.length,
-              })
-            }
-          >
-            <Plus className="size-4" />
-            Add link
-          </Button>
-        </div>
+        </Card>
+      ) : null}
 
-        <div className="mt-6 space-y-4">
-          {socialFieldArray.fields.map((field, index) => {
-            const socialError = errors.social_links?.[index];
-
-            return (
-              <div
-                key={field.id}
-                className="grid gap-4 rounded-3xl border border-white/8 bg-white/4 p-4 md:grid-cols-[0.8fr_1fr_auto]"
-              >
-                <div className="space-y-2">
-                  <select
-                    className="input-base"
-                    {...form.register(`social_links.${index}.platform`)}
-                  >
-                    {SOCIAL_PLATFORM_OPTIONS.map((option) => (
-                      <option key={option} value={option} className="bg-[#0b1728]">
-                        {SOCIAL_PLATFORM_LABELS[option]}
-                      </option>
-                    ))}
-                  </select>
-                  <FieldErrorText message={socialError?.platform?.message} />
+      {step === 1 ? (
+        <Card>
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-xl font-semibold text-white">Links</h2>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => socialFieldArray.append({ platform: "custom", label: "", url: "", sort_order: socialFieldArray.fields.length })}
+            >
+              <Plus className="size-4" />
+              Add link
+            </Button>
+          </div>
+          <div className="mt-4 space-y-3">
+            {socialFieldArray.fields.map((field, index) => (
+              <div key={field.id} className="grid gap-3 rounded-xl border border-white/8 bg-white/4 p-3 md:grid-cols-[0.8fr_1fr_auto]">
+                <select className="input-base" {...form.register(`social_links.${index}.platform`)}>
+                  {SOCIAL_PLATFORM_OPTIONS.map((option) => (
+                    <option key={option} value={option} className="bg-[#0b1728]">
+                      {SOCIAL_PLATFORM_LABELS[option]}
+                    </option>
+                  ))}
+                </select>
+                <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
+                  <Input placeholder="Label" {...form.register(`social_links.${index}.label`)} />
+                  <Input placeholder="https://" {...form.register(`social_links.${index}.url`)} />
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1">
-                  <div className="space-y-2">
-                    <Input
-                      placeholder="Label"
-                      {...form.register(`social_links.${index}.label`)}
-                    />
-                    <FieldErrorText message={socialError?.label?.message} />
-                  </div>
-                  <div className="space-y-2">
-                    <Input
-                      placeholder="https://"
-                      {...form.register(`social_links.${index}.url`)}
-                    />
-                    <FieldErrorText message={socialError?.url?.message} />
-                  </div>
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="justify-center"
-                  onClick={() => socialFieldArray.remove(index)}
-                >
+                <Button type="button" variant="ghost" size="sm" onClick={() => socialFieldArray.remove(index)}>
                   <Trash2 className="size-4" />
                 </Button>
               </div>
-            );
-          })}
-        </div>
-      </Card>
-
-      <Card className="rounded-[2rem]">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold text-white">Experience</h2>
-            <p className="mt-2 text-sm text-muted">
-              Add timeline entries like a lightweight resume builder.
-            </p>
+            ))}
           </div>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() =>
-              experienceFieldArray.append({
-                title: "",
-                company: "",
-                location: "",
-                description: "",
-                start_date: "",
-                end_date: "",
-                is_current: false,
-                sort_order: experienceFieldArray.fields.length,
-              })
-            }
-          >
-            <Plus className="size-4" />
-            Add role
-          </Button>
-        </div>
+        </Card>
+      ) : null}
 
-        <div className="mt-6 space-y-4">
-          {experienceFieldArray.fields.map((field, index) => {
-            const experienceError = errors.experiences?.[index];
-
-            return (
-              <div
-                key={field.id}
-                className="rounded-3xl border border-white/8 bg-white/4 p-4"
-              >
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Input
-                      placeholder="Title"
-                      {...form.register(`experiences.${index}.title`)}
-                    />
-                    <FieldErrorText message={experienceError?.title?.message} />
-                  </div>
-                  <div className="space-y-2">
-                    <Input
-                      placeholder="Company"
-                      {...form.register(`experiences.${index}.company`)}
-                    />
-                    <FieldErrorText message={experienceError?.company?.message} />
-                  </div>
-                  <div className="space-y-2">
-                    <Input
-                      placeholder="Location"
-                      {...form.register(`experiences.${index}.location`)}
-                    />
-                    <FieldErrorText message={experienceError?.location?.message} />
-                  </div>
-                  <label className="flex items-center gap-3 rounded-2xl border border-white/8 px-4 py-3 text-sm text-white">
-                    <input
-                      type="checkbox"
-                      {...form.register(`experiences.${index}.is_current`)}
-                    />
+      {step === 2 ? (
+        <Card>
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-xl font-semibold text-white">Experience</h2>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() =>
+                experienceFieldArray.append({
+                  title: "",
+                  company: "",
+                  location: "",
+                  description: "",
+                  start_date: "",
+                  end_date: "",
+                  is_current: false,
+                  sort_order: experienceFieldArray.fields.length,
+                })
+              }
+            >
+              <Plus className="size-4" />
+              Add role
+            </Button>
+          </div>
+          <div className="mt-4 space-y-3">
+            {experienceFieldArray.fields.map((field, index) => (
+              <div key={field.id} className="rounded-xl border border-white/8 bg-white/4 p-3">
+                <div className="grid gap-3 md:grid-cols-2">
+                  <Input placeholder="Title" {...form.register(`experiences.${index}.title`)} />
+                  <Input placeholder="Company" {...form.register(`experiences.${index}.company`)} />
+                  <Input placeholder="Location" {...form.register(`experiences.${index}.location`)} />
+                  <label className="flex items-center gap-2 rounded-xl border border-white/8 px-3 py-2 text-sm text-white">
+                    <input type="checkbox" {...form.register(`experiences.${index}.is_current`)} />
                     Current role
                   </label>
-                  <div className="space-y-2">
-                    <Input
-                      type="date"
-                      {...form.register(`experiences.${index}.start_date`)}
-                    />
-                    <FieldErrorText message={experienceError?.start_date?.message} />
-                  </div>
-                  <div className="space-y-2">
-                    <Input
-                      type="date"
-                      {...form.register(`experiences.${index}.end_date`)}
-                    />
-                    <FieldErrorText message={experienceError?.end_date?.message} />
-                  </div>
-                  <div className="space-y-2 md:col-span-2">
-                    <Textarea
-                      placeholder="What did you do?"
-                      {...form.register(`experiences.${index}.description`)}
-                    />
-                    <FieldErrorText message={experienceError?.description?.message} />
-                    <FieldErrorText message={experienceError?.message} />
+                  <Input type="date" {...form.register(`experiences.${index}.start_date`)} />
+                  <Input type="date" {...form.register(`experiences.${index}.end_date`)} />
+                  <div className="md:col-span-2">
+                    <Textarea className="min-h-20" placeholder="What did you do?" {...form.register(`experiences.${index}.description`)} />
                   </div>
                 </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="mt-4"
-                  onClick={() => experienceFieldArray.remove(index)}
-                >
+                <Button type="button" variant="ghost" size="sm" className="mt-3" onClick={() => experienceFieldArray.remove(index)}>
                   <Trash2 className="size-4" />
                   Remove role
                 </Button>
               </div>
-            );
-          })}
-        </div>
-      </Card>
+            ))}
+          </div>
+          <div className="mt-5 rounded-xl border border-white/10 bg-white/5 p-3">
+            <div className="mb-2 flex items-center gap-2">
+              <CheckCircle2 className="size-4 text-emerald-300" />
+              <p className="text-sm font-medium text-white">Finish</p>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <label className="flex items-center gap-2 text-sm text-white">
+              <input type="checkbox" {...form.register("is_published")} />
+              Profile is publicly visible
+            </label>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Saving..." : "Save profile"}
+            </Button>
+          </div>
+          </div>
+          {resultMessage ? (
+            <p className={`mt-3 text-sm ${resultType === "error" ? "text-red-300" : "text-emerald-300"}`}>
+              {resultMessage}
+            </p>
+          ) : null}
+        </Card>
+      ) : null}
 
-      <Card className="rounded-[2rem]">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <label className="flex items-center gap-3 text-sm text-white">
-            <input type="checkbox" {...form.register("is_published")} />
-            Profile is publicly visible
-          </label>
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "Saving..." : "Save profile"}
+      <Card>
+        <div className="flex items-center justify-between">
+          <Button type="button" variant="ghost" size="sm" disabled={step === 0} onClick={() => setStep((curr) => Math.max(0, curr - 1))}>
+            <ChevronLeft className="size-4" />
+            Previous
+          </Button>
+          <p className="text-xs text-muted">
+            Step {step + 1} of {STEPS.length}
+          </p>
+          <Button type="button" variant="secondary" size="sm" disabled={step === STEPS.length - 1} onClick={() => setStep((curr) => Math.min(STEPS.length - 1, curr + 1))}>
+            Next
+            <ChevronRight className="size-4" />
           </Button>
         </div>
-        {isPending ? (
-          <p className="mt-4 text-sm text-blue-100/78">Saving changes...</p>
-        ) : null}
-        {resultMessage ? (
-          <p
-            className={`mt-4 text-sm ${
-              resultType === "error" ? "text-red-300" : "text-emerald-300"
-            }`}
-          >
-            {resultMessage}
-          </p>
-        ) : null}
       </Card>
     </form>
   );

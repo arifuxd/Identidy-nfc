@@ -159,7 +159,6 @@ export async function saveProfileAction(values: ProfileFormValues) {
 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/profile");
-  revalidatePath("/dashboard/analytics");
   if (existingProfile?.slug) {
     revalidatePath(`/${existingProfile.slug}`);
   }

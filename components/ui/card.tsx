@@ -6,7 +6,7 @@ export function Card({ className, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        "glass-panel rounded-3xl p-6",
+        "glass-panel rounded-2xl p-5",
         className,
       )}
       {...props}

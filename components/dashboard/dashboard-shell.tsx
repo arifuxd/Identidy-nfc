@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   Shield,
   UserRound,
-  BarChart3,
   Settings,
   Handshake,
   LogOut,
@@ -18,7 +17,6 @@ const items = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/profile", label: "Profile", icon: UserRound },
   { href: "/dashboard/styling", label: "Styling", icon: SwatchBook },
-  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/dashboard/connections", label: "Connections", icon: Handshake },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
@@ -36,7 +34,7 @@ export function DashboardShell({
 }: DashboardShellProps) {
   return (
     <div className="shell flex flex-1 flex-col gap-6 py-6 lg:flex-row lg:py-8">
-      <aside className="glass-panel rounded-[2rem] border-white/8 p-4 lg:w-72 lg:p-5">
+      <aside className="glass-panel rounded-2xl border-white/8 p-4 lg:w-72">
         <div className="mb-6">
           <p className="text-xs font-medium uppercase tracking-[0.28em] text-blue-200/72">
             Identidy
@@ -53,7 +51,7 @@ export function DashboardShell({
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm transition",
+                "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition",
                 currentPath === item.href
                   ? "bg-primary text-white shadow-[0_16px_36px_rgba(37,99,235,0.28)]"
                   : "text-muted hover:bg-white/5 hover:text-white",
@@ -68,7 +66,7 @@ export function DashboardShell({
             <Link
               href="/admin"
               className={cn(
-                "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm transition",
+                "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition",
                 currentPath.startsWith("/admin")
                   ? "bg-primary text-white shadow-[0_16px_36px_rgba(37,99,235,0.28)]"
                   : "text-muted hover:bg-white/5 hover:text-white",
