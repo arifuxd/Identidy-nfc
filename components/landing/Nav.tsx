@@ -29,21 +29,10 @@ export default function Nav() {
           <a href="#" className="nav-logo">
             <Image src="/identidy-logo.svg" alt="Identidy" width={122} height={28} style={{ width: '122px', height: 'auto' }} priority />
           </a>
-
-          <ul className="nav-links">
-            {links.map((l) => (
-              <li key={l.href}><a href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a></li>
-            ))}
-          </ul>
-
+          <ul className="nav-links">{links.map((l) => (<li key={l.href}><a href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a></li>))}</ul>
           <div className="nav-actions">
-            <a href="#pricing" className="btn-ghost nav-request-btn">Request Access</a>
             <a href="#pricing" className="btn-primary-sm">Get Started <span className="arrow">→</span></a>
-            <button className={`hamburger${menuOpen ? ' open' : ''}`} onClick={() => setMenuOpen((v) => !v)} aria-label={menuOpen ? 'Close menu' : 'Open menu'}>
-              <span />
-              <span />
-              <span />
-            </button>
+            <button className={`hamburger${menuOpen ? ' open' : ''}`} onClick={() => setMenuOpen((v) => !v)} aria-label={menuOpen ? 'Close menu' : 'Open menu'}><span /><span /><span /></button>
           </div>
         </div>
       </nav>

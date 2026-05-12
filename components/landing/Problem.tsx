@@ -1,4 +1,4 @@
-﻿import { BarChart3, RefreshCcw, Trash2, UserRoundX } from 'lucide-react';
+﻿import { BarChart3, RefreshCcw, Trash2, TrendingDown, UserRoundX } from 'lucide-react';
 
 const cards = [
   { title: 'Straight to the Bin', desc: '88% of cards are discarded within a week.', icon: Trash2 },
@@ -21,7 +21,9 @@ export default function Problem() {
           <div className="stagger">
             <div className="pain-grid pain-bento-grid">
               <div className="pain-card reveal pain-stat-tall">
-                <div className="pain-icon"><Trash2 size={16} strokeWidth={2} /></div>
+                <div className="pain-graph-wrap">
+                  <TrendingDown size={94} strokeWidth={1.8} />
+                </div>
                 <div className="stat-callout-number">88%</div>
                 <div className="stat-callout-label">discarded within 7 days</div>
               </div>
