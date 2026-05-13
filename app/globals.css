@@ -27,7 +27,7 @@
   --color-border: var(--border);
   --color-success: var(--success);
   --color-danger: var(--danger);
-  --font-sans: var(--font-space-grotesk);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Arial, sans-serif;
   --font-mono: var(--font-ibm-plex-mono);
 }
 
@@ -45,7 +45,7 @@ body {
     radial-gradient(circle at top, rgba(59, 130, 246, 0.18), transparent 32%),
     linear-gradient(180deg, #091322 0%, #050c16 100%);
   color: var(--foreground);
-  font-family: var(--font-space-grotesk), sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Arial, sans-serif;
 }
 
 @keyframes terminal-cursor-blink {

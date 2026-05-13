@@ -11,7 +11,7 @@
   --gray-400: #aaaaaa;
   --gray-600: #666666;
   --gray-800: #333333;
-  --font: 'Inter', -apple-system, sans-serif;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Arial, sans-serif;
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
@@ -2546,4 +2546,140 @@ section {
   -webkit-backdrop-filter: blur(22px) saturate(165%) !important;
   border-bottom: 1px solid rgba(126,152,225,0.45) !important;
   box-shadow: 0 10px 30px rgba(20,71,175,0.12), inset 0 1px 0 rgba(255,255,255,0.72) !important;
+}
+
+/* requested landing refinements */
+.url-static,
+.url-typing {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.url-typing {
+  width: 0;
+  max-width: 72px;
+  overflow: hidden;
+  vertical-align: bottom;
+  animation: urlTyping 2.8s steps(8, end) infinite;
+}
+
+.url-typing::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 1px;
+  background: #1447af;
+  vertical-align: -0.12em;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes urlTyping {
+  0%, 12% { width: 0; }
+  48%, 72% { width: 58px; }
+  100% { width: 0; }
+}
+
+.pain-mini-chart {
+  width: min(100%, 220px);
+  height: 94px;
+  padding: 10px 10px 8px;
+  border: 1px solid #dbe8ff;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+}
+
+.pain-mini-chart svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.difference-grid {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.diff-color-grid .diff-green-logo {
+  justify-content: flex-start !important;
+}
+
+.testimonials-carousel {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 20px !important;
+  overflow: visible !important;
+  scroll-snap-type: none !important;
+}
+
+.testimonials-carousel .testimonial-card {
+  min-width: 0;
+}
+
+.carousel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #1447af;
+}
+
+@media (max-width: 900px) {
+  .testimonials-carousel {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.testimonials-carousel-stage {
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonials-step-track {
+  display: flex;
+  gap: 20px;
+  will-change: transform;
+}
+
+.testimonials-slide-layer {
+  width: 100%;
+}
+
+.testimonials-slide-layer.slide-out-left {
+  animation: testimonialsSlideOutLeft 520ms ease both;
+}
+
+.testimonials-slide-layer.slide-out-right {
+  animation: testimonialsSlideOutRight 520ms ease both;
+}
+
+.testimonials-slide-layer.slide-in-right {
+  position: absolute;
+  inset: 0;
+  animation: testimonialsSlideInRight 520ms ease both;
+}
+
+.testimonials-slide-layer.slide-in-left {
+  position: absolute;
+  inset: 0;
+  animation: testimonialsSlideInLeft 520ms ease both;
+}
+
+@keyframes testimonialsSlideOutLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes testimonialsSlideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes testimonialsSlideOutRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+@keyframes testimonialsSlideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
 }
