@@ -1,10 +1,10 @@
-import { BarChart3, RefreshCcw, Trash2, UserRoundX } from 'lucide-react';
+import AnimatedIcon from './AnimatedIcon';
 
 const cards = [
-  { title: 'Straight to the Bin', desc: '88% of cards are discarded within a week.', icon: Trash2 },
-  { title: 'Reprint. Regret. Repeat.', desc: 'Every update means another costly reprint cycle.', icon: RefreshCcw },
-  { title: 'Forgotten Connections', desc: 'No lead capture means opportunities get lost.', icon: UserRoundX },
-  { title: 'No Digital Trail', desc: 'No view data and no follow-up insights.', icon: BarChart3 },
+  { title: 'Straight to the Bin', desc: '88% of cards are discarded within a week.', icon: '/animated%20icons/straight-to-bin.json' },
+  { title: 'Reprint. Regret. Repeat.', desc: 'Every update means another costly reprint cycle.', icon: '/animated%20icons/reprint-regret-repeat.json' },
+  { title: 'Forgotten Connections', desc: 'No lead capture means opportunities get lost.', icon: '/animated%20icons/forgotten-connection.json' },
+  { title: 'No Digital Trail', desc: 'No view data and no follow-up insights.', icon: '/animated%20icons/no-digital-trail.json' },
 ];
 
 export default function Problem() {
@@ -40,7 +40,7 @@ export default function Problem() {
 
               {cards.map((c, i) => (
                 <div key={i} className="pain-card reveal">
-                  <div className="pain-icon"><c.icon size={16} strokeWidth={2} /></div>
+                  <div className="pain-icon"><AnimatedIcon src={c.icon} className="pain-icon-lottie" size={19} title={`${c.title} icon`} /></div>
                   <div className="pain-card-title">{c.title}</div>
                   <div className="pain-card-desc">{c.desc}</div>
                 </div>

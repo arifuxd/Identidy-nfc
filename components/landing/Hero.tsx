@@ -1,5 +1,7 @@
 ﻿import { useEffect, useMemo, useState } from 'react';
 
+import AnimatedIcon from './AnimatedIcon';
+
 const faces = [
   'https://randomuser.me/api/portraits/women/44.jpg',
   'https://randomuser.me/api/portraits/men/32.jpg',
@@ -57,7 +59,7 @@ export default function Hero() {
             </div>
             <div className={`claim-status ${state === 'available' ? 'ok' : state === 'taken' ? 'no' : ''}`}>{message}</div>
           </div>
-          <div className="hero-ctas"><a href="#pricing" className="btn-hero-primary">Get Your Identidy Card</a><a href="#how" className="btn-hero-secondary">See How It Works →</a></div>
+          <div className="hero-ctas"><a href="#pricing" className="btn-hero-primary">Get Your Identidy Card</a><a href="#how" className="btn-hero-secondary">See How It Works <AnimatedIcon src="/animated%20icons/how-it-works-hero-arrow.json" className="hero-arrow-lottie" size={18} /></a></div>
           <div className="social-proof"><div className="avatars real-faces">{faces.map((src,i)=><img key={i} src={src} alt="Identidy user" className="avatar-face" loading="lazy" />)}</div><span className="social-proof-text">Trusted by 500++ professionals</span></div>
         </div>
         <div className="hero-right"><div className="phone-cluster"><div className="blob blob-1" /><div className="blob blob-2" /><div className="floating-badge"><div className="badge-dot" /><span className="badge-text">247 profile views today</span></div><div className="phone-frame phone-main"><div className="phone-notch" /><div className="phone-profile-header"><div className="phone-avatar">AJ</div><div className="phone-name">Alex Johnson</div><div className="phone-title">Product Designer</div></div><div className="phone-links"><div className="phone-link-btn">Portfolio</div><div className="phone-link-btn">LinkedIn</div><div className="phone-link-btn">Email Me</div></div><div className="phone-connect-btn">Save Contact</div></div></div></div>
