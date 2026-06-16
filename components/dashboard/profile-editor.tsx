@@ -117,7 +117,15 @@ export function ProfileEditor({ userId, profile, socialLinks, experiences }: Pro
           setResultType(null);
           startTransition(async () => {
             try {
-              const result = await saveProfileAction(values);
+              const cleanedSocialLinks = values.social_links?.map((link) => ({
+                ...link,
+                label: link.platform === "custom" ? link.label : null,
+              })) ?? [];
+              
+              const result = await saveProfileAction({
+                ...values,
+                social_links: cleanedSocialLinks,
+              });
               if (result.error) {
                 setResultMessage(result.error);
                 setResultType("error");
@@ -242,24 +250,55 @@ export function ProfileEditor({ userId, profile, socialLinks, experiences }: Pro
             </Button>
           </div>
           <div className="mt-4 space-y-3">
-            {socialFieldArray.fields.map((field, index) => (
-              <div key={field.id} className="grid gap-3 rounded-xl border border-white/8 bg-white/4 p-3 md:grid-cols-[0.8fr_1fr_auto]">
-                <select className="input-base" {...form.register(`social_links.${index}.platform`)}>
-                  {SOCIAL_PLATFORM_OPTIONS.map((option) => (
-                    <option key={option} value={option} className="bg-[#0b1728]">
-                      {SOCIAL_PLATFORM_LABELS[option]}
-                    </option>
-                  ))}
-                </select>
-                <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
-                  <Input placeholder="Label" {...form.register(`social_links.${index}.label`)} />
-                  <Input placeholder="https://" {...form.register(`social_links.${index}.url`)} />
+            {socialFieldArray.fields.map((field, index) => {
+              const platform = form.watch(`social_links.${index}.platform`);
+              const isCustom = platform === "custom";
+
+              return (
+                <div key={field.id} className="rounded-xl border border-white/8 bg-white/4 p-3">
+                  <div className="grid gap-3 md:grid-cols-[0.8fr_1fr_auto] items-start">
+                    <div className="space-y-1">
+                      <label className="text-xs font-medium text-blue-100/70">Platform</label>
+                      <select className="input-base w-full" {...form.register(`social_links.${index}.platform`)}>
+                        {SOCIAL_PLATFORM_OPTIONS.map((option) => (
+                          <option key={option} value={option} className="bg-[#0b1728]">
+                            {SOCIAL_PLATFORM_LABELS[option]}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="grid gap-3 w-full sm:grid-cols-1">
+                      {isCustom && (
+                        <div className="space-y-1">
+                          <label className="text-xs font-medium text-blue-100/70">Label</label>
+                          <Input placeholder="e.g. Personal Website" {...form.register(`social_links.${index}.label`)} />
+                          <FieldErrorText message={errors.social_links?.[index]?.label?.message} />
+                        </div>
+                      )}
+                      
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-blue-100/70">URL</label>
+                        <Input placeholder="https://" {...form.register(`social_links.${index}.url`)} />
+                        <FieldErrorText message={errors.social_links?.[index]?.url?.message} />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end pt-5 md:pt-6">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-300 hover:text-red-200 hover:bg-red-500/10"
+                        onClick={() => socialFieldArray.remove(index)}
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-                <Button type="button" variant="ghost" size="sm" onClick={() => socialFieldArray.remove(index)}>
-                  <Trash2 className="size-4" />
-                </Button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
       ) : null}

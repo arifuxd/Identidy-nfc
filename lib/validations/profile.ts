@@ -17,13 +17,35 @@ const nullableString = (max: number) =>
     z.string().max(max).nullable().optional(),
   );
 
-export const socialLinkSchema = z.object({
-  id: z.string().uuid().optional(),
-  platform: z.enum(SOCIAL_PLATFORM_OPTIONS),
-  label: nullableString(50),
-  url: z.url().max(280),
-  sort_order: z.number().int().min(0).default(0),
-});
+const ensureHttp = (val: unknown) => {
+  if (typeof val !== "string") return val;
+  const trimmed = val.trim();
+  if (!trimmed) return trimmed;
+  return trimmed.startsWith("http://") || trimmed.startsWith("https://")
+    ? trimmed
+    : `https://${trimmed}`;
+};
+
+export const socialLinkSchema = z
+  .object({
+    id: z.string().uuid().optional(),
+    platform: z.enum(SOCIAL_PLATFORM_OPTIONS),
+    label: nullableString(50),
+    url: z.preprocess(ensureHttp, z.url().max(280)),
+    sort_order: z.number().int().min(0).default(0),
+  })
+  .refine(
+    (data) => {
+      if (data.platform === "custom") {
+        return !!(data.label && data.label.trim().length > 0);
+      }
+      return true;
+    },
+    {
+      message: "Label is required for custom links.",
+      path: ["label"],
+    },
+  );
 
 export const experienceSchema = z
   .object({
