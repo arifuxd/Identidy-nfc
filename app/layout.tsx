@@ -34,7 +34,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">{children}
 
-<!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -50,7 +49,6 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=1035518152259593&ev=PageView&noscript=1"
 /></noscript>
-<!-- End Meta Pixel Code -->
 </body>
     </html>
   );
