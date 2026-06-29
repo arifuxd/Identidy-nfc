@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect } from "react";
 import Nav from "@/components/landing/Nav";
@@ -17,8 +17,18 @@ import FAQ from "@/components/landing/FAQ";
 import CTABanner from "@/components/landing/CTABanner";
 import Footer from "@/components/landing/Footer";
 
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+  }
+}
+
 export default function LandingPageClient() {
   useEffect(() => {
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "PageView");
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import Script from "next/script";
+import { MetaPixelEvents } from "@/components/meta-pixel";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -60,6 +61,7 @@ export default function RootLayout({
             src="https://www.facebook.com/tr?id=1035518152259593&ev=PageView&noscript=1"
           />
         </noscript>
+        <MetaPixelEvents />
         {children}
       </body>
     </html>
