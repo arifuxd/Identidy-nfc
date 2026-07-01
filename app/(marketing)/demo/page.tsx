@@ -40,7 +40,7 @@ export default function Demo() {
 
                   <button
                     onClick={() => setSaved(true)}
-                    className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-3 text-sm font-medium text-background transition-transform active:scale-95"
+                    className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-btn-primary py-3 text-sm font-medium text-btn-primary transition-transform active:scale-95"
                   >
                     <Download size={16} /> {saved ? "Contact saved" : "Save contact"}
                   </button>
@@ -116,7 +116,7 @@ export default function Demo() {
             </ul>
 
             <div className="mt-10 flex flex-wrap gap-3">
-              <Link href="/get-your-card" className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background">
+               <Link href="/get-your-card" className="inline-flex items-center gap-2 rounded-full bg-btn-primary px-5 py-3 text-sm font-medium text-btn-primary">
                 Get your own <ArrowUpRight size={15} />
               </Link>
               <Link href="/themes" className="inline-flex items-center gap-2 rounded-full border border-hairline px-5 py-3 text-sm">

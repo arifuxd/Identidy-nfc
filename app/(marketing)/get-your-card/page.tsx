@@ -161,7 +161,7 @@ function GetYourCardContent() {
               </div>
             </fieldset>
 
-            <button className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-4 text-sm font-medium text-background transition-transform hover:scale-[1.005] active:scale-[0.99]">
+            <button className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-btn-primary py-4 text-sm font-medium text-btn-primary transition-transform hover:scale-[1.005] active:scale-[0.99]">
               Place order — we'll confirm within 24 hours
             </button>
             <p className="text-center text-[11px] uppercase tracking-[0.22em] text-ink-soft">No payment required now</p>

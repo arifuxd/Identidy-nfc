@@ -75,7 +75,7 @@ export default function About() {
         <div className="mt-20">
           <Link
             href="/get-your-card"
-            className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3.5 text-sm font-medium text-background"
+            className="inline-flex items-center gap-2 rounded-full bg-btn-primary px-6 py-3.5 text-sm font-medium text-btn-primary"
           >
             Get your card <ArrowUpRight size={16} />
           </Link>

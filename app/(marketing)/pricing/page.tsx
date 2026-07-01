@@ -108,7 +108,7 @@ function TiltPricingCard({ tier }: { tier: (typeof TIERS)[number] }) {
         href="/get-your-card"
         className={[
           "mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-transform hover:scale-[1.01]",
-          tier.featured ? "bg-accent text-accent-ink" : "bg-foreground text-background",
+          tier.featured ? "bg-accent text-accent-ink" : "bg-btn-primary text-btn-primary",
         ].join(" ")}
       >
         Order {tier.name} <ArrowUpRight size={15} />
@@ -156,7 +156,7 @@ export default function Pricing() {
               href="https://wa.me/8801000000000"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-6 py-4 text-sm font-medium text-background"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-btn-primary px-6 py-4 text-sm font-medium text-btn-primary"
             >
               Chat on WhatsApp <ArrowUpRight size={15} />
             </a>

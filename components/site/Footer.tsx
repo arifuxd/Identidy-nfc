@@ -56,7 +56,7 @@ export function Footer() {
             </p>
             <Link
               href="/get-your-card"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[13px] font-medium text-[#0A0A0A] transition-transform duration-200 hover:scale-[1.02]"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-btn-dark px-4 py-2 text-[13px] font-medium text-btn-dark transition-transform duration-200 hover:scale-[1.02]"
             >
               Get your card →
             </Link>

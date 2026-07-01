@@ -83,7 +83,7 @@ export function Header() {
           </Link>
           <Link
             href="/get-your-card"
-            className="group relative hidden overflow-hidden rounded-full bg-foreground px-4 py-2 text-[13px] font-medium text-background transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] md:inline-flex"
+            className="group relative hidden overflow-hidden rounded-full bg-btn-primary px-4 py-2 text-[13px] font-medium text-btn-primary transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] md:inline-flex"
           >
             <span className="relative z-10">Get your card</span>
             <span className="pointer-events-none absolute inset-0 -translate-x-full bg-accent transition-transform duration-500 group-hover:translate-x-0" />
@@ -118,7 +118,7 @@ export function Header() {
             <Link
               href="/get-your-card"
               onClick={() => setOpen(false)}
-              className="mt-2 rounded-full bg-foreground px-4 py-3 text-center text-sm font-medium text-background"
+              className="mt-2 rounded-full bg-btn-primary px-4 py-3 text-center text-sm font-medium text-btn-primary"
             >
               Get your card →
             </Link>

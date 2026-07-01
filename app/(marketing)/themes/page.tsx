@@ -149,7 +149,7 @@ export default function Themes() {
           </div>
           <div className="flex gap-2">
             <Link href="/demo" className="rounded-full border border-hairline px-5 py-3 text-sm">Try demo profile</Link>
-            <Link href="/get-your-card" className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm text-background">
+            <Link href="/get-your-card" className="inline-flex items-center gap-2 rounded-full bg-btn-primary px-5 py-3 text-sm text-btn-primary">
               Get your card <ArrowUpRight size={15} />
             </Link>
           </div>

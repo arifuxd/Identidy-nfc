@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #07111f;
   --background-soft: #0b1728;
@@ -106,4 +108,20 @@ label[for] {
 
 .card-grid {
   @apply grid gap-4 md:grid-cols-2 xl:grid-cols-4;
+}
+
+@utility bg-btn-primary {
+  background-color: var(--foreground) !important;
+}
+
+@utility text-btn-primary {
+  color: var(--background) !important;
+}
+
+@utility bg-btn-dark {
+  background-color: #ffffff !important;
+}
+
+@utility text-btn-dark {
+  color: #0a0a0a !important;
 }

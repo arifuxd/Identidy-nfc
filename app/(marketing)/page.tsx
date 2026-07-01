@@ -122,14 +122,14 @@ export default function MarketingPage() {
               />
               <button
                 type="submit"
-                className="rounded-full bg-foreground px-4 py-2 text-[13px] font-medium text-background transition-transform hover:scale-[1.02] active:scale-95"
+                className="rounded-full bg-btn-primary px-4 py-2 text-[13px] font-medium text-btn-primary transition-transform hover:scale-[1.02] active:scale-95"
               >
                 Claim
               </button>
             </form>
 
             <div className="tap-in-delay-4 mt-8 flex flex-wrap items-center gap-3">
-              <Link href="/get-your-card" className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background transition-transform hover:scale-[1.02]">
+              <Link href="/get-your-card" className="group inline-flex items-center gap-2 rounded-full bg-btn-primary px-5 py-3 text-sm font-medium text-btn-primary transition-transform hover:scale-[1.02]">
                 Get your card
                 <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
@@ -414,7 +414,7 @@ export default function MarketingPage() {
                   </div>
                 ))}
               </div>
-              <button className="mt-5 w-full rounded-full bg-foreground py-2.5 text-sm text-background">Save to CRM</button>
+              <button className="mt-5 w-full rounded-full bg-btn-primary py-2.5 text-sm text-btn-primary">Save to CRM</button>
             </div>
           </TapReveal>
         </div>
@@ -553,7 +553,7 @@ export default function MarketingPage() {
             <p className="mt-5 max-w-[42ch] text-ink-soft">
               White for the everyday. Black for the room. Black Metal for the moment they don't forget.
             </p>
-            <Link href="/pricing" className="mt-8 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm text-background">
+            <Link href="/pricing" className="mt-8 inline-flex items-center gap-2 rounded-full bg-btn-primary px-5 py-3 text-sm text-btn-primary">
               See pricing <ArrowUpRight size={16} />
             </Link>
           </TapReveal>
@@ -620,7 +620,7 @@ export default function MarketingPage() {
             </h2>
             <Link
               href="/get-your-card"
-              className="relative mt-10 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-medium text-[#0A0A0A] transition-transform hover:scale-[1.02]"
+              className="relative mt-10 inline-flex items-center gap-2 rounded-full bg-btn-dark px-6 py-3.5 text-sm font-medium text-btn-dark transition-transform hover:scale-[1.02]"
             >
               Get your card
               <ArrowUpRight size={16} />

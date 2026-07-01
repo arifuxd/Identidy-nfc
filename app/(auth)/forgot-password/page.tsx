@@ -58,7 +58,7 @@ export default function ForgotPasswordPage() {
               <p className="mt-4 text-sm text-ink-soft leading-relaxed">
                 Check your email. We've sent a password reset link to <strong className="text-foreground">{email}</strong>.
               </p>
-              <Link href="/login" className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-3.5 text-sm font-medium text-background transition-transform hover:scale-[1.01] active:scale-95">
+              <Link href="/login" className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-btn-primary py-3.5 text-sm font-medium text-btn-primary transition-transform hover:scale-[1.01] active:scale-95">
                 Back to login
               </Link>
             </div>
@@ -94,7 +94,7 @@ export default function ForgotPasswordPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-3.5 text-sm font-medium text-background transition-transform hover:scale-[1.01] active:scale-95 disabled:opacity-50"
+                  className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-btn-primary py-3.5 text-sm font-medium text-btn-primary transition-transform hover:scale-[1.01] active:scale-95 disabled:opacity-50"
                 >
                   {loading ? "Sending..." : "Send link"} <ArrowUpRight size={15} />
                 </button>

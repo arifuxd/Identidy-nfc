@@ -54,7 +54,7 @@ export function LoginForm({ error }: { error?: string }) {
               <Link href="/forgot-password" className="text-ink-soft hover:text-ink font-medium">Forgot password?</Link>
             </div>
 
-            <button type="submit" className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-3.5 text-sm font-medium text-background transition-transform hover:scale-[1.01] active:scale-95">
+            <button type="submit" className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-btn-primary py-3.5 text-sm font-medium text-btn-primary transition-transform hover:scale-[1.01] active:scale-95">
               Sign in <ArrowUpRight size={15} />
             </button>
           </form>

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -273,4 +273,20 @@
     scroll-behavior: auto !important;
   }
   .cursor-dot, .cursor-ring { display: none; }
+}
+
+@utility bg-btn-primary {
+  background-color: var(--foreground) !important;
+}
+
+@utility text-btn-primary {
+  color: var(--background) !important;
+}
+
+@utility bg-btn-dark {
+  background-color: #ffffff !important;
+}
+
+@utility text-btn-dark {
+  color: #0a0a0a !important;
 }
