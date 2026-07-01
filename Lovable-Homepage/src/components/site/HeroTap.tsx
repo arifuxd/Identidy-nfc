@@ -6,7 +6,7 @@ import heroImg from "@/assets/hero-card-tap.jpg";
  */
 export function HeroTap() {
   return (
-    <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-[#0A0A0A] grain">
+    <div className="relative aspect-[4/4] w-full overflow-hidden rounded-3xl bg-[#0A0A0A] grain">
       <img
         src={heroImg}
         alt="Identidy NFC card tapping a phone"

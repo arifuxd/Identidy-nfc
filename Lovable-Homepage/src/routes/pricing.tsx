@@ -68,7 +68,7 @@ function TiltPricingCard({ tier }: { tier: (typeof TIERS)[number] }) {
       }}
     >
       {tier.featured && (
-        <span className="absolute -top-3 left-6 rounded-full bg-accent px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-accent-ink">
+        <span className="absolute -top-3 left-6 rounded-full bg-accent px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-white">
           Most tapped
         </span>
       )}
@@ -87,7 +87,7 @@ function TiltPricingCard({ tier }: { tier: (typeof TIERS)[number] }) {
           style={{ transformStyle: "preserve-3d", transform: flipped ? "rotateY(180deg)" : "rotateY(0)" }}
         >
           <div className="absolute inset-0" style={{ backfaceVisibility: "hidden" }}>
-            <CardMockup variant={tier.variant} name="Your Name" role="Your Role" />
+            <CardMockup variant={tier.variant} name="Your Name" role="Your Role" largeLogo />
           </div>
           <div
             className="absolute inset-0 rounded-2xl border border-hairline bg-background p-5"
@@ -105,19 +105,12 @@ function TiltPricingCard({ tier }: { tier: (typeof TIERS)[number] }) {
         </div>
       </div>
 
-      <ul className="mt-8 space-y-2.5 text-sm">
-        {tier.features.map((f) => (
-          <li key={f} className="flex items-center gap-3">
-            <Check size={16} className="text-accent" /> {f}
-          </li>
-        ))}
-      </ul>
 
       <Link
         to="/get-your-card"
         className={[
           "mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-transform hover:scale-[1.01]",
-          tier.featured ? "bg-accent text-accent-ink" : "bg-foreground text-background",
+          tier.featured ? "bg-accent text-white" : "bg-foreground text-background",
         ].join(" ")}
       >
         Order {tier.name} <ArrowUpRight size={15} />

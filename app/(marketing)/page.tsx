@@ -47,12 +47,53 @@ function TiltCard({ children }: { children: React.ReactNode }) {
   );
 }
 
-function VideoBlock({ label }: { label: string }) {
+function VideoBlock({
+  label,
+  youtubeId,
+  isReel = false,
+  thumbnailUrl,
+}: {
+  label: string;
+  youtubeId?: string;
+  isReel?: boolean;
+  thumbnailUrl?: string;
+}) {
+  const [playing, setPlaying] = useState(false);
+
+  if (playing && youtubeId) {
+    return (
+      <div className={`relative ${isReel ? "aspect-[9/16] max-w-[300px] mx-auto w-full" : "aspect-video w-full"} overflow-hidden rounded-2xl bg-[#0A0A0A]`}>
+        <div className="absolute inset-0 overflow-hidden">
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&fs=0&playsinline=1`}
+            title={label}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            className="absolute -top-[52px] h-[calc(100%+104px)] w-full scale-[1.01]"
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="group relative aspect-video w-full overflow-hidden rounded-2xl bg-[#0A0A0A] grain">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,rgba(20,71,175,0.35),transparent_60%)]" />
-      <div className="absolute inset-0 grid place-items-center">
+    <div className={`group relative ${isReel ? "aspect-[9/16] max-w-[300px] mx-auto w-full" : "aspect-video w-full"} overflow-hidden rounded-2xl bg-[#0A0A0A] grain`}>
+      {thumbnailUrl ? (
+        <img
+          src={thumbnailUrl}
+          alt={label}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      ) : (
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,rgba(20,71,175,0.35),transparent_60%)]" />
+      )}
+      <div className="absolute inset-0 bg-black/25 transition-colors duration-300 group-hover:bg-black/35" />
+      <div className="absolute inset-0 grid place-items-center z-10">
         <button
+          onClick={() => {
+            if (youtubeId) setPlaying(true);
+          }}
           aria-label={`Play ${label}`}
           className="relative grid h-20 w-20 place-items-center rounded-full border border-white/25 bg-white/5 backdrop-blur transition-transform duration-300 group-hover:scale-105"
         >
@@ -60,8 +101,6 @@ function VideoBlock({ label }: { label: string }) {
           <span className="pointer-events-none absolute inset-0 rounded-full border border-white/30 ripple-loop" />
         </button>
       </div>
-      <div className="absolute left-5 top-5 text-[10.5px] uppercase tracking-[0.24em] text-white/60">{label}</div>
-      <div className="absolute right-5 bottom-5 text-[10.5px] uppercase tracking-[0.24em] text-white/60">01:24</div>
     </div>
   );
 }
@@ -122,18 +161,15 @@ export default function MarketingPage() {
       <Section className="pb-16 pt-8 sm:pt-14">
         <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <p className="tap-in flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-ink-soft">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent chip-glow" />
+            <p className="tap-in text-[11px] uppercase tracking-[0.28em] text-ink-soft">
               Made in Bangladesh
             </p>
-            <h1 className="tap-in-delay-1 mt-6 text-balance font-display text-[clamp(2.75rem,7.5vw,7rem)] font-medium leading-[0.92] tracking-[-0.035em]">
-              One tap. <br />
-              Your entire <span className="italic text-ink-soft">identity</span>,
-              <br />
-              shared.
+            <h1 className="tap-in-delay-1 mt-6 text-balance font-display text-[clamp(2.5rem,7vw,5.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
+              Tap your card. <br />
+              Share your <span className="italic text-ink-soft">profile.</span>
             </h1>
-            <p className="tap-in-delay-2 mt-8 max-w-[46ch] text-[15px] leading-relaxed text-ink-soft">
-              Identidy is a premium NFC business card and profile platform. A single deliberate motion replaces the stack in your pocket — and the app store on their phone.
+            <p className="tap-in-delay-2 mt-8 max-w-[58ch] text-[15px] leading-relaxed text-ink-soft">
+              Share your contact details, portfolio, LinkedIn, website, social media, and more with a premium NFC business card. Identidy helps professionals across Bangladesh replace paper business cards with a smarter digital business card.
             </p>
 
             {/* username claim */}
@@ -179,7 +215,7 @@ export default function MarketingPage() {
               </div>
             </div>
 
-            <div className="tap-in-delay-4 mt-8 flex flex-wrap items-center gap-3">
+            <div className="tap-in-delay-4 mt-2 flex flex-wrap items-center gap-3">
               <Link href="/get-your-card" className="group inline-flex items-center gap-2 rounded-full bg-btn-primary px-5 py-3 text-sm font-medium text-btn-primary transition-transform hover:scale-[1.02]">
                 Get your card
                 <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -214,86 +250,64 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      {/* ================== PROBLEM ================== */}
-      <Section className="py-28">
-        <div className="grid gap-14 lg:grid-cols-12">
-          <TapReveal className="lg:col-span-5">
-            <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">The problem</p>
-            <h2 className="mt-6 font-display text-[clamp(2.25rem,5vw,4.25rem)] leading-[0.98] tracking-[-0.03em]">
-              <span className="italic text-ink-soft">88%</span> of paper cards
-              <br /> are in the bin
-              <br /> within a week.
-            </h2>
-          </TapReveal>
-          <TapReveal delay={80} className="lg:col-span-6 lg:col-start-7">
-            <ul className="space-y-6 text-[15px] leading-relaxed">
-              {[
-                ["Print, reprint, reprint.", "Titles change. Numbers change. Paper doesn't."],
-                ["No memory.", "You never know who kept the card, or when they tapped."],
-                ["No signal.", "Paper can't route to your best link this quarter, or your latest work."],
-                ["No sense of you.", "A logo and a font can't carry the way you show up in a room."],
-              ].map(([h, p]) => (
-                <li key={h} className="grid grid-cols-[auto_1fr] gap-4 border-b border-hairline pb-6">
-                  <MinusCircle className="mt-1 text-accent" size={18} />
-                  <div>
-                    <p className="font-medium text-ink">{h}</p>
-                    <p className="mt-1 text-ink-soft">{p}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </TapReveal>
-        </div>
-      </Section>
 
-      {/* ================== VIDEO 1 ================== */}
-      <Section className="py-8">
+
+      {/* ================== WATCH & HOW IT WORKS ================== */}
+      <Section className="py-16">
+        {/* Section title on top */}
+        <div className="mb-16 text-center">
+          <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">Process</p>
+          <h2 className="mt-4 font-display text-[clamp(2.25rem,4.5vw,3.75rem)] leading-[1.02] tracking-[-0.025em]">
+            How it <span className="italic text-ink-soft">works.</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-[48ch] text-[15px] text-ink-soft">
+            A premium physical card powered by a lightning-fast digital profile. Tap to share, save, and capture leads instantly.
+          </p>
+        </div>
+
         <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
-          <TapReveal className="lg:col-span-5">
-            <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">Watch · 01</p>
-            <h3 className="mt-5 font-display text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.02] tracking-[-0.02em]">
-              See the tap in a real handshake.
-            </h3>
-            <p className="mt-5 max-w-[42ch] text-ink-soft">
-              A 90-second look at how Identidy replaces the paper stack — from meeting to follow-up — without an app on either side.
-            </p>
-          </TapReveal>
-          <TapReveal delay={100} className="lg:col-span-7">
-            <VideoBlock label="Product film" />
-          </TapReveal>
-        </div>
-      </Section>
-
-      {/* ================== HOW IT WORKS ================== */}
-      <Section className="py-28">
-        <div className="mb-16 flex items-end justify-between gap-6">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">How it works</p>
-            <h2 className="mt-5 font-display text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.02] tracking-[-0.025em]">
-              Three moves. <span className="italic text-ink-soft">One motion.</span>
-            </h2>
-          </div>
-          <div className="hidden text-xs text-ink-soft md:block">Under 30 seconds. Every time.</div>
-        </div>
-
-        <div className="relative grid gap-10 md:grid-cols-3">
-          {/* connective line */}
-          <div className="pointer-events-none absolute left-6 right-6 top-8 hidden h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent md:block" />
-          {[
-            ["01", "Design", "Pick a theme, add your links, upload your photo. Free custom design available."],
-            ["02", "Tap", "Hold the card to any modern phone. Your profile opens instantly — no app required."],
-            ["03", "Follow up", "They save your contact, drop their info, and you get analytics on every tap."],
-          ].map(([n, h, p], i) => (
-            <TapReveal key={n} delay={i * 80}>
-              <div className="relative">
-                <div className="grid h-12 w-12 place-items-center rounded-full border border-hairline bg-surface text-xs font-medium">
+          {/* Left Column: Features 1-3 */}
+          <TapReveal className="lg:col-span-4 space-y-12 flex flex-col items-start lg:items-end">
+            {[
+              ["01", "One-Tap Share", "Share your contact details, social links, website, and portfolio with a single deliberate tap."],
+              ["02", "No App Required", "Your digital business card profile opens natively in their mobile browser—no store downloads needed."],
+              ["03", "Instant Contact Save", "Prospects can save your contact details (.vcf) directly into their phonebook in one tap."],
+            ].map(([n, h, p]) => (
+              <div key={n} className="flex flex-col items-start gap-2.5 lg:items-end lg:text-right max-w-[27ch]">
+                <div className="grid h-7 w-7 place-items-center rounded-full border border-hairline bg-surface text-[10.5px] font-medium text-accent">
                   {n}
                 </div>
-                <h3 className="mt-6 font-display text-2xl tracking-tight">{h}</h3>
-                <p className="mt-3 text-ink-soft">{p}</p>
+                <div>
+                  <h4 className="font-display text-[15.5px] font-semibold text-ink">{h}</h4>
+                  <p className="mt-1.5 text-xs text-ink-soft leading-relaxed">{p}</p>
+                </div>
               </div>
-            </TapReveal>
-          ))}
+            ))}
+          </TapReveal>
+
+          {/* Middle Column: Reel Video player */}
+          <TapReveal delay={100} className="lg:col-span-4 flex justify-center w-full">
+            <VideoBlock label="Product film" youtubeId="C1n0X8m1OXI" isReel thumbnailUrl="/thumbnail-video-1.png" />
+          </TapReveal>
+
+          {/* Right Column: Features 4-6 */}
+          <TapReveal delay={200} className="lg:col-span-4 space-y-12">
+            {[
+              ["04", "Real-Time Updates", "Change your links, contact details, or profile theme anytime. Your card updates instantly."],
+              ["05", "Tap Analytics", "Track tap frequency, profile views, and link clicks mapped to dates and cities directly in your dashboard."],
+              ["06", "Two-Way Exchange", "Capture details back from prospects immediately via the lead form on your public profile."],
+            ].map(([n, h, p]) => (
+              <div key={n} className="flex flex-col items-start gap-2.5">
+                <div className="grid h-7 w-7 place-items-center rounded-full border border-hairline bg-surface text-[10.5px] font-medium text-accent">
+                  {n}
+                </div>
+                <div>
+                  <h4 className="font-display text-[15.5px] font-semibold text-ink">{h}</h4>
+                  <p className="mt-1.5 text-xs text-ink-soft leading-relaxed max-w-[34ch]">{p}</p>
+                </div>
+              </div>
+            ))}
+          </TapReveal>
         </div>
       </Section>
 
@@ -326,7 +340,7 @@ export default function MarketingPage() {
       </Section>
 
       {/* ================== THEMES TEASER ================== */}
-      <Section className="py-28">
+      <Section className="py-16">
         <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
           <TapReveal className="lg:col-span-5">
             <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">Themes</p>
@@ -357,7 +371,7 @@ export default function MarketingPage() {
       </Section>
 
       {/* ================== ANALYTICS ================== */}
-      <Section className="py-16">
+      <Section className="py-12">
         <div className="rounded-3xl border border-hairline bg-surface p-6 sm:p-10">
           <div className="grid gap-8 lg:grid-cols-12">
             <div className="lg:col-span-4">
@@ -407,70 +421,6 @@ export default function MarketingPage() {
         </div>
       </Section>
 
-      {/* ================== VIDEO 2 (mirrored) ================== */}
-      <Section className="py-16">
-        <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
-          <TapReveal className="order-2 lg:order-1 lg:col-span-7">
-            <VideoBlock label="Founder note" />
-          </TapReveal>
-          <TapReveal delay={100} className="order-1 lg:order-2 lg:col-span-5">
-            <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">Watch · 02</p>
-            <h3 className="mt-5 font-display text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.02] tracking-[-0.02em]">
-              Why we obsess over the material.
-            </h3>
-            <p className="mt-5 max-w-[42ch] text-ink-soft">
-              The chip, the finish, the weight. A minute with our founder on why the physical card still matters — even in a software world.
-            </p>
-          </TapReveal>
-        </div>
-      </Section>
-
-      {/* ================== LEAD CAPTURE ================== */}
-      <Section className="py-24">
-        <div className="grid gap-12 rounded-3xl border border-hairline bg-surface p-8 lg:grid-cols-12 lg:p-14">
-          <TapReveal className="lg:col-span-6">
-            <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">Lead capture</p>
-            <h2 className="mt-5 font-display text-[clamp(1.9rem,3.8vw,3.2rem)] leading-[1.02] tracking-[-0.02em]">
-              Every tap becomes a lead — before the handshake ends.
-            </h2>
-            <ul className="mt-8 space-y-4 text-[15px]">
-              {[
-                "Auto-save to your phone contacts",
-                "Inline lead form on your public profile",
-                "CSV export & WhatsApp handoff",
-                "Owner-only analytics dashboard",
-              ].map((c) => (
-                <li key={c} className="flex items-center gap-3">
-                  <CheckCircle2 size={18} className="text-accent" /> {c}
-                </li>
-              ))}
-            </ul>
-          </TapReveal>
-          <TapReveal delay={100} className="lg:col-span-6">
-            <div className="rounded-2xl border border-hairline bg-background p-6" style={{ boxShadow: "var(--shadow-card)" }}>
-              <div className="flex items-center justify-between text-xs text-ink-soft">
-                <span>New lead · 2m ago</span>
-                <span className="inline-flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-accent chip-glow" /> live</span>
-              </div>
-              <div className="mt-4 space-y-3">
-                {[
-                  ["Name", "Nusrat Jahan"],
-                  ["Email", "nusrat@studio.bd"],
-                  ["Company", "Studio Kagoj"],
-                  ["Tapped at", "Radisson, Dhaka · 6:42 PM"],
-                ].map(([k, v]) => (
-                  <div key={k} className="flex items-center justify-between border-b border-hairline py-2 text-sm">
-                    <span className="text-ink-soft">{k}</span>
-                    <span className="text-ink">{v}</span>
-                  </div>
-                ))}
-              </div>
-              <button className="mt-5 w-full rounded-full bg-btn-primary py-2.5 text-sm text-btn-primary">Save to CRM</button>
-            </div>
-          </TapReveal>
-        </div>
-      </Section>
-
       {/* ================== PAPER VS DIGITAL (color-invert wipe) ================== */}
       <div ref={invertRef} className="relative">
         <div
@@ -480,7 +430,7 @@ export default function MarketingPage() {
             color: inverted ? "#FAFAFA" : "inherit",
           }}
         >
-          <Section className="py-28">
+          <Section className="py-16">
             <p className="text-[11px] uppercase tracking-[0.28em] opacity-60">Compare</p>
             <h2 className="mt-5 max-w-[16ch] font-display text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.02] tracking-[-0.025em]">
               Paper vs. <span className="italic opacity-70">digital.</span>
@@ -517,7 +467,7 @@ export default function MarketingPage() {
       </div>
 
       {/* ================== WHY IDENTIDY ================== */}
-      <Section className="py-28">
+      <Section className="py-16">
         <div className="grid gap-10 lg:grid-cols-12">
           <TapReveal className="lg:col-span-4">
             <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">Why Identidy</p>
@@ -542,7 +492,7 @@ export default function MarketingPage() {
       </Section>
 
       {/* ================== TESTIMONIALS ================== */}
-      <Section className="py-24">
+      <Section className="py-14">
         <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">Voices</p>
         <h2 className="mt-5 max-w-[20ch] font-display text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.02] tracking-[-0.025em]">
           What people say after the first tap.
@@ -569,7 +519,7 @@ export default function MarketingPage() {
       </Section>
 
       {/* ================== USE CASES ================== */}
-      <Section className="py-16">
+      <Section className="py-12">
         <div className="rounded-3xl border border-hairline bg-surface p-8 sm:p-12">
           <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">Use cases</p>
           <h2 className="mt-4 font-display text-[clamp(1.75rem,3.4vw,2.75rem)] tracking-[-0.02em]">
@@ -594,7 +544,7 @@ export default function MarketingPage() {
       </Section>
 
       {/* ================== PRICING TEASER ================== */}
-      <Section className="py-24">
+      <Section className="py-14">
         <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
           <TapReveal className="lg:col-span-5">
             <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">Pricing</p>
@@ -623,7 +573,7 @@ export default function MarketingPage() {
       </Section>
 
       {/* ================== FAQ ================== */}
-      <Section className="py-24">
+      <Section className="py-14">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">FAQ</p>

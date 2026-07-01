@@ -179,7 +179,7 @@ function GetYourCardContent() {
           <div className="sticky top-24 rounded-3xl border border-hairline bg-background p-6" style={{ boxShadow: "var(--shadow-card)" }}>
             <p className="text-[11px] uppercase tracking-[0.22em] text-ink-soft">Order summary</p>
             <div className="mt-5">
-              <CardMockup variant={selected.variant} name="Your Name" role="Your Role" />
+              <CardMockup variant={selected.variant} name="Your Name" role="Your Role" hideTapConnect />
             </div>
             <dl className="mt-6 space-y-3 border-t border-hairline pt-5 text-sm">
               <Row k="Card" v={selected.label} />

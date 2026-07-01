@@ -10,7 +10,7 @@ export function HeroTap() {
   const heroImg = "/hero-card-tap.jpg";
 
   return (
-    <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-[#0A0A0A] grain">
+    <div className="relative aspect-[4/4] w-full overflow-hidden rounded-3xl bg-[#0A0A0A] grain">
       <img
         src={heroImg}
         alt="Identidy NFC card tapping a phone"

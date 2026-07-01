@@ -9,6 +9,8 @@ export function CardMockup({
   company = "Identidy",
   className = "",
   style,
+  hideTapConnect = false,
+  largeLogo = false,
 }: {
   variant?: "black" | "white" | "metal";
   name?: string;
@@ -16,6 +18,8 @@ export function CardMockup({
   company?: string;
   className?: string;
   style?: React.CSSProperties;
+  hideTapConnect?: boolean;
+  largeLogo?: boolean;
 }) {
   const skin =
     variant === "white"
@@ -62,13 +66,7 @@ export function CardMockup({
         <div className="flex items-start justify-between">
           <div>
             <p
-              className="text-[9px] uppercase tracking-[0.28em]"
-              style={{ color: skin.soft }}
-            >
-              {company}
-            </p>
-            <p
-              className="mt-2 text-[clamp(0.95rem,1.4vw,1.15rem)] font-medium tracking-tight"
+              className="text-[clamp(0.95rem,1.4vw,1.15rem)] font-medium tracking-tight"
               style={{ fontFamily: "var(--font-display)" }}
             >
               {name}
@@ -91,22 +89,16 @@ export function CardMockup({
 
         <div className="flex items-end justify-between">
           <div className="relative">
-            {/* chip */}
-            <div
-              className="grid h-6 w-8 grid-cols-3 grid-rows-3 gap-[1.5px] rounded-[3px]"
-              style={{
-                background: variant === "white" ? "linear-gradient(135deg,#c9c9c9,#8a8a8a)" : "linear-gradient(135deg,#3a3a3a,#141414)",
-                boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.15)",
-              }}
-            >
-              {Array.from({ length: 9 }).map((_, i) => (
-                <div key={i} className="rounded-[1px]" style={{ background: "rgba(0,0,0,0.2)" }} />
-              ))}
-              <div className="pointer-events-none absolute -inset-1.5 rounded-full bg-accent/50 blur-md chip-glow" />
-            </div>
+            {variant === "white" ? (
+              <img src="/identidy-logo.svg" alt="Logo" className={`${largeLogo ? "h-[22px] sm:h-[28px]" : "h-[18px] sm:h-[22px]"} w-auto animate-none`} />
+            ) : (
+              <img src="/identidy-logo-white.svg" alt="Logo" className={`${largeLogo ? "h-[22px] sm:h-[28px]" : "h-[18px] sm:h-[22px]"} w-auto animate-none`} />
+            )}
           </div>
           <div className="text-right">
-            <p className="text-[9px] uppercase tracking-[0.22em]" style={{ color: skin.soft }}>Tap → Connect</p>
+            {!hideTapConnect && (
+              <p className="text-[9px] uppercase tracking-[0.22em]" style={{ color: skin.soft }}>Tap → Connect</p>
+            )}
           </div>
         </div>
       </div>
