@@ -17,9 +17,9 @@ export const Route = createFileRoute("/get-your-card")({
 });
 
 const TIERS = [
-  { id: "white", label: "White", variant: "white" as const, price: "৳2,490" },
-  { id: "black", label: "Black", variant: "black" as const, price: "৳3,490" },
-  { id: "metal", label: "Black Metal", variant: "metal" as const, price: "৳6,900" },
+  { id: "white", label: "White", variant: "white" as const, price: "৳499" },
+  { id: "black", label: "Black", variant: "black" as const, price: "৳599" },
+  { id: "metal", label: "Black Metal", variant: "metal" as const, price: "৳1,699" },
 ];
 
 const THEMES = ["Creator", "Minimal", "Designer", "Developer", "Gamer", "Corporate", "Football Fan", "Cinematographer"];

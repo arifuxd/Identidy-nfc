@@ -100,11 +100,11 @@ function Home() {
     <>
       {/* ================== HERO ================== */}
       <Section className="pb-16 pt-8 sm:pt-14">
-        <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12">
+        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <p className="tap-in flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-ink-soft">
               <span className="h-1.5 w-1.5 rounded-full bg-accent chip-glow" />
-              The tap · Identidy 01
+              Made in Bangladesh
             </p>
             <h1 className="tap-in-delay-1 mt-6 text-balance font-display text-[clamp(2.75rem,7.5vw,7rem)] font-medium leading-[0.92] tracking-[-0.035em]">
               One tap. <br />
@@ -119,7 +119,7 @@ function Home() {
             {/* username claim */}
             <form
               onSubmit={(e) => e.preventDefault()}
-              className="tap-in-delay-3 mt-9 flex max-w-[520px] items-center gap-2 rounded-full border border-hairline bg-surface p-1.5 pl-4"
+              className="tap-in-delay-3 mt-9 flex max-w-[520px] items-center gap-2 rounded-full border border-black dark:border-white bg-surface p-1.5 pl-4"
             >
               <span className="text-sm text-ink-soft">identidy.co/</span>
               <input

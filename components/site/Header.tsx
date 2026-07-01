@@ -17,18 +17,12 @@ const NAV = [
 
 export function Header() {
   const pathname = usePathname();
-  const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    let last = 0;
     const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 8);
-      if (y > last && y > 120) setHidden(true);
-      else setHidden(false);
-      last = y;
+      setScrolled(window.scrollY > 8);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -37,20 +31,15 @@ export function Header() {
   return (
     <header
       className={[
-        "fixed inset-x-0 top-0 z-50 transition-transform duration-300 will-change-transform",
-        hidden ? "-translate-y-full" : "translate-y-0",
+        "fixed inset-x-0 top-0 z-50",
+        scrolled ? "backdrop-blur-xl" : "",
       ].join(" ")}
+      style={{
+        background: scrolled ? "color-mix(in oklab, var(--background) 78%, transparent)" : "transparent",
+        borderBottom: scrolled ? "1px solid var(--accent)" : "1px solid transparent",
+      }}
     >
-      <div
-        className={[
-          "mx-auto flex max-w-[1440px] items-center justify-between gap-6 px-5 py-3 sm:px-8",
-          scrolled ? "backdrop-blur-xl" : "",
-        ].join(" ")}
-        style={{
-          background: scrolled ? "color-mix(in oklab, var(--background) 78%, transparent)" : "transparent",
-          borderBottom: scrolled ? "1px solid var(--hairline)" : "1px solid transparent",
-        }}
-      >
+      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-6 px-5 py-3 sm:px-8">
         <Logo />
 
         <nav className="hidden items-center gap-8 md:flex">

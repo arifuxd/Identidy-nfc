@@ -10,14 +10,14 @@ const TIERS = [
   {
     name: "White",
     tag: "The everyday",
-    price: "৳2,490",
+    price: "৳499",
     variant: "white" as const,
     features: ["Matte print finish", "Custom color accents", "Live profile & analytics", "Free design assistance", "Lifetime updates"],
   },
   {
     name: "Black",
     tag: "The room",
-    price: "৳3,490",
+    price: "৳599",
     variant: "black" as const,
     features: ["Deep matte black", "Laser-etched detail", "Live profile & analytics", "Free design assistance", "Lifetime updates", "Priority support"],
     featured: true,
@@ -25,7 +25,7 @@ const TIERS = [
   {
     name: "Black Metal",
     tag: "The moment",
-    price: "৳6,900",
+    price: "৳1,699",
     variant: "metal" as const,
     features: ["Brushed metal body", "Custom engraving", "Weighted premium feel", "Live profile & analytics", "Free design assistance", "Lifetime updates", "Concierge onboarding"],
   },

@@ -35,7 +35,7 @@ export function LoginForm({ error }: { error?: string }) {
           <form action={loginAction} className="mt-8 space-y-4">
             <label className="block text-left">
               <span className="text-[11px] uppercase tracking-[0.2em] text-ink-soft">Email or username</span>
-              <input required name="email" type="email" placeholder="you@identidy.co" className="mt-2 w-full rounded-xl border border-hairline bg-background px-4 py-3 text-sm outline-none focus:border-accent text-foreground" />
+              <input required name="email" type="email" placeholder="you@identidy.net" className="mt-2 w-full rounded-xl border border-hairline bg-background px-4 py-3 text-sm outline-none focus:border-accent text-foreground" />
             </label>
             <label className="block text-left">
               <span className="text-[11px] uppercase tracking-[0.2em] text-ink-soft">Password</span>

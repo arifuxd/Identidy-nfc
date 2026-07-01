@@ -83,7 +83,7 @@ export default function ForgotPasswordPage() {
                   <input
                     required
                     type="email"
-                    placeholder="you@identidy.co"
+                    placeholder="you@identidy.net"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="mt-2 w-full rounded-xl border border-hairline bg-background px-4 py-3 text-sm outline-none focus:border-accent text-foreground"

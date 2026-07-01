@@ -43,8 +43,7 @@ export function Footer() {
       <div className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-accent/25 blur-[120px] aurora" />
 
       <div className="relative mx-auto max-w-[1440px] px-5 pt-24 pb-10 sm:px-8">
-        <p className="text-xs uppercase tracking-[0.25em] text-white/50">— Closing statement</p>
-        <h2 className="mt-6 max-w-[15ch] text-balance text-[clamp(2.75rem,8vw,7.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
+        <h2 className="max-w-[15ch] text-balance text-[clamp(2.75rem,8vw,7.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
           Your Identidy <span className="italic text-white/60">lives</span> here.
         </h2>
 

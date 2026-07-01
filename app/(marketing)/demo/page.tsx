@@ -56,7 +56,7 @@ export default function Demo() {
                   <div className="mt-5 space-y-2">
                     {[
                       [Phone, "+880 1XXX 000000"],
-                      [Mail, "ayaan@identidy.co"],
+                      [Mail, "ayaan@identidy.net"],
                       [MapPin, "Gulshan, Dhaka"],
                     ].map(([I, v], i) => {
                       const Icon = I as typeof Phone;

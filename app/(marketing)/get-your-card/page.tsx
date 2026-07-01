@@ -7,9 +7,9 @@ import { CardMockup } from "@/components/site/CardMockup";
 import { TapReveal } from "@/components/site/TapReveal";
 
 const TIERS = [
-  { id: "white", label: "White", variant: "white" as const, price: "৳2,490" },
-  { id: "black", label: "Black", variant: "black" as const, price: "৳3,490" },
-  { id: "metal", label: "Black Metal", variant: "metal" as const, price: "৳6,900" },
+  { id: "white", label: "White", variant: "white" as const, price: "৳499" },
+  { id: "black", label: "Black", variant: "black" as const, price: "৳599" },
+  { id: "metal", label: "Black Metal", variant: "metal" as const, price: "৳1,699" },
 ];
 
 const THEMES = ["Creator", "Minimal", "Designer", "Developer", "Gamer", "Corporate", "Football Fan", "Cinematographer"];
@@ -24,6 +24,12 @@ function GetYourCardContent() {
   const [theme, setTheme] = useState("Minimal");
   const [placed, setPlaced] = useState(false);
   const [username, setUsername] = useState(usernameParam);
+
+  React.useEffect(() => {
+    if (usernameParam) {
+      setUsername(usernameParam);
+    }
+  }, [usernameParam]);
 
   const selected = TIERS.find((t) => t.id === tier)!;
 
@@ -106,7 +112,7 @@ function GetYourCardContent() {
               <div className="mt-4">
                 <Field label="Desired username" required>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-ink-soft">identidy.co/</span>
+                    <span className="text-sm text-ink-soft">identidy.net/</span>
                     <input
                       required
                       className="i flex-1 min-w-0"
@@ -178,7 +184,7 @@ function GetYourCardContent() {
             <dl className="mt-6 space-y-3 border-t border-hairline pt-5 text-sm">
               <Row k="Card" v={selected.label} />
               <Row k="Theme" v={theme} />
-              <Row k="Desired URL" v={username ? `identidy.co/${username}` : "Not claimed"} />
+              <Row k="Desired URL" v={username ? `identidy.net/${username}` : "Not claimed"} />
               <Row k="Design revisions" v="Unlimited" />
               <Row k="Analytics" v="Included" />
               <Row k="Delivery" v="3–5 days" />

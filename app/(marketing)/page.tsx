@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowUpRight, Check, Play, MinusCircle, CheckCircle2 } from "lucide-react";
 import { HeroTap } from "@/components/site/HeroTap";
 import { CardMockup } from "@/components/site/CardMockup";
@@ -66,9 +67,11 @@ function VideoBlock({ label }: { label: string }) {
 }
 
 export default function MarketingPage() {
+  const router = useRouter();
   const invertRef = useRef<HTMLDivElement>(null);
   const [inverted, setInverted] = useState(false);
   const [claimUsername, setClaimUsername] = useState("");
+  const [checkingStatus, setCheckingStatus] = useState<"idle" | "checking" | "available" | "unavailable">("idle");
 
   useEffect(() => {
     const el = invertRef.current;
@@ -80,10 +83,36 @@ export default function MarketingPage() {
     return () => io.disconnect();
   }, []);
 
+  useEffect(() => {
+    const trimmed = claimUsername.trim();
+    if (!trimmed) {
+      setCheckingStatus("idle");
+      return;
+    }
+
+    setCheckingStatus("checking");
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/slug/check?slug=${encodeURIComponent(trimmed)}`);
+        const data = await res.json();
+        if (data.available) {
+          setCheckingStatus("available");
+        } else {
+          setCheckingStatus("unavailable");
+        }
+      } catch (err) {
+        setCheckingStatus("unavailable");
+      }
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [claimUsername]);
+
   const handleClaim = (e: React.FormEvent) => {
     e.preventDefault();
-    if (claimUsername.trim()) {
-      window.location.href = `/get-your-card?username=${encodeURIComponent(claimUsername.trim())}`;
+    if (claimUsername.trim() && checkingStatus === "available") {
+      router.push(`/get-your-card?username=${encodeURIComponent(claimUsername.trim())}`);
     }
   };
 
@@ -91,11 +120,11 @@ export default function MarketingPage() {
     <>
       {/* ================== HERO ================== */}
       <Section className="pb-16 pt-8 sm:pt-14">
-        <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12">
+        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <p className="tap-in flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-ink-soft">
               <span className="h-1.5 w-1.5 rounded-full bg-accent chip-glow" />
-              The tap · Identidy 01
+              Made in Bangladesh
             </p>
             <h1 className="tap-in-delay-1 mt-6 text-balance font-display text-[clamp(2.75rem,7.5vw,7rem)] font-medium leading-[0.92] tracking-[-0.035em]">
               One tap. <br />
@@ -108,25 +137,47 @@ export default function MarketingPage() {
             </p>
 
             {/* username claim */}
-            <form
-              onSubmit={handleClaim}
-              className="tap-in-delay-3 mt-9 flex max-w-[520px] items-center gap-2 rounded-full border border-hairline bg-surface p-1.5 pl-4"
-            >
-              <span className="text-sm text-ink-soft">identidy.co/</span>
-              <input
-                aria-label="Claim your username"
-                placeholder="yourname"
-                value={claimUsername}
-                onChange={(e) => setClaimUsername(e.target.value)}
-                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-ink-soft/60"
-              />
-              <button
-                type="submit"
-                className="rounded-full bg-btn-primary px-4 py-2 text-[13px] font-medium text-btn-primary transition-transform hover:scale-[1.02] active:scale-95"
+            <div className="tap-in-delay-3 mt-9 max-w-[520px]">
+              <form
+                onSubmit={handleClaim}
+                className="flex items-center gap-2 rounded-full border border-black dark:border-white bg-surface p-1.5 pl-4"
               >
-                Claim
-              </button>
-            </form>
+                <span className="text-sm text-ink-soft">identidy.net/</span>
+                <input
+                  aria-label="Claim your username"
+                  placeholder="yourname"
+                  value={claimUsername}
+                  onChange={(e) => setClaimUsername(e.target.value)}
+                  className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-ink-soft/60"
+                />
+                <button
+                  type="submit"
+                  disabled={checkingStatus !== "available"}
+                  className="rounded-full bg-btn-primary px-4 py-2 text-[13px] font-medium text-btn-primary transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Claim
+                </button>
+              </form>
+
+              <div className="h-5 mt-2.5 pl-4 text-xs flex items-center gap-2">
+                {checkingStatus === "checking" && (
+                  <>
+                    <span className="h-3 w-3 animate-spin rounded-full border-[1.5px] border-ink-soft border-t-transparent" />
+                    <span className="text-ink-soft">Checking username availability...</span>
+                  </>
+                )}
+                {checkingStatus === "available" && (
+                  <span className="text-success font-medium">
+                    Excellent! That username is available
+                  </span>
+                )}
+                {checkingStatus === "unavailable" && (
+                  <span className="text-danger font-medium">
+                    That username is not available
+                  </span>
+                )}
+              </div>
+            </div>
 
             <div className="tap-in-delay-4 mt-8 flex flex-wrap items-center gap-3">
               <Link href="/get-your-card" className="group inline-flex items-center gap-2 rounded-full bg-btn-primary px-5 py-3 text-sm font-medium text-btn-primary transition-transform hover:scale-[1.02]">
