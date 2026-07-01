@@ -1,11 +1,30 @@
-"use client";
-
-import Link from "next/link";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Check, Play, MinusCircle, CheckCircle2 } from "lucide-react";
 import { HeroTap } from "@/components/site/HeroTap";
 import { CardMockup } from "@/components/site/CardMockup";
 import { TapReveal, CountUp } from "@/components/site/TapReveal";
+import cardMacro from "@/assets/card-macro.jpg";
+import cardsDeck from "@/assets/cards-deck.jpg";
+import t1 from "@/assets/testimonial-1.jpg";
+import t2 from "@/assets/testimonial-2.jpg";
+import t3 from "@/assets/testimonial-3.jpg";
 import { useEffect, useRef, useState } from "react";
+
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Identidy — One Tap. Your Entire Identity." },
+      {
+        name: "description",
+        content:
+          "A premium NFC business card platform. Share your profile, contact and links with a single, deliberate tap.",
+      },
+      { property: "og:title", content: "Identidy — One Tap. Your Entire Identity." },
+      { property: "og:description", content: "Premium NFC business cards. Instantly beautiful, deliberately physical." },
+    ],
+  }),
+  component: Home,
+});
 
 const MARQUEE = [
   "12,400+ taps this week",
@@ -31,8 +50,7 @@ function TiltCard({ children }: { children: React.ReactNode }) {
     <div
       ref={ref}
       onMouseMove={(e) => {
-        if (!ref.current) return;
-        const r = ref.current.getBoundingClientRect();
+        const r = ref.current!.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width - 0.5;
         const y = (e.clientY - r.top) / r.height - 0.5;
         setStyle({ transform: `perspective(900px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) translateZ(0)` });
@@ -65,27 +83,18 @@ function VideoBlock({ label }: { label: string }) {
   );
 }
 
-export default function MarketingPage() {
+function Home() {
+  // scroll invert for paper vs digital section handled via IntersectionObserver
   const invertRef = useRef<HTMLDivElement>(null);
   const [inverted, setInverted] = useState(false);
-  const [claimUsername, setClaimUsername] = useState("");
-
   useEffect(() => {
-    const el = invertRef.current;
-    if (!el) return;
+    const el = invertRef.current; if (!el) return;
     const io = new IntersectionObserver((entries) => {
       for (const e of entries) setInverted(e.isIntersecting);
     }, { threshold: 0.35 });
     io.observe(el);
     return () => io.disconnect();
   }, []);
-
-  const handleClaim = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (claimUsername.trim()) {
-      window.location.href = `/get-your-card?username=${encodeURIComponent(claimUsername.trim())}`;
-    }
-  };
 
   return (
     <>
@@ -109,15 +118,13 @@ export default function MarketingPage() {
 
             {/* username claim */}
             <form
-              onSubmit={handleClaim}
+              onSubmit={(e) => e.preventDefault()}
               className="tap-in-delay-3 mt-9 flex max-w-[520px] items-center gap-2 rounded-full border border-hairline bg-surface p-1.5 pl-4"
             >
               <span className="text-sm text-ink-soft">identidy.co/</span>
               <input
                 aria-label="Claim your username"
                 placeholder="yourname"
-                value={claimUsername}
-                onChange={(e) => setClaimUsername(e.target.value)}
                 className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-ink-soft/60"
               />
               <button
@@ -129,11 +136,11 @@ export default function MarketingPage() {
             </form>
 
             <div className="tap-in-delay-4 mt-8 flex flex-wrap items-center gap-3">
-              <Link href="/get-your-card" className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background transition-transform hover:scale-[1.02]">
+              <Link to="/get-your-card" className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background transition-transform hover:scale-[1.02]">
                 Get your card
                 <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
-              <Link href="/demo" className="inline-flex items-center gap-2 rounded-full border border-hairline px-5 py-3 text-sm">
+              <Link to="/demo" className="inline-flex items-center gap-2 rounded-full border border-hairline px-5 py-3 text-sm">
                 View a live profile
               </Link>
             </div>
@@ -285,14 +292,14 @@ export default function MarketingPage() {
             <p className="mt-5 max-w-[44ch] text-ink-soft">
               Creator, Minimal, Designer, Developer, Gamer, Corporate, Football Fan, Cinematographer — and a free custom design if none of them are quite you.
             </p>
-            <Link href="/themes" className="mt-8 inline-flex items-center gap-2 rounded-full border border-hairline px-5 py-3 text-sm">
+            <Link to="/themes" className="mt-8 inline-flex items-center gap-2 rounded-full border border-hairline px-5 py-3 text-sm">
               Browse the deck <ArrowUpRight size={15} />
             </Link>
           </TapReveal>
           <TapReveal delay={100} className="lg:col-span-7">
             <div className="relative">
               <img
-                src="/cards-deck.jpg"
+                src={cardsDeck}
                 alt="A fanned deck of premium NFC business cards"
                 width={1600}
                 height={1104}
@@ -498,9 +505,9 @@ export default function MarketingPage() {
         </h2>
         <div className="mt-14 grid gap-8 md:grid-cols-3">
           {[
-            { img: "/testimonial-1.jpg", q: "I stopped reprinting cards. Titles change, my Identidy doesn't.", n: "Rafiq H.", c: "Founder — Dhaka" },
-            { img: "/testimonial-2.jpg", q: "Clients remember the tap. That's an unfair advantage.", n: "Sadia K.", c: "Creative Dir. — Chattogram" },
-            { img: "/testimonial-3.jpg", q: "I close faster because they open my profile at the meeting, not after.", n: "Imran S.", c: "Real Estate — Sylhet" },
+            { img: t1, q: "I stopped reprinting cards. Titles change, my Identidy doesn't.", n: "Rafiq H.", c: "Founder — Dhaka" },
+            { img: t2, q: "Clients remember the tap. That's an unfair advantage.", n: "Sadia K.", c: "Creative Dir. — Chattogram" },
+            { img: t3, q: "I close faster because they open my profile at the meeting, not after.", n: "Imran S.", c: "Real Estate — Sylhet" },
           ].map((t, i) => (
             <TapReveal key={t.n} delay={i * 80}>
               <figure className="overflow-hidden rounded-2xl border border-hairline bg-surface">
@@ -553,7 +560,7 @@ export default function MarketingPage() {
             <p className="mt-5 max-w-[42ch] text-ink-soft">
               White for the everyday. Black for the room. Black Metal for the moment they don't forget.
             </p>
-            <Link href="/pricing" className="mt-8 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm text-background">
+            <Link to="/pricing" className="mt-8 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm text-background">
               See pricing <ArrowUpRight size={16} />
             </Link>
           </TapReveal>
@@ -588,7 +595,7 @@ export default function MarketingPage() {
               ["Do you deliver outside Bangladesh?", "Currently we serve Bangladesh with rapid delivery. International shipping is rolling out."],
               ["What if I don't like a theme?", "Every order includes a free design pass with our team — no template lock-in."],
             ].map(([q, a]) => (
-              <details key={q} className="group border-t border-hairline py-5 animate-none" data-cursor="expand">
+              <details key={q} className="group border-t border-hairline py-5" data-cursor="expand">
                 <summary className="flex cursor-pointer list-none items-center justify-between text-[15px] font-medium">
                   {q}
                   <span className="text-ink-soft transition-transform group-open:rotate-45">+</span>
@@ -606,7 +613,7 @@ export default function MarketingPage() {
           <div className="relative overflow-hidden rounded-3xl bg-[#0A0A0A] px-8 py-20 text-[#FAFAFA] sm:px-14 sm:py-28 grain">
             <div className="pointer-events-none absolute -top-40 right-0 h-[420px] w-[420px] rounded-full bg-accent/40 blur-[120px] aurora" />
             <img
-              src="/card-macro.jpg"
+              src={cardMacro}
               alt=""
               aria-hidden
               width={1400}
@@ -619,7 +626,7 @@ export default function MarketingPage() {
               Make the next handshake unforgettable.
             </h2>
             <Link
-              href="/get-your-card"
+              to="/get-your-card"
               className="relative mt-10 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-medium text-[#0A0A0A] transition-transform hover:scale-[1.02]"
             >
               Get your card
