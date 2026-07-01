@@ -90,14 +90,27 @@ function TiltPricingCard({ tier }: { tier: (typeof TIERS)[number] }) {
             <CardMockup variant={tier.variant} name="Your Name" role="Your Role" largeLogo />
           </div>
           <div
-            className="absolute inset-0 rounded-2xl border border-hairline bg-background p-5"
+            className={[
+              "absolute inset-0 rounded-2xl p-5",
+              tier.variant === "white"
+                ? "border border-hairline bg-background text-foreground"
+                : "border border-white/10 bg-[#0A0A0A] text-white",
+            ].join(" ")}
             style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", boxShadow: "var(--shadow-card)" }}
           >
-            <p className="text-[10.5px] uppercase tracking-[0.22em] text-ink-soft">Included</p>
+            <p
+              className={[
+                "text-[10.5px] uppercase tracking-[0.22em]",
+                tier.variant === "white" ? "text-ink-soft" : "text-white/60",
+              ].join(" ")}
+            >
+              Included
+            </p>
             <ul className="mt-3 grid grid-cols-1 gap-1.5 text-[13px]">
               {tier.features.slice(0, 5).map((f) => (
                 <li key={f} className="flex items-center gap-2">
-                  <Check size={13} className="text-accent" /> {f}
+                  <Check size={13} className="text-accent shrink-0" />
+                  <span className={tier.variant === "white" ? "text-ink" : "text-white/90"}>{f}</span>
                 </li>
               ))}
             </ul>
@@ -108,9 +121,10 @@ function TiltPricingCard({ tier }: { tier: (typeof TIERS)[number] }) {
 
       <Link
         to="/get-your-card"
+        style={tier.featured ? { color: "#ffffff" } : undefined}
         className={[
           "mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-transform hover:scale-[1.01]",
-          tier.featured ? "bg-accent text-white" : "bg-foreground text-background",
+          tier.featured ? "bg-accent !text-white" : "bg-foreground text-background",
         ].join(" ")}
       >
         Order {tier.name} <ArrowUpRight size={15} />

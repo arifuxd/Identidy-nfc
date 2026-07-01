@@ -15,14 +15,11 @@ const COLS = [
     title: "Company",
     links: [
       { label: "About", to: "/about" as const },
-      { label: "Press", to: "/about" as const },
-      { label: "Careers", to: "/about" as const },
     ],
   },
   {
     title: "Support",
     links: [
-      { label: "Contact", to: "/about" as const },
       { label: "Login", to: "/login" as const },
       { label: "FAQ", to: "/pricing" as const },
     ],
@@ -30,9 +27,9 @@ const COLS = [
   {
     title: "Social",
     links: [
-      { label: "Instagram", to: "/" as const },
-      { label: "LinkedIn", to: "/" as const },
-      { label: "Facebook", to: "/" as const },
+      { label: "YouTube", href: "https://www.youtube.com/@identidy-bd" },
+      { label: "Facebook", href: "https://www.facebook.com/identidybd" },
+      { label: "Instagram", href: "https://www.instagram.com/identidybd" },
     ],
   },
 ];
@@ -64,13 +61,30 @@ export function Footer() {
             <div key={c.title}>
               <p className="text-[11px] uppercase tracking-[0.2em] text-white/45">{c.title}</p>
               <ul className="mt-4 space-y-2.5">
-                {c.links.map((l, i) => (
-                  <li key={i}>
-                    <Link to={l.to} className="text-sm text-white/80 transition-colors hover:text-white">
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
+                {c.links.map((l, i) => {
+                  if ('href' in l && l.href) {
+                    return (
+                      <li key={i}>
+                        <a
+                          href={l.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-white/80 transition-colors hover:text-white"
+                        >
+                          {l.label}
+                        </a>
+                      </li>
+                    );
+                  }
+
+                  return (
+                    <li key={i}>
+                      <Link to={l.to} className="text-sm text-white/80 transition-colors hover:text-white">
+                        {l.label}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
@@ -79,8 +93,6 @@ export function Footer() {
         <div className="mt-14 flex flex-col-reverse items-start justify-between gap-6 border-t border-white/10 pt-6 text-xs text-white/45 md:flex-row md:items-center">
           <p>© {new Date().getFullYear()} Identidy. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <Link to="/" className="hover:text-white">Privacy</Link>
-            <Link to="/" className="hover:text-white">Terms</Link>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-[10.5px] uppercase tracking-[0.18em] text-white/70">
               <span className="h-1.5 w-1.5 rounded-full bg-accent chip-glow" />
               Made in Bangladesh

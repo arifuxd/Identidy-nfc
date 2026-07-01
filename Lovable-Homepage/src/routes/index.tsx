@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowUpRight, Check, Play, MinusCircle, CheckCircle2 } from "lucide-react";
+import { ArrowUpRight, Check, Play, MinusCircle, CheckCircle2, ArrowLeft, ArrowRight } from "lucide-react";
 import { HeroTap } from "@/components/site/HeroTap";
 import { CardMockup } from "@/components/site/CardMockup";
 import { TapReveal, CountUp } from "@/components/site/TapReveal";
@@ -122,6 +122,196 @@ function VideoBlock({
   );
 }
 
+const TIERS = [
+  {
+    name: "White",
+    tag: "The everyday",
+    price: "৳499",
+    variant: "white" as const,
+    features: ["Matte print finish", "Custom color accents", "Live profile & analytics", "Free design assistance", "Lifetime updates"],
+  },
+  {
+    name: "Black",
+    tag: "The room",
+    price: "৳599",
+    variant: "black" as const,
+    features: ["Deep matte black", "Laser-etched detail", "Live profile & analytics", "Free design assistance", "Lifetime updates", "Priority support"],
+    featured: true,
+  },
+  {
+    name: "Black Metal",
+    tag: "The moment",
+    price: "৳1,699",
+    variant: "metal" as const,
+    features: ["Brushed metal body", "Custom engraving", "Weighted premium feel", "Live profile & analytics", "Free design assistance", "Lifetime updates", "Concierge onboarding"],
+  },
+];
+
+function TiltPricingCard({ tier }: { tier: (typeof TIERS)[number] }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [t, setT] = useState<React.CSSProperties>({});
+  const [flipped, setFlipped] = useState(false);
+  return (
+    <div
+      ref={ref}
+      onMouseMove={(e) => {
+        if (!ref.current) return;
+        const r = ref.current.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        setT({ transform: `perspective(1000px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg)` });
+      }}
+      onMouseEnter={() => setFlipped(true)}
+      onMouseLeave={() => { setT({ transform: "perspective(1000px) rotateY(0) rotateX(0)" }); setFlipped(false); }}
+      className={[
+        "group relative rounded-3xl border p-6 sm:p-8 transition-shadow duration-500",
+        tier.featured ? "border-accent/40" : "border-hairline",
+      ].join(" ")}
+      style={{
+        ...t,
+        transformStyle: "preserve-3d",
+        boxShadow: tier.featured ? "var(--shadow-lift)" : "var(--shadow-card)",
+        background: "var(--surface)",
+      }}
+    >
+      {tier.featured && (
+        <span className="absolute -top-3 left-6 rounded-full bg-accent px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-white">
+          Most tapped
+        </span>
+      )}
+      <div className="flex items-baseline justify-between">
+        <h3 className="font-display text-2xl tracking-tight">{tier.name}</h3>
+        <span className="text-[11px] uppercase tracking-[0.22em] text-ink-soft">{tier.tag}</span>
+      </div>
+      <p className="mt-6 font-display text-5xl tracking-[-0.03em]">
+        {tier.price}
+        <span className="ml-2 text-sm font-normal text-ink-soft">/ card</span>
+      </p>
+
+      <div className="mt-8" style={{ perspective: 1200 }}>
+        <div
+          className="relative aspect-[1.586/1] w-full transition-transform duration-700"
+          style={{ transformStyle: "preserve-3d", transform: flipped ? "rotateY(180deg)" : "rotateY(0)" }}
+        >
+          <div className="absolute inset-0" style={{ backfaceVisibility: "hidden" }}>
+            <CardMockup variant={tier.variant} name="Your Name" role="Your Role" largeLogo />
+          </div>
+          <div
+            className={[
+              "absolute inset-0 rounded-2xl p-5",
+              tier.variant === "white"
+                ? "border border-hairline bg-background text-foreground"
+                : "border border-white/10 bg-[#0A0A0A] text-white",
+            ].join(" ")}
+            style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", boxShadow: "var(--shadow-card)" }}
+          >
+            <p
+              className={[
+                "text-[10.5px] uppercase tracking-[0.22em]",
+                tier.variant === "white" ? "text-ink-soft" : "text-white/60",
+              ].join(" ")}
+            >
+              Included
+            </p>
+            <ul className="mt-3 grid grid-cols-1 gap-1.5 text-[13px]">
+              {tier.features.slice(0, 5).map((f) => (
+                <li key={f} className="flex items-center gap-2">
+                  <Check size={13} className="text-accent shrink-0" />
+                  <span className={tier.variant === "white" ? "text-ink" : "text-white/90"}>{f}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <Link
+        to="/get-your-card"
+        style={tier.featured ? { color: "#ffffff" } : undefined}
+        className={[
+          "mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-transform hover:scale-[1.01]",
+          tier.featured ? "bg-accent !text-white" : "bg-foreground text-background",
+        ].join(" ")}
+      >
+        Order {tier.name} <ArrowUpRight size={15} />
+      </Link>
+    </div>
+  );
+}
+
+const TESTIMONIALS = [
+  { img: t1, q: "I stopped reprinting cards. Titles change, my Identidy doesn't.", n: "Rafiq H.", c: "Founder — Dhaka" },
+  { img: t2, q: "Clients remember the tap. That's an unfair advantage.", n: "Sadia K.", c: "Creative Dir. — Chattogram" },
+  { img: t3, q: "I close faster because they open my profile at the meeting, not after.", n: "Imran S.", c: "Real Estate — Sylhet" },
+];
+
+function TestimonialsSlider() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleManualScroll = (direction: "left" | "right") => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const scrollAmount = 340;
+    container.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <div className="relative mt-14 group/slider max-w-[1440px] mx-auto">
+      <div
+        ref={containerRef}
+        className="flex gap-6 overflow-x-auto scrollbar-none snap-x snap-mandatory pb-4 md:grid md:grid-cols-3 md:overflow-x-visible md:pb-0"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
+        {TESTIMONIALS.map((t, i) => (
+          <div
+            key={i}
+            className="w-[290px] sm:w-[320px] md:w-full shrink-0 snap-start"
+          >
+            <figure className="flex flex-col justify-between h-full rounded-2xl border border-hairline bg-surface p-6 sm:p-8 min-h-[220px]">
+              <blockquote className="font-display text-[15.5px] sm:text-[16.5px] leading-relaxed text-ink tracking-tight">
+                "{t.q}"
+              </blockquote>
+              <figcaption className="mt-6 flex items-center gap-3">
+                <img
+                  src={t.img}
+                  alt={t.n}
+                  loading="lazy"
+                  className="h-10 w-10 sm:h-11 sm:w-11 rounded-full object-cover border border-hairline bg-surface-soft"
+                />
+                <div>
+                  <p className="font-semibold text-xs sm:text-sm text-ink leading-none">{t.n}</p>
+                  <p className="mt-1 text-[11px] text-ink-soft leading-none">{t.c}</p>
+                </div>
+              </figcaption>
+            </figure>
+          </div>
+        ))}
+      </div>
+
+      <div className="absolute top-1/2 -translate-y-1/2 -left-4 -right-4 flex justify-between pointer-events-none z-20 md:hidden">
+        <button
+          onClick={() => handleManualScroll("left")}
+          aria-label="Scroll left"
+          className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-ink shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+        >
+          <ArrowLeft size={16} />
+        </button>
+        <button
+          onClick={() => handleManualScroll("right")}
+          aria-label="Scroll right"
+          className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-ink shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+        >
+          <ArrowRight size={16} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function Home() {
   // scroll invert for paper vs digital section handled via IntersectionObserver
   const invertRef = useRef<HTMLDivElement>(null);
@@ -138,7 +328,7 @@ function Home() {
   return (
     <>
       {/* ================== HERO ================== */}
-      <Section className="pb-16 pt-8 sm:pt-14">
+      <Section className="pb-8 pt-8 sm:pt-14">
         <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <p className="tap-in text-[11px] uppercase tracking-[0.28em] text-ink-soft">
@@ -195,7 +385,7 @@ function Home() {
       </Section>
 
       {/* ================== MARQUEE ================== */}
-      <section className="mt-6 overflow-hidden border-y border-hairline py-5">
+      <section className="mt-2 overflow-hidden border-y border-hairline py-5">
         <div className="marquee flex min-w-max items-center gap-14 whitespace-nowrap">
           {[...MARQUEE, ...MARQUEE].map((m, i) => (
             <span key={i} className="inline-flex items-center gap-14 text-[13px] uppercase tracking-[0.22em] text-ink-soft">
@@ -264,34 +454,6 @@ function Home() {
               </div>
             ))}
           </TapReveal>
-        </div>
-      </Section>
-
-      {/* ================== FEATURES ================== */}
-      <Section className="py-8">
-        <div className="grid gap-4 md:grid-cols-6">
-          {[
-            { t: "One tap, no app", d: "iOS 14+ and Android 8+ open your profile the instant they meet the card.", s: "md:col-span-3" },
-            { t: "Live analytics", d: "Every tap, view, save and click — mapped to time, city and source.", s: "md:col-span-3" },
-            { t: "Lead capture", d: "Optional inline form saves contacts directly to your dashboard and inbox.", s: "md:col-span-2" },
-            { t: "Free design service", d: "A designer refines your profile — no template lock-in.", s: "md:col-span-2" },
-            { t: "Local support, real people", d: "WhatsApp support based in Dhaka. Actual humans, actual replies.", s: "md:col-span-2" },
-          ].map((f) => (
-            <TapReveal key={f.t} className={f.s}>
-              <div
-                data-cursor="expand"
-                className="group relative h-full overflow-hidden rounded-2xl border border-hairline bg-surface p-8"
-                style={{ boxShadow: "var(--shadow-card)" }}
-              >
-                <div className="flex items-start justify-between">
-                  <h3 className="font-display text-xl tracking-tight">{f.t}</h3>
-                  <ArrowUpRight size={18} className="text-ink-soft transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                </div>
-                <p className="mt-4 max-w-[42ch] text-sm text-ink-soft">{f.d}</p>
-                <div className="pointer-events-none absolute -bottom-24 -right-24 h-56 w-56 rounded-full bg-accent/0 blur-3xl transition-colors duration-500 group-hover:bg-accent/25" />
-              </div>
-            </TapReveal>
-          ))}
         </div>
       </Section>
 
@@ -455,25 +617,7 @@ function Home() {
         <h2 className="mt-5 max-w-[20ch] font-display text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.02] tracking-[-0.025em]">
           What people say after the first tap.
         </h2>
-        <div className="mt-14 grid gap-8 md:grid-cols-3">
-          {[
-            { img: t1, q: "I stopped reprinting cards. Titles change, my Identidy doesn't.", n: "Rafiq H.", c: "Founder — Dhaka" },
-            { img: t2, q: "Clients remember the tap. That's an unfair advantage.", n: "Sadia K.", c: "Creative Dir. — Chattogram" },
-            { img: t3, q: "I close faster because they open my profile at the meeting, not after.", n: "Imran S.", c: "Real Estate — Sylhet" },
-          ].map((t, i) => (
-            <TapReveal key={t.n} delay={i * 80}>
-              <figure className="overflow-hidden rounded-2xl border border-hairline bg-surface">
-                <img src={t.img} alt={t.n} width={800} height={1000} loading="lazy" className="h-72 w-full object-cover" />
-                <figcaption className="p-6">
-                  <blockquote className="font-display text-lg leading-snug tracking-tight">"{t.q}"</blockquote>
-                  <p className="mt-4 text-xs uppercase tracking-[0.18em] text-ink-soft">
-                    {t.n} · {t.c}
-                  </p>
-                </figcaption>
-              </figure>
-            </TapReveal>
-          ))}
-        </div>
+        <TestimonialsSlider />
       </Section>
 
       {/* ================== USE CASES ================== */}
@@ -501,32 +645,22 @@ function Home() {
         </div>
       </Section>
 
-      {/* ================== PRICING TEASER ================== */}
-      <Section className="py-14">
-        <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
-          <TapReveal className="lg:col-span-5">
-            <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">Pricing</p>
-            <h2 className="mt-5 font-display text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.02] tracking-[-0.025em]">
-              Three cards.<br /><span className="italic text-ink-soft">One tap each.</span>
-            </h2>
-            <p className="mt-5 max-w-[42ch] text-ink-soft">
-              White for the everyday. Black for the room. Black Metal for the moment they don't forget.
-            </p>
-            <Link to="/pricing" className="mt-8 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm text-background">
-              See pricing <ArrowUpRight size={16} />
-            </Link>
-          </TapReveal>
-          <TapReveal delay={100} className="grid gap-5 sm:grid-cols-3 lg:col-span-7">
-            {(["white", "black", "metal"] as const).map((v, i) => (
-              <TiltCard key={v}>
-                <CardMockup
-                  variant={v}
-                  name={["Ayaan Rahman", "Nadia Chowdhury", "Zaman Ahmed"][i]}
-                  role={["Product Designer", "CEO, Studio Kagoj", "Director, Metal & Co."][i]}
-                />
-              </TiltCard>
-            ))}
-          </TapReveal>
+      {/* ================== PRICING ================== */}
+      <Section className="py-16">
+        <div className="mb-14 text-center">
+          <p className="text-[11px] uppercase tracking-[0.28em] text-ink-soft">Pricing</p>
+          <h2 className="mt-4 font-display text-[clamp(2.25rem,4.5vw,3.75rem)] leading-[1.02] tracking-[-0.025em]">
+            Three cards. <span className="italic text-ink-soft">One tap each.</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-[52ch] text-[15px] text-ink-soft">
+            All prices include free design assistance, lifetime profile updates, and analytics. No subscription.
+          </p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          {TIERS.map((tier) => (
+            <TiltPricingCard key={tier.name} tier={tier} />
+          ))}
         </div>
       </Section>
 
