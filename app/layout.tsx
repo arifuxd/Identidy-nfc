@@ -36,6 +36,22 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-MD21G3DLND"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-gtag"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-MD21G3DLND');
+            `,
+          }}
+        />
+        <Script
           id="meta-pixel"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
