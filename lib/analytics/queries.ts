@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { subDays, subHours } from "date-fns";
 
 import { createClient } from "@/lib/supabase/server";
@@ -6,7 +7,7 @@ function toIso(date: Date) {
   return date.toISOString();
 }
 
-export async function getAnalyticsSummary(profileId: string) {
+export const getAnalyticsSummary = cache(async (profileId: string) => {
   const supabase = await createClient();
   const now = new Date();
 
@@ -44,4 +45,4 @@ export async function getAnalyticsSummary(profileId: string) {
     last24Hours: last24Hours.count ?? 0,
     daily: daily.data ?? [],
   };
-}
+});

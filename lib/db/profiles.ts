@@ -37,7 +37,7 @@ export const getProfileBundleBySlug = cache(async (slug: string) => {
   };
 });
 
-export async function getProfileBundleForUser(userId: string) {
+export const getProfileBundleForUser = cache(async (userId: string) => {
   const supabase = await createClient();
 
   const { data: profile, error } = await supabase
@@ -72,7 +72,7 @@ export async function getProfileBundleForUser(userId: string) {
     socialLinks: socialLinks ?? [],
     experiences: experiences ?? [],
   };
-}
+});
 
 export async function getAdminUsers() {
   const supabase = createServiceRoleClient();

@@ -9,7 +9,6 @@ import { getAnalyticsSummary } from "@/lib/analytics/queries";
 import { requireUser } from "@/lib/auth/session";
 import { getConnectionSummary } from "@/lib/db/connections";
 import { getProfileBundleForUser } from "@/lib/db/profiles";
-import { createClient } from "@/lib/supabase/server";
 import { formatCompactNumber } from "@/lib/utils";
 
 type RangeKey = "7d" | "30d" | "lifetime";
@@ -33,17 +32,11 @@ export default async function DashboardOverviewPage({
       : "30d";
 
   const user = await requireUser();
-  const data = await getProfileBundleForUser(user.id);
-  const [analytics, connectionStats, supabase] = await Promise.all([
+  const [data, analytics, connectionStats] = await Promise.all([
+    getProfileBundleForUser(user.id),
     getAnalyticsSummary(user.id),
     getConnectionSummary(user.id),
-    createClient(),
   ]);
-  const { data: role } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", user.id)
-    .maybeSingle();
 
   if (!data) {
     return null;
@@ -63,7 +56,7 @@ export default async function DashboardOverviewPage({
         : connectionStats.lifetime;
 
   return (
-    <DashboardShell currentPath="/dashboard" isAdmin={role?.role === "admin"}>
+    <DashboardShell currentPath="/dashboard" isAdmin={false}>
       <div className="space-y-5">
         <Card>
           <p className="text-xs font-medium uppercase tracking-[0.24em] text-accent/80">

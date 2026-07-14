@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { requireUser } from "@/lib/auth/session";
 import { getConnectionsForUser } from "@/lib/db/connections";
-import { createClient } from "@/lib/supabase/server";
 
 function formatSubmittedAt(value: string) {
   return new Intl.DateTimeFormat("en", {
@@ -16,18 +15,10 @@ function formatSubmittedAt(value: string) {
 
 export default async function DashboardConnectionsPage() {
   const user = await requireUser();
-  const [connections, supabase] = await Promise.all([
-    getConnectionsForUser(user.id),
-    createClient(),
-  ]);
-  const { data: role } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const connections = await getConnectionsForUser(user.id);
 
   return (
-    <DashboardShell currentPath="/dashboard/connections" isAdmin={role?.role === "admin"}>
+    <DashboardShell currentPath="/dashboard/connections" isAdmin={false}>
       <div className="space-y-5">
         <Card>
           <p className="text-xs font-medium uppercase tracking-[0.24em] text-accent/80">

@@ -1,6 +1,7 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 
-export async function getConnectionsForUser(userId: string) {
+export const getConnectionsForUser = cache(async (userId: string) => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("profile_connections")
@@ -13,9 +14,9 @@ export async function getConnectionsForUser(userId: string) {
   }
 
   return data ?? [];
-}
+});
 
-export async function getConnectionSummary(profileId: string) {
+export const getConnectionSummary = cache(async (profileId: string) => {
   const supabase = await createClient();
   const now = new Date();
   const from7Days = new Date(now);
@@ -45,4 +46,4 @@ export async function getConnectionSummary(profileId: string) {
     last30Days: last30Days.count ?? 0,
     last7Days: last7Days.count ?? 0,
   };
-}
+});

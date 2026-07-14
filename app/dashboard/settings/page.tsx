@@ -7,13 +7,14 @@ import { createClient } from "@/lib/supabase/server";
 export default async function DashboardSettingsPage() {
   const user = await requireUser();
   const supabase = await createClient();
-  const [{ data: role }, { data: profile }] = await Promise.all([
-    supabase.from("user_roles").select("role").eq("user_id", user.id).maybeSingle(),
-    supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
-  ]);
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle();
 
   return (
-    <DashboardShell currentPath="/dashboard/settings" isAdmin={role?.role === "admin"}>
+    <DashboardShell currentPath="/dashboard/settings" isAdmin={false}>
       <Card>
         <p className="text-xs font-medium uppercase tracking-[0.24em] text-accent/80">
           Settings
@@ -33,7 +34,7 @@ export default async function DashboardSettingsPage() {
           <div className="rounded-xl border border-border bg-foreground/4 p-4">
             <p className="text-sm text-muted">Role</p>
             <p className="mt-2 text-base capitalize text-foreground">
-              {role?.role ?? "user"}
+              user
             </p>
           </div>
           <div className="rounded-xl border border-border bg-foreground/4 p-4">
