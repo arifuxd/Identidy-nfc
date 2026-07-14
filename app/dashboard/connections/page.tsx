@@ -30,10 +30,10 @@ export default async function DashboardConnectionsPage() {
     <DashboardShell currentPath="/dashboard/connections" isAdmin={role?.role === "admin"}>
       <div className="space-y-5">
         <Card>
-          <p className="text-xs font-medium uppercase tracking-[0.24em] text-blue-200/72">
+          <p className="text-xs font-medium uppercase tracking-[0.24em] text-accent/80">
             Connections
           </p>
-          <h1 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">
+          <h1 className="mt-2 text-2xl font-semibold text-foreground sm:text-3xl">
             Contact requests
           </h1>
         </Card>
@@ -44,8 +44,8 @@ export default async function DashboardConnectionsPage() {
               <Card key={connection.id} className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-white">{connection.visitor_name}</p>
-                    <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-blue-100/62">
+                    <p className="text-sm font-semibold text-foreground">{connection.visitor_name}</p>
+                    <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-muted">
                       {formatSubmittedAt(connection.created_at)}
                     </p>
                   </div>
@@ -54,12 +54,12 @@ export default async function DashboardConnectionsPage() {
                   </span>
                 </div>
                 <div className="mt-3 space-y-2 text-xs">
-                  <a href={`tel:${connection.visitor_phone}`} className="flex items-center gap-2 text-white hover:text-primary">
-                    <Phone className="size-3.5 text-blue-100/80" />
+                  <a href={`tel:${connection.visitor_phone}`} className="flex items-center gap-2 text-foreground hover:text-primary">
+                    <Phone className="size-3.5 text-muted" />
                     {connection.visitor_phone}
                   </a>
-                  <div className="flex items-center gap-2 text-white">
-                    <Mail className="size-3.5 text-blue-100/80" />
+                  <div className="flex items-center gap-2 text-foreground">
+                    <Mail className="size-3.5 text-muted" />
                     {connection.visitor_email ? (
                       <a href={`mailto:${connection.visitor_email}`} className="hover:text-primary">
                         {connection.visitor_email}

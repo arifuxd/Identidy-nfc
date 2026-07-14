@@ -66,10 +66,10 @@ export default async function DashboardOverviewPage({
     <DashboardShell currentPath="/dashboard" isAdmin={role?.role === "admin"}>
       <div className="space-y-5">
         <Card>
-          <p className="text-xs font-medium uppercase tracking-[0.24em] text-blue-200/72">
+          <p className="text-xs font-medium uppercase tracking-[0.24em] text-accent/80">
             Overview
           </p>
-          <h1 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">
+          <h1 className="mt-2 text-2xl font-semibold text-foreground sm:text-3xl">
             {data.profile.display_name}
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-muted">
@@ -94,7 +94,7 @@ export default async function DashboardOverviewPage({
 
         <Card>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-lg font-semibold text-white">Traffic & connections</h2>
+            <h2 className="text-lg font-semibold text-foreground">Traffic & connections</h2>
             <div className="flex flex-wrap gap-2">
               {RANGE_OPTIONS.map((option) => (
                 <Link key={option.key} href={`/dashboard?range=${option.key}`}>
@@ -110,30 +110,30 @@ export default async function DashboardOverviewPage({
           </div>
 
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-              <div className="flex items-center gap-2 text-blue-100/80">
+            <div className="rounded-xl border border-border bg-foreground/5 p-3">
+              <div className="flex items-center gap-2 text-muted">
                 <Eye className="size-4" />
                 <span className="text-xs">Profile visits</span>
               </div>
-              <p className="mt-2 text-2xl font-semibold text-white">
+              <p className="mt-2 text-2xl font-semibold text-foreground">
                 {formatCompactNumber(visitsValue)}
               </p>
             </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-              <div className="flex items-center gap-2 text-blue-100/80">
+            <div className="rounded-xl border border-border bg-foreground/5 p-3">
+              <div className="flex items-center gap-2 text-muted">
                 <Handshake className="size-4" />
                 <span className="text-xs">Connection requests</span>
               </div>
-              <p className="mt-2 text-2xl font-semibold text-white">
+              <p className="mt-2 text-2xl font-semibold text-foreground">
                 {formatCompactNumber(connectionValue)}
               </p>
             </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-              <div className="flex items-center gap-2 text-blue-100/80">
+            <div className="rounded-xl border border-border bg-foreground/5 p-3">
+              <div className="flex items-center gap-2 text-muted">
                 <Link2 className="size-4" />
                 <span className="text-xs">Social links</span>
               </div>
-              <p className="mt-2 text-2xl font-semibold text-white">
+              <p className="mt-2 text-2xl font-semibold text-foreground">
                 {data.socialLinks.length}
               </p>
             </div>

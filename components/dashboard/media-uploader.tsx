@@ -273,10 +273,10 @@ export function MediaUploader({ bucket, label, userId, value, onChange }: MediaU
 
   return (
     <>
-      <div className="rounded-xl border border-white/8 bg-white/4 p-4">
+      <div className="rounded-xl border border-border bg-foreground/4 p-4">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-medium text-white">{label}</p>
+            <p className="text-sm font-medium text-foreground">{label}</p>
             <p className="mt-1 text-xs text-muted">Choose the area to display.</p>
           </div>
           <input
@@ -295,7 +295,7 @@ export function MediaUploader({ bucket, label, userId, value, onChange }: MediaU
 
         {value ? (
           <div
-            className={`relative mt-4 overflow-hidden rounded-xl border border-white/8 ${
+            className={`relative mt-4 overflow-hidden rounded-xl border border-border ${
               bucket === "avatars" ? "aspect-square w-full max-w-44" : "aspect-[16/6] w-full"
             }`}
           >
@@ -308,16 +308,16 @@ export function MediaUploader({ bucket, label, userId, value, onChange }: MediaU
 
       {draftDataUrl ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#030712]/80 p-4">
-          <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-[#0b1728] p-4">
+          <div className="w-full max-w-2xl rounded-2xl border border-border bg-background p-4">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-base font-semibold text-white">Crop {label}</h3>
-              <button type="button" className="rounded-lg p-1 text-blue-100/70 hover:bg-white/10 hover:text-white" onClick={closeModal}>
+              <h3 className="text-base font-semibold text-foreground">Crop {label}</h3>
+              <button type="button" className="rounded-lg p-1 text-muted hover:bg-foreground/10 hover:text-foreground" onClick={closeModal}>
                 <X className="size-4" />
               </button>
             </div>
             <div
               ref={stageRef}
-              className="relative mx-auto h-[420px] w-full touch-none overflow-hidden rounded-xl border border-white/10 bg-[#020816] select-none"
+              className="relative mx-auto h-[420px] w-full touch-none overflow-hidden rounded-xl border border-border bg-background select-none"
               onPointerDown={handlePointerDown}
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUp}

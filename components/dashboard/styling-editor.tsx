@@ -127,10 +127,10 @@ export function StylingEditor({ profile }: StylingEditorProps) {
       <Card className="rounded-2xl">
         <div className="flex flex-col gap-5">
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.24em] text-blue-200/72">
+            <p className="text-xs font-medium uppercase tracking-[0.24em] text-accent/80">
               Select Design
             </p>
-            <h2 className="mt-2 text-2xl font-semibold text-white">Choose profile style</h2>
+            <h2 className="mt-2 text-2xl font-semibold text-foreground">Choose profile style</h2>
             <p className="mt-1 text-sm text-muted">
               Hover on a design card to preview the full layout.
             </p>
@@ -149,7 +149,7 @@ export function StylingEditor({ profile }: StylingEditorProps) {
                   className={`group overflow-hidden rounded-xl border text-left transition ${
                     selected
                       ? "border-primary bg-primary/10"
-                      : "border-white/10 bg-white/4 hover:border-white/30"
+                      : "border-border bg-foreground/4 hover:border-foreground/30"
                   }`}
                   onMouseEnter={() => setActivePreviewId(style.id)}
                   onMouseLeave={() => setActivePreviewId(null)}
@@ -159,7 +159,7 @@ export function StylingEditor({ profile }: StylingEditorProps) {
                   }}
                 >
                   <div className="p-2.5">
-                    <div className="relative h-64 overflow-hidden rounded-lg border border-white/10 bg-[#0a1422] sm:h-72 xl:h-80">
+                    <div className="relative h-64 overflow-hidden rounded-lg border border-border bg-background sm:h-72 xl:h-80">
                       <div ref={(node) => { frameRefs.current[style.id] = node; }} className="h-full w-full overflow-hidden">
                         <img
                           ref={(node) => { imageRefs.current[style.id] = node; }}
@@ -185,8 +185,8 @@ export function StylingEditor({ profile }: StylingEditorProps) {
                       </div>
                     </div>
                   </div>
-                  <div className="border-t border-white/10 px-3 py-2.5">
-                    <p className="text-sm font-semibold text-white">{style.name}</p>
+                  <div className="border-t border-border px-3 py-2.5">
+                    <p className="text-sm font-semibold text-foreground">{style.name}</p>
                     <p className="mt-0.5 text-xs text-muted">{style.description}</p>
                   </div>
                 </button>
@@ -194,7 +194,7 @@ export function StylingEditor({ profile }: StylingEditorProps) {
             })}
           </div>
           {selectedStyle ? (
-            <p className="text-xs text-blue-100/72">Selected: {selectedStyle.name}</p>
+            <p className="text-xs text-muted">Selected: {selectedStyle.name}</p>
           ) : null}
           {errors.profile_style?.message ? (
             <p className="text-xs text-red-300">{errors.profile_style.message}</p>
@@ -202,7 +202,7 @@ export function StylingEditor({ profile }: StylingEditorProps) {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-blue-50/85">Theme Color</label>
+              <label className="text-sm font-medium text-foreground/85">Theme Color</label>
               {isColorfulStyle ? (
                 <span className="rounded-full border border-amber-400/25 bg-amber-500/15 px-2.5 py-0.5 text-[10px] font-medium text-amber-200/90">
                   Fixed color for this style

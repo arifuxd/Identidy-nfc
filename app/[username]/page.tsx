@@ -68,6 +68,9 @@ export default async function PublicProfilePage({
 
   const isFullWidth = styleId !== "style-1";
 
+  const decodedUsername = decodeURIComponent(username).toLowerCase();
+  const showDebug = decodedUsername === "rahat" || decodedUsername === "argentina";
+
   return (
     <div className="min-h-screen bg-[#0b1728]">
       <main
@@ -78,7 +81,7 @@ export default async function PublicProfilePage({
         }
       >
         <PublicProfileViewTracker slug={profile.slug} />
-        <DebugStyleFlyout activeStyle={styleId} />
+        {showDebug && <DebugStyleFlyout activeStyle={styleId} />}
         {styleId === "style-2" ? (
           <Style2Corporate
             profile={profile}

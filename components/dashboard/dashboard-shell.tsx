@@ -34,47 +34,57 @@ export function DashboardShell({
 }: DashboardShellProps) {
   return (
     <div className="shell flex flex-1 flex-col gap-6 py-6 lg:flex-row lg:py-8">
-      <aside className="glass-panel rounded-2xl border-white/8 p-4 lg:w-72">
+      <aside className="rounded-2xl border border-border bg-secondary p-4 shadow-[var(--shadow-panel)] backdrop-blur-xl lg:w-72">
         <div className="mb-6">
-          <p className="text-xs font-medium uppercase tracking-[0.28em] text-blue-200/72">
+          <p className="text-xs font-medium uppercase tracking-[0.28em] text-accent/80">
             Identidy
           </p>
-          <h1 className="mt-3 text-2xl font-semibold text-white">Dashboard</h1>
+          <h1 className="mt-3 text-2xl font-semibold text-foreground">Dashboard</h1>
           <p className="mt-2 text-sm text-muted">
             Manage your NFC profile, links, and profile traffic.
           </p>
         </div>
 
         <nav className="space-y-2">
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition",
-                currentPath === item.href
-                  ? "bg-primary text-white shadow-[0_16px_36px_rgba(37,99,235,0.28)]"
-                  : "text-muted hover:bg-white/5 hover:text-white",
-              )}
-            >
-              <item.icon className="size-4" />
-              {item.label}
-            </Link>
-          ))}
+          {items.map((item) => {
+            const isActive = currentPath === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition",
+                  isActive
+                    ? "bg-primary shadow-sm"
+                    : "text-muted hover:bg-foreground/5 hover:text-foreground",
+                )}
+                style={isActive ? { color: "var(--primary-foreground)" } : undefined}
+              >
+                <item.icon className="size-4" style={isActive ? { color: "var(--primary-foreground)" } : undefined} />
+                <span style={isActive ? { color: "var(--primary-foreground)" } : undefined}>{item.label}</span>
+              </Link>
+            );
+          })}
 
           {isAdmin ? (
-            <Link
-              href="/admin"
-              className={cn(
-                "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition",
-                currentPath.startsWith("/admin")
-                  ? "bg-primary text-white shadow-[0_16px_36px_rgba(37,99,235,0.28)]"
-                  : "text-muted hover:bg-white/5 hover:text-white",
-              )}
-            >
-              <Shield className="size-4" />
-              Admin
-            </Link>
+            (() => {
+              const isActive = currentPath.startsWith("/admin");
+              return (
+                <Link
+                  href="/admin"
+                  className={cn(
+                    "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition",
+                    isActive
+                      ? "bg-primary shadow-sm"
+                      : "text-muted hover:bg-foreground/5 hover:text-foreground",
+                  )}
+                  style={isActive ? { color: "var(--primary-foreground)" } : undefined}
+                >
+                  <Shield className="size-4" style={isActive ? { color: "var(--primary-foreground)" } : undefined} />
+                  <span style={isActive ? { color: "var(--primary-foreground)" } : undefined}>Admin</span>
+                </Link>
+              );
+            })()
           ) : null}
         </nav>
 

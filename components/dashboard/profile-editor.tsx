@@ -147,13 +147,13 @@ export function ProfileEditor({ userId, profile, socialLinks, experiences }: Pro
     >
       <Card>
         <div className="relative flex items-center justify-between gap-2">
-          <div className="absolute left-0 right-0 top-1/2 hidden h-px -translate-y-1/2 bg-white/10 sm:block" />
+          <div className="absolute left-0 right-0 top-1/2 hidden h-px -translate-y-1/2 bg-border sm:block" />
           {STEPS.map((label, idx) => (
-            <button key={label} type="button" className="relative flex items-center gap-2 bg-[#0d1a2f] pr-3" onClick={() => setStep(idx)}>
+            <button key={label} type="button" className="relative flex items-center gap-2 bg-surface pr-3" onClick={() => setStep(idx)}>
               <span className={`flex size-6 items-center justify-center rounded-full border text-[11px] ${
-                idx <= step ? "border-primary bg-primary/20 text-white" : "border-white/20 text-blue-100/70"
+                idx <= step ? "border-primary bg-primary/20 text-foreground" : "border-border text-muted"
               }`}>{idx + 1}</span>
-              <span className={`text-xs ${idx <= step ? "text-white" : "text-blue-100/70"}`}>{label}</span>
+              <span className={`text-xs ${idx <= step ? "text-foreground font-semibold" : "text-muted"}`}>{label}</span>
             </button>
           ))}
         </div>
@@ -163,56 +163,56 @@ export function ProfileEditor({ userId, profile, socialLinks, experiences }: Pro
         <Card>
           <div className="flex items-center gap-2">
             <Sparkles className="size-4 text-primary" />
-            <h2 className="text-xl font-semibold text-white">Profile basics & media</h2>
+            <h2 className="text-xl font-semibold text-foreground">Profile basics & media</h2>
           </div>
           <div className="mt-4 grid gap-3 md:grid-cols-2">
             <div className="space-y-1.5">
-              <label className="text-sm text-blue-50/85">Display name</label>
+              <label className="text-sm text-muted">Display name</label>
               <Input {...form.register("display_name")} />
               <FieldErrorText message={errors.display_name?.message} />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm text-blue-50/85">Username</label>
+              <label className="text-sm text-muted">Username</label>
               <Input {...form.register("username")} />
             </div>
             <div className="space-y-1.5 md:col-span-2">
-              <label className="text-sm text-blue-50/85">Slug</label>
+              <label className="text-sm text-muted">Slug</label>
               <Input {...form.register("slug")} onBlur={(e) => form.setValue("slug", normalizeSlug(e.target.value))} />
               {slugStatus.message ? (
-                <p className={`text-xs ${slugStatus.state === "taken" ? "text-red-300" : "text-blue-100/72"}`}>{slugStatus.message}</p>
+                <p className={`text-xs ${slugStatus.state === "taken" ? "text-red-300" : "text-muted"}`}>{slugStatus.message}</p>
               ) : null}
               <FieldErrorText message={errors.slug?.message} />
             </div>
             <div className="space-y-1.5 md:col-span-2">
-              <label className="text-sm text-blue-50/85">Short bio</label>
+              <label className="text-sm text-muted">Short bio</label>
               <Textarea className="min-h-20" {...form.register("bio")} />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm text-blue-50/85">Job title</label>
+              <label className="text-sm text-muted">Job title</label>
               <Input {...form.register("job_title")} />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm text-blue-50/85">Company</label>
+              <label className="text-sm text-muted">Company</label>
               <Input {...form.register("company_name")} />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm text-blue-50/85">Email (Home)</label>
+              <label className="text-sm text-muted">Email (Home)</label>
               <Input type="email" {...form.register("email_home")} />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm text-blue-50/85">Email (Office)</label>
+              <label className="text-sm text-muted">Email (Office)</label>
               <Input type="email" {...form.register("email_office")} />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm text-blue-50/85">Phone (Home)</label>
+              <label className="text-sm text-muted">Phone (Home)</label>
               <Input {...form.register("phone_home")} />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm text-blue-50/85">Phone (Office)</label>
+              <label className="text-sm text-muted">Phone (Office)</label>
               <Input {...form.register("phone_office")} />
             </div>
             <div className="space-y-1.5 md:col-span-2">
-              <label className="text-sm text-blue-50/85">Address</label>
+              <label className="text-sm text-muted">Address</label>
               <Textarea className="min-h-20" {...form.register("address")} />
             </div>
           </div>
@@ -238,7 +238,7 @@ export function ProfileEditor({ userId, profile, socialLinks, experiences }: Pro
       {step === 1 ? (
         <Card>
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-xl font-semibold text-white">Links</h2>
+            <h2 className="text-xl font-semibold text-foreground">Links</h2>
             <Button
               type="button"
               variant="secondary"
@@ -255,13 +255,13 @@ export function ProfileEditor({ userId, profile, socialLinks, experiences }: Pro
               const isCustom = platform === "custom";
 
               return (
-                <div key={field.id} className="rounded-xl border border-white/8 bg-white/4 p-3">
+                <div key={field.id} className="rounded-xl border border-border bg-foreground/4 p-3">
                   <div className="grid gap-3 md:grid-cols-[0.8fr_1fr_auto] items-start">
                     <div className="space-y-1">
-                      <label className="text-xs font-medium text-blue-100/70">Platform</label>
+                      <label className="text-xs font-medium text-muted">Platform</label>
                       <select className="input-base w-full" {...form.register(`social_links.${index}.platform`)}>
                         {SOCIAL_PLATFORM_OPTIONS.map((option) => (
-                          <option key={option} value={option} className="bg-[#0b1728]">
+                          <option key={option} value={option} className="bg-background text-foreground">
                             {SOCIAL_PLATFORM_LABELS[option]}
                           </option>
                         ))}
@@ -271,14 +271,14 @@ export function ProfileEditor({ userId, profile, socialLinks, experiences }: Pro
                     <div className="grid gap-3 w-full sm:grid-cols-1">
                       {isCustom && (
                         <div className="space-y-1">
-                          <label className="text-xs font-medium text-blue-100/70">Label</label>
+                          <label className="text-xs font-medium text-muted">Label</label>
                           <Input placeholder="e.g. Personal Website" {...form.register(`social_links.${index}.label`)} />
                           <FieldErrorText message={errors.social_links?.[index]?.label?.message} />
                         </div>
                       )}
                       
                       <div className="space-y-1">
-                        <label className="text-xs font-medium text-blue-100/70">URL</label>
+                        <label className="text-xs font-medium text-muted">URL</label>
                         <Input placeholder="https://" {...form.register(`social_links.${index}.url`)} />
                         <FieldErrorText message={errors.social_links?.[index]?.url?.message} />
                       </div>
@@ -306,7 +306,7 @@ export function ProfileEditor({ userId, profile, socialLinks, experiences }: Pro
       {step === 2 ? (
         <Card>
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-xl font-semibold text-white">Experience</h2>
+            <h2 className="text-xl font-semibold text-foreground">Experience</h2>
             <Button
               type="button"
               variant="secondary"
@@ -330,12 +330,12 @@ export function ProfileEditor({ userId, profile, socialLinks, experiences }: Pro
           </div>
           <div className="mt-4 space-y-3">
             {experienceFieldArray.fields.map((field, index) => (
-              <div key={field.id} className="rounded-xl border border-white/8 bg-white/4 p-3">
+              <div key={field.id} className="rounded-xl border border-border bg-foreground/4 p-3">
                 <div className="grid gap-3 md:grid-cols-2">
                   <Input placeholder="Title" {...form.register(`experiences.${index}.title`)} />
                   <Input placeholder="Company" {...form.register(`experiences.${index}.company`)} />
                   <Input placeholder="Location" {...form.register(`experiences.${index}.location`)} />
-                  <label className="flex items-center gap-2 rounded-xl border border-white/8 px-3 py-2 text-sm text-white">
+                  <label className="flex items-center gap-2 rounded-xl border border-border px-3 py-2 text-sm text-foreground bg-foreground/3">
                     <input type="checkbox" {...form.register(`experiences.${index}.is_current`)} />
                     Current role
                   </label>
@@ -352,13 +352,13 @@ export function ProfileEditor({ userId, profile, socialLinks, experiences }: Pro
               </div>
             ))}
           </div>
-          <div className="mt-5 rounded-xl border border-white/10 bg-white/5 p-3">
+          <div className="mt-5 rounded-xl border border-border bg-foreground/5 p-3">
             <div className="mb-2 flex items-center gap-2">
               <CheckCircle2 className="size-4 text-emerald-300" />
-              <p className="text-sm font-medium text-white">Finish</p>
+              <p className="text-sm font-medium text-foreground">Finish</p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <label className="flex items-center gap-2 text-sm text-white">
+            <label className="flex items-center gap-2 text-sm text-foreground">
               <input type="checkbox" {...form.register("is_published")} />
               Profile is publicly visible
             </label>

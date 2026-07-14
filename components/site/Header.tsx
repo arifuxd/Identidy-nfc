@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
+import { createClient } from "@/lib/supabase/client";
+
+import type { User } from "@supabase/supabase-js";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -19,6 +22,7 @@ export function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -26,6 +30,21 @@ export function Header() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (
@@ -64,20 +83,40 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Link
-            href="/login"
-            className="hidden rounded-full px-4 py-2 text-[13px] text-ink-soft transition-colors hover:text-ink md:inline-flex"
-          >
-            Login
-          </Link>
-          <Link
-            href="/get-your-card"
-            className="group relative hidden overflow-hidden rounded-full bg-btn-primary px-4 py-2 text-[13px] font-medium text-btn-primary transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] md:inline-flex"
-          >
-            <span className="relative z-10">Get your card</span>
-            <span className="pointer-events-none absolute inset-0 -translate-x-full bg-accent transition-transform duration-500 group-hover:translate-x-0" />
-            <span className="relative z-10 ml-1.5 opacity-70 transition-opacity group-hover:opacity-100">→</span>
-          </Link>
+          {user ? (
+            <Link
+              href="/dashboard"
+              className="hidden rounded-full px-4 py-2 text-[13px] text-ink-soft transition-colors hover:text-ink md:inline-flex"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="hidden rounded-full px-4 py-2 text-[13px] text-ink-soft transition-colors hover:text-ink md:inline-flex"
+            >
+              Login
+            </Link>
+          )}
+          {user ? (
+            <Link
+              href="/dashboard/profile"
+              className="group relative hidden overflow-hidden rounded-full bg-btn-primary px-4 py-2 text-[13px] font-medium text-btn-primary transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] md:inline-flex"
+            >
+              <span className="relative z-10">My Profile</span>
+              <span className="pointer-events-none absolute inset-0 -translate-x-full bg-accent transition-transform duration-500 group-hover:translate-x-0" />
+              <span className="relative z-10 ml-1.5 opacity-70 transition-opacity group-hover:opacity-100">→</span>
+            </Link>
+          ) : (
+            <Link
+              href="/get-your-card"
+              className="group relative hidden overflow-hidden rounded-full bg-btn-primary px-4 py-2 text-[13px] font-medium text-btn-primary transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] md:inline-flex"
+            >
+              <span className="relative z-10">Get your card</span>
+              <span className="pointer-events-none absolute inset-0 -translate-x-full bg-accent transition-transform duration-500 group-hover:translate-x-0" />
+              <span className="relative z-10 ml-1.5 opacity-70 transition-opacity group-hover:opacity-100">→</span>
+            </Link>
+          )}
           <button
             onClick={() => setOpen((o) => !o)}
             aria-label="Menu"
@@ -101,16 +140,33 @@ export function Header() {
                 {n.label}
               </Link>
             ))}
-            <Link href="/login" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm text-ink-soft">
-              Login
-            </Link>
-            <Link
-              href="/get-your-card"
-              onClick={() => setOpen(false)}
-              className="mt-2 rounded-full bg-btn-primary px-4 py-3 text-center text-sm font-medium text-btn-primary"
-            >
-              Get your card →
-            </Link>
+            {user ? (
+              <>
+                <Link href="/dashboard" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm text-ink-soft">
+                  Dashboard
+                </Link>
+                <Link
+                  href="/dashboard/profile"
+                  onClick={() => setOpen(false)}
+                  className="mt-2 rounded-full bg-btn-primary px-4 py-3 text-center text-sm font-medium text-btn-primary"
+                >
+                  My Profile →
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/login" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm text-ink-soft">
+                  Login
+                </Link>
+                <Link
+                  href="/get-your-card"
+                  onClick={() => setOpen(false)}
+                  className="mt-2 rounded-full bg-btn-primary px-4 py-3 text-center text-sm font-medium text-btn-primary"
+                >
+                  Get your card →
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

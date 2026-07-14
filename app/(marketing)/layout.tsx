@@ -1,6 +1,6 @@
 "use client";
 
-import "../landing.css";
+import "@/app/landing.css";
 import { ThemeProvider } from "@/lib/theme";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";

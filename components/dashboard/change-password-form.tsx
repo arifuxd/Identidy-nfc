@@ -44,7 +44,7 @@ export function ChangePasswordForm() {
     >
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-2 sm:col-span-2">
-          <label className="text-sm text-blue-50/85">Current password</label>
+          <label className="text-sm text-muted">Current password</label>
           <Input
             type="password"
             value={currentPassword}
@@ -52,7 +52,7 @@ export function ChangePasswordForm() {
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm text-blue-50/85">New password</label>
+          <label className="text-sm text-muted">New password</label>
           <Input
             type="password"
             value={newPassword}
@@ -60,7 +60,7 @@ export function ChangePasswordForm() {
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm text-blue-50/85">Confirm new password</label>
+          <label className="text-sm text-muted">Confirm new password</label>
           <Input
             type="password"
             value={confirmPassword}

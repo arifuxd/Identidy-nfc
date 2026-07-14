@@ -15,6 +15,7 @@
   --success: #10b981;
   --danger: #ef4444;
   --ring: rgba(59, 130, 246, 0.45);
+  --shadow-panel: 0 12px 40px rgba(4, 10, 20, 0.35);
 }
 
 @theme inline {
@@ -24,8 +25,12 @@
   --color-surface-strong: var(--surface-strong);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
   --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   --color-primary-strong: var(--primary-strong);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-success: var(--success);
   --color-danger: var(--danger);
@@ -91,7 +96,7 @@ label[for] {
 }
 
 .glass-panel {
-  @apply border border-border bg-surface shadow-[0_12px_40px_rgba(4,10,20,0.35)] backdrop-blur-xl;
+  @apply border border-border bg-surface shadow-[var(--shadow-panel)] backdrop-blur-xl;
 }
 
 .section-title {
@@ -103,7 +108,7 @@ label[for] {
 }
 
 .input-base {
-  @apply w-full rounded-xl border border-border bg-white/5 px-3.5 py-2.5 text-sm text-white outline-none transition placeholder:text-muted/70 focus:border-primary focus:ring-4 focus:ring-[var(--ring)];
+  @apply w-full rounded-xl border border-border bg-foreground/5 px-3.5 py-2.5 text-sm text-foreground outline-none transition placeholder:text-muted/70 focus:border-primary focus:ring-4 focus:ring-[var(--ring)];
 }
 
 .card-grid {
