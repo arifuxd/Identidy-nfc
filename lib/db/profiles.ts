@@ -166,3 +166,30 @@ export async function getAdminUserById(userId: string) {
     role: roleRow?.role ?? "user",
   };
 }
+
+export async function getProfileRedirect(slug: string) {
+  const supabase = createServiceRoleClient();
+  const { data } = await supabase
+    .from("profile_redirects")
+    .select("profile_id, profiles(slug)")
+    .eq("slug", slug.toLowerCase().trim())
+    .maybeSingle();
+
+  if (data?.profiles) {
+    return {
+      slug: (data.profiles as any).slug as string,
+    };
+  }
+  return null;
+}
+
+export async function getAdminUserRedirects(userId: string) {
+  const supabase = createServiceRoleClient();
+  const { data } = await supabase
+    .from("profile_redirects")
+    .select("*")
+    .eq("profile_id", userId)
+    .order("created_at", { ascending: false });
+
+  return data ?? [];
+}

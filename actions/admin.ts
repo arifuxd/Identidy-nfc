@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { requireAdmin } from "@/lib/auth/session";
-import { normalizeSlug } from "@/lib/slug";
+import { normalizeSlug, isReservedSlug } from "@/lib/slug";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
 
 async function ensureUserProfile(
@@ -143,4 +143,185 @@ export async function deleteUserAction(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath("/admin/users");
   redirect("/admin/users?success=User%20deleted%20successfully.");
+}
+
+export async function updateUserBasicInfoAction(formData: FormData) {
+  await requireAdmin();
+  const supabase = createServiceRoleClient();
+
+  const userId = String(formData.get("user_id"));
+  const displayName = String(formData.get("display_name") ?? "").trim();
+  const username = String(formData.get("username") ?? "").trim().toLowerCase();
+  const slug = normalizeSlug(String(formData.get("slug") ?? ""));
+  const bio = String(formData.get("bio") ?? "").trim();
+
+  if (displayName.length < 2) {
+    redirect(`/admin/users/${userId}?error=Name must be at least 2 characters.`);
+  }
+  if (username.length < 3) {
+    redirect(`/admin/users/${userId}?error=Username must be at least 3 characters.`);
+  }
+  if (slug.length < 3) {
+    redirect(`/admin/users/${userId}?error=Slug must be at least 3 characters.`);
+  }
+
+  const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  if (!slugRegex.test(slug)) {
+    redirect(`/admin/users/${userId}?error=Slug can only contain lowercase letters, numbers, and hyphens.`);
+  }
+
+  if (isReservedSlug(slug)) {
+    redirect(`/admin/users/${userId}?error=That slug is reserved.`);
+  }
+
+  // Check if slug is taken by another profile
+  const { data: existingProfileBySlug } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("slug", slug)
+    .neq("id", userId)
+    .maybeSingle();
+
+  if (existingProfileBySlug) {
+    redirect(`/admin/users/${userId}?error=That slug is already taken by another profile.`);
+  }
+
+  // Check if slug is taken by a redirect
+  const { data: existingRedirectBySlug } = await supabase
+    .from("profile_redirects")
+    .select("id, profile_id")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (existingRedirectBySlug) {
+    redirect(`/admin/users/${userId}?error=That slug is already taken by a redirect alias.`);
+  }
+
+  // Check if username is taken by another profile
+  const { data: existingProfileByUsername } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("username", username)
+    .neq("id", userId)
+    .maybeSingle();
+
+  if (existingProfileByUsername) {
+    redirect(`/admin/users/${userId}?error=That username is already taken.`);
+  }
+
+  // Fetch the old profile to revalidate its old slug path
+  const { data: oldProfile } = await supabase
+    .from("profiles")
+    .select("slug")
+    .eq("id", userId)
+    .maybeSingle();
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      display_name: displayName,
+      username,
+      slug,
+      bio: bio || null,
+    })
+    .eq("id", userId);
+
+  if (error) {
+    redirect(`/admin/users/${userId}?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/admin/users");
+  revalidatePath(`/admin/users/${userId}`);
+  if (oldProfile?.slug) {
+    revalidatePath(`/${oldProfile.slug}`);
+  }
+  revalidatePath(`/${slug}`);
+
+  redirect(`/admin/users/${userId}?success=User profile updated successfully.`);
+}
+
+export async function addProfileRedirectAction(formData: FormData) {
+  await requireAdmin();
+  const supabase = createServiceRoleClient();
+
+  const userId = String(formData.get("user_id"));
+  const rawSlug = String(formData.get("redirect_slug") ?? "");
+  const slug = normalizeSlug(rawSlug);
+
+  if (slug.length < 3) {
+    redirect(`/admin/users/${userId}?error=Redirect slug must be at least 3 characters.`);
+  }
+
+  const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  if (!slugRegex.test(slug)) {
+    redirect(`/admin/users/${userId}?error=Redirect slug can only contain lowercase letters, numbers, and hyphens.`);
+  }
+
+  if (isReservedSlug(slug)) {
+    redirect(`/admin/users/${userId}?error=That slug is reserved.`);
+  }
+
+  // Check if clashing with any profile slug
+  const { data: clashingProfile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (clashingProfile) {
+    redirect(`/admin/users/${userId}?error=This slug is already in use by a profile.`);
+  }
+
+  // Check if clashing with any existing redirect
+  const { data: clashingRedirect } = await supabase
+    .from("profile_redirects")
+    .select("id")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (clashingRedirect) {
+    redirect(`/admin/users/${userId}?error=This redirect slug is already taken.`);
+  }
+
+  const { error } = await supabase
+    .from("profile_redirects")
+    .insert({
+      profile_id: userId,
+      slug,
+    });
+
+  if (error) {
+    redirect(`/admin/users/${userId}?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath(`/admin/users/${userId}`);
+  revalidatePath(`/${slug}`);
+
+  redirect(`/admin/users/${userId}?success=Redirect URL added successfully.`);
+}
+
+export async function deleteProfileRedirectAction(formData: FormData) {
+  await requireAdmin();
+  const supabase = createServiceRoleClient();
+
+  const userId = String(formData.get("user_id"));
+  const redirectId = String(formData.get("redirect_id"));
+  const slug = String(formData.get("slug"));
+
+  const { error } = await supabase
+    .from("profile_redirects")
+    .delete()
+    .eq("id", redirectId)
+    .eq("profile_id", userId);
+
+  if (error) {
+    redirect(`/admin/users/${userId}?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath(`/admin/users/${userId}`);
+  if (slug) {
+    revalidatePath(`/${slug}`);
+  }
+
+  redirect(`/admin/users/${userId}?success=Redirect URL deleted successfully.`);
 }

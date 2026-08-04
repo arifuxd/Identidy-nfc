@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { DebugStyleFlyout } from "@/components/profile/debug-style-flyout";
 import { PublicProfileViewTracker } from "@/components/profile/public-profile-view-tracker";
@@ -12,7 +12,7 @@ import { Style5Colorful } from "@/components/profile/styles/style-5-colorful";
 import { Style6Terminal } from "@/components/profile/styles/style-6-terminal";
 import { Style7Scifi } from "@/components/profile/styles/style-7-scifi";
 import { Style8Cinema } from "@/components/profile/styles/style-8-cinema";
-import { getProfileBundleBySlug } from "@/lib/db/profiles";
+import { getProfileBundleBySlug, getProfileRedirect } from "@/lib/db/profiles";
 import { resolveProfileStyleDefinition } from "@/lib/profile-styles";
 import { absoluteUrl } from "@/lib/utils";
 
@@ -52,6 +52,10 @@ export default async function PublicProfilePage({
   const data = await getProfileBundleBySlug(username);
 
   if (!data) {
+    const redir = await getProfileRedirect(username);
+    if (redir?.slug) {
+      redirect(`/${redir.slug}`);
+    }
     notFound();
   }
 
